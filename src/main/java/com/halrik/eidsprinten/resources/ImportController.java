@@ -32,6 +32,7 @@ public class ImportController {
                 return ResponseEntity.status(HttpStatus.OK)
                     .body(new ResponseMessage("Uploaded the file successfully: " + file.getOriginalFilename()));
             } catch (Exception e) {
+                log.error("Could not upload the file!", e);
                 return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED)
                     .body(new ResponseMessage("Could not upload the file: " + file.getOriginalFilename() + "!"));
             }
