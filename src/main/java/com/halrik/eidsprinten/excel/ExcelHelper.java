@@ -76,8 +76,8 @@ public class ExcelHelper {
 
         participant.setGender(row.getCell(6).getStringCellValue());
         participant.setBirthDate(DATE_FORMAT.parse(row.getCell(7).getStringCellValue()));
-        participant.setClub(row.getCell(10).getStringCellValue());
-        participant.setTeam(row.getCell(15).getStringCellValue());
+        participant.setClubName(row.getCell(10).getStringCellValue());
+        participant.setTeamName(row.getCell(15).getStringCellValue());
         participant.setLeg(Integer.valueOf(row.getCell(16).getStringCellValue()));
 
         if (row.getCell(23) != null) {
@@ -91,6 +91,15 @@ public class ExcelHelper {
         if (row.getCell(25) != null) {
             participant.setTeamLeaderEmail(row.getCell(25).getStringCellValue());
         }
+
+        participant.setAge(Integer.valueOf(
+            participant.getGroupName()
+                .replace("år", "")
+                .replace("G", "")
+                .replace("J", "")
+                .replace(" ", "")));
+
+        participant.setGenderClass(participant.getGroupName().substring(0, 1));
 
         return participant;
     }

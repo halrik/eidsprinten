@@ -1,6 +1,7 @@
 package com.halrik.eidsprinten.resources;
 
 import com.halrik.eidsprinten.domain.Participant;
+import com.halrik.eidsprinten.domain.Team;
 import com.halrik.eidsprinten.excel.ExcelHelper;
 import com.halrik.eidsprinten.services.EidsprintenService;
 import java.util.List;
@@ -56,4 +57,10 @@ public class EidsprintenController {
     public ResponseEntity<List<Participant>> getParticipantsByClub(@PathVariable String clubName) {
         return new ResponseEntity<>(eidsprintenService.getParticipantsByClub(clubName), HttpStatus.OK);
     }
+
+    @GetMapping(value = "/teams/{age}")
+    public ResponseEntity<List<Team>> getTeamsByAge(@PathVariable Integer age) {
+        return new ResponseEntity<>(eidsprintenService.getTeamsByAge(age), HttpStatus.OK);
+    }
+
 }

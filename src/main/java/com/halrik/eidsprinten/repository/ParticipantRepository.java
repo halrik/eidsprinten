@@ -2,10 +2,10 @@ package com.halrik.eidsprinten.repository;
 
 import com.halrik.eidsprinten.domain.Participant;
 import java.util.List;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ParticipantRepository extends CrudRepository<Participant, Long> {
+public interface ParticipantRepository extends JpaRepository<Participant, Long> {
 
-    List<Participant> findByClub(String club);
+    List<Participant> findByClubName(String clubName);
 
 }
