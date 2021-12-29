@@ -1,7 +1,6 @@
 package com.halrik.eidsprinten.excel;
 
 import com.halrik.eidsprinten.domain.Participant;
-import com.halrik.eidsprinten.resources.ImportController;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
@@ -71,7 +70,7 @@ public class ExcelHelper {
 
     private static Participant rowToParticipant(Row row) throws ParseException {
         Participant participant = new Participant();
-        participant.setGroup(row.getCell(0).getStringCellValue());
+        participant.setGroupName(row.getCell(0).getStringCellValue());
         participant.setLastName(row.getCell(4).getStringCellValue());
         participant.setFirstName(row.getCell(5).getStringCellValue());
 

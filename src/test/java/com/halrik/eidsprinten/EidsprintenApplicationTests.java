@@ -1,13 +1,13 @@
 package com.halrik.eidsprinten;
 
-import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
+@SpringBootTest(classes = EidsprintenApplication.class)
 class EidsprintenApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
-
+    /*
+    @Test
+    void contextLoads() {
+    }
+     */
 }
