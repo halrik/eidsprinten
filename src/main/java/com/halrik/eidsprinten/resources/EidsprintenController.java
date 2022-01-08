@@ -1,5 +1,6 @@
 package com.halrik.eidsprinten.resources;
 
+import com.halrik.eidsprinten.domain.Heat;
 import com.halrik.eidsprinten.domain.Participant;
 import com.halrik.eidsprinten.domain.Team;
 import com.halrik.eidsprinten.excel.ExcelHelper;
@@ -46,11 +47,24 @@ public class EidsprintenController {
             } catch (Exception e) {
                 log.error("Could not upload the file!", e);
                 return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED)
-                    .body(new ResponseMessage("Could not upload the file: " + file.getOriginalFilename() + "!"));
+                    .body(new ResponseMessage("Could not upload the file: " + e.getMessage() + "!"));
             }
         }
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage("Please upload an excel file!"));
+    }
+
+    @GetMapping(value = "/teams/validate")
+    public ResponseEntity<ResponseMessage> validateTeams() {
+        try {
+            int numberOfTeams = eidsprintenService.validateTeams();
+
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(numberOfTeams + " teams are valid!"));
+        } catch (Exception e) {
+            log.error("Teams are not valid!", e);
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED)
+                .body(new ResponseMessage("Teams are not valid: " + e.getMessage() + "!"));
+        }
     }
 
     @GetMapping(value = "/participants/club/{clubName}")
@@ -61,6 +75,11 @@ public class EidsprintenController {
     @GetMapping(value = "/teams/{age}")
     public ResponseEntity<List<Team>> getTeamsByAge(@PathVariable Integer age) {
         return new ResponseEntity<>(eidsprintenService.getTeamsByAge(age), HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/heats/unranked")
+    public ResponseEntity<List<Heat>> getHeatsUnRanked() {
+        return new ResponseEntity<>(eidsprintenService.getHeatsUnRanked(), HttpStatus.OK);
     }
 
 }
