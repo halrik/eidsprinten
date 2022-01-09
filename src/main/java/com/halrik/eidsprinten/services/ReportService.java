@@ -1,10 +1,12 @@
 package com.halrik.eidsprinten.services;
 
+import com.halrik.eidsprinten.domain.Heat;
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
 import com.openhtmltopdf.svgsupport.BatikSVGDrawer;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -12,10 +14,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class ReportService {
 
+    private final HeatsService heatsService;
     private final TemplateService templateService;
     private final PdfRendererBuilder pdfBuilder;
 
-    public ReportService(TemplateService templateService) {
+    public ReportService(HeatsService heatsService, TemplateService templateService) {
+        this.heatsService = heatsService;
         this.templateService = templateService;
 
         pdfBuilder = new PdfRendererBuilder()
@@ -27,7 +31,9 @@ public class ReportService {
 
     public byte[] generateStartListUnrankedPdf() throws IOException {
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-            pdfBuilder.withHtmlContent(templateService.getStartListUnrankedHtml(), "")
+            List<Heat> heatsUnRanked = heatsService.getHeatsUnRanked();
+
+            pdfBuilder.withHtmlContent(templateService.getStartListUnrankedHtml(heatsUnRanked), "")
                 .toStream(outputStream)
                 .run();
 

@@ -1,11 +1,6 @@
 package com.halrik.eidsprinten.resources;
 
-import static javax.servlet.http.HttpServletResponse.SC_OK;
-
 import com.halrik.eidsprinten.services.ReportService;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -33,18 +28,12 @@ public class ReportController {
     }
 
     @GetMapping(value = "/startlist/unranked", produces = "application/pdf")
-    @ApiOperation(value = "Generates a PDF .",
-        responseReference = "ResponseRepresentationOfOfferRepresentation"
-    )
-    @ApiResponses({
-        @ApiResponse(code = SC_OK, message = "Successfully created PDF")
-    })
     public ResponseEntity<InputStreamResource> startListUnranked() throws IOException {
         byte[] pdfBytes = reportService.generateStartListUnrankedPdf();
 
         String dateTimePattern = "dd-MM-yyyy-HHmm";
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(dateTimePattern);
-        String downloadFileName = "startlist-unranked-" + LocalDateTime.now().format(dateTimeFormatter) + ".pdf";
+        String downloadFileName = "startliste-urangert-" + LocalDateTime.now().format(dateTimeFormatter) + ".pdf";
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/pdf");
