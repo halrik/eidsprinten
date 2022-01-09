@@ -1,4 +1,4 @@
-package com.halrik.eidsprinten.domain;
+package com.halrik.eidsprinten.model.enums;
 
 public enum Gender {
     BOYS("G"),

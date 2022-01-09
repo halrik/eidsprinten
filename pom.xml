@@ -15,7 +15,9 @@
 	<description>Eidsprinten</description>
 	<properties>
 		<java.version>11</java.version>
+		<openhtml.version>1.0.10</openhtml.version>
 	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -67,6 +69,34 @@
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
+		</dependency>
+
+		<!-- Templating -->
+		<dependency>
+			<groupId>org.thymeleaf</groupId>
+			<artifactId>thymeleaf</artifactId>
+			<version>3.0.14.RELEASE</version>
+		</dependency>
+
+		<dependency>
+			<!-- ALWAYS required, usually included transitively. -->
+			<groupId>com.openhtmltopdf</groupId>
+			<artifactId>openhtmltopdf-core</artifactId>
+			<version>${openhtml.version}</version>
+		</dependency>
+
+		<dependency>
+			<!-- Required for PDF output. -->
+			<groupId>com.openhtmltopdf</groupId>
+			<artifactId>openhtmltopdf-pdfbox</artifactId>
+			<version>${openhtml.version}</version>
+		</dependency>
+
+		<dependency>
+			<!-- Optional, leave out if you do not need SVG support. -->
+			<groupId>com.openhtmltopdf</groupId>
+			<artifactId>openhtmltopdf-svg-support</artifactId>
+			<version>${openhtml.version}</version>
 		</dependency>
 
 	</dependencies>

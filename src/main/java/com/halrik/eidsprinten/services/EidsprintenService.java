@@ -2,10 +2,10 @@ package com.halrik.eidsprinten.services;
 
 import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.ignoreCase;
 
-import com.halrik.eidsprinten.domain.Gender;
 import com.halrik.eidsprinten.domain.Heat;
 import com.halrik.eidsprinten.domain.Participant;
 import com.halrik.eidsprinten.domain.Team;
+import com.halrik.eidsprinten.model.enums.Gender;
 import com.halrik.eidsprinten.repository.ParticipantRepository;
 import com.halrik.eidsprinten.repository.TeamRepository;
 import java.util.ArrayList;
