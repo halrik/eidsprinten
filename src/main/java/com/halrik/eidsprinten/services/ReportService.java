@@ -41,9 +41,9 @@ public class ReportService {
         }
     }
 
-    public byte[] generateStartListPrologRankedPdf() throws IOException {
+    public byte[] generateStartListRankedPrologPdf() throws IOException {
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-            List<Heat> heatsUnRanked = heatsService.getHeatsPrologRanked();
+            List<Heat> heatsUnRanked = heatsService.getHeatsRankedProlog();
 
             pdfBuilder.withHtmlContent(templateService.getStartListHeatsHtml(heatsUnRanked, "Rangert - Prolog"), "")
                 .toStream(outputStream)

@@ -7,6 +7,7 @@ import lombok.Data;
 public class Heat {
 
     private Integer heatNumber;
+    private boolean prologHeat;
     private String groupName;
     private String startTime;
     private List<Team> teams;

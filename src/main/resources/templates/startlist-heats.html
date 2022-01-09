@@ -17,8 +17,8 @@
     }
 
     tr {
-      page-break-inside:avoid;
-      page-break-after:auto;
+      page-break-inside: avoid;
+      page-break-after: auto;
     }
 
     td.inline {
@@ -44,7 +44,7 @@
 </head>
 <body>
 <h3>
-  <span th:text="'Eidsprinten - Startliste - ' + ${startListType}" ></span>
+  <span th:text="'Eidsprinten - Startliste - ' + ${startListType}"></span>
 </h3>
 
 <table>
@@ -79,14 +79,16 @@
     <td>
       <table class="inline">
         <tr th:each="team, iterStat: ${heat.teams}">
-          <td th:class="${iterStat.last}? 'inline last' : 'inline'" th:text="${team.participantLeg1Name}"/>
+          <td th:class="${iterStat.last}? 'inline last' : 'inline'"
+              th:text="${heat.isPrologHeat} ? ${team.participantLeg1Name} : ${team.participantLeg2Name}"/>
         </tr>
       </table>
     </td>
     <td>
       <table class="inline">
         <tr th:each="team, iterStat: ${heat.teams}">
-          <td th:class="${iterStat.last}? 'inline last' : 'inline'" th:text="${team.participantLeg2Name}"/>
+          <td th:class="${iterStat.last}? 'inline last' : 'inline'"
+              th:text="${heat.isPrologHeat} ? ${team.participantLeg2Name} : ${team.participantLeg1Name}"/>
         </tr>
       </table>
     </td>

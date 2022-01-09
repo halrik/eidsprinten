@@ -44,7 +44,7 @@ public class ReportController {
 
     @GetMapping(value = "/startlist/ranked/prolog", produces = "application/pdf")
     public ResponseEntity<InputStreamResource> startListRankedProlog() throws IOException {
-        byte[] pdfBytes = reportService.generateStartListPrologRankedPdf();
+        byte[] pdfBytes = reportService.generateStartListRankedPrologPdf();
         String downloadFileName = "startliste-rangert-prolog" + LocalDateTime.now().format(dateTimeFormatter) + ".pdf";
         ByteArrayInputStream inputStream = new ByteArrayInputStream(pdfBytes);
         return ResponseEntity

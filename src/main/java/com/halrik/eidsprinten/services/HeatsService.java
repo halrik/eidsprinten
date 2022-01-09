@@ -20,8 +20,10 @@ public class HeatsService {
 
     private static final Logger log = LoggerFactory.getLogger(HeatsService.class);
 
-    private static final int MAX_HEAT_SIZE = 8;
+    private static final int MAX_HEAT_SIZE = 9;
     private static final int START_HOUR = 10;
+    private static final int START_HOUR_RANKED = 13;
+    private static final int MINUTES_BETWEEN_HEATS = 5;
 
     private TeamRepository teamRepository;
 
@@ -39,121 +41,145 @@ public class HeatsService {
         List<Team> age9Teams = teamRepository.findByAge(9);
         List<Team> age10Teams = teamRepository.findByAge(10);
 
-        List<Team> age8BoysTeams = filterTeamsByGender(Gender.BOYS, age8Teams);
-        List<Team> age8GirlsTeams = filterTeamsByGender(Gender.GIRLS, age8Teams);
-        List<Team> age9BoysTeams = filterTeamsByGender(Gender.BOYS, age9Teams);
-        List<Team> age9GirlsTeams = filterTeamsByGender(Gender.GIRLS, age9Teams);
-        List<Team> age10BoysTeams = filterTeamsByGender(Gender.BOYS, age10Teams);
-        List<Team> age10GirlsTeams = filterTeamsByGender(Gender.GIRLS, age10Teams);
-
-        LocalDateTime startTime = LocalDateTime.of(2021, Month.FEBRUARY, 13, START_HOUR, 00, 00);
-        ;
+        LocalDateTime start = getStartTime(START_HOUR);
 
         // add L1 heats for age 8 and 9
         int leg = 1;
-        startTime = addHeats(startTime, leg, unRankedHeats, age8BoysTeams);
-        startTime = addHeats(startTime, leg, unRankedHeats, age8GirlsTeams);
-        startTime = addHeats(startTime, leg, unRankedHeats, age9BoysTeams);
-        startTime = addHeats(startTime, leg, unRankedHeats, age9GirlsTeams);
+        start = addHeats(start, leg, heatNo(unRankedHeats), unRankedHeats, filterByGender(Gender.BOYS, age8Teams));
+        start = addHeats(start, leg, heatNo(unRankedHeats), unRankedHeats, filterByGender(Gender.GIRLS, age8Teams));
+        start = addHeats(start, leg, heatNo(unRankedHeats), unRankedHeats, filterByGender(Gender.BOYS, age9Teams));
+        start = addHeats(start, leg, heatNo(unRankedHeats), unRankedHeats, filterByGender(Gender.GIRLS, age9Teams));
 
         // add L2 heats for age 8 and 9
         leg = 2;
-        startTime = addHeats(startTime, leg, unRankedHeats, age8BoysTeams);
-        startTime = addHeats(startTime, leg, unRankedHeats, age8GirlsTeams);
-        startTime = addHeats(startTime, leg, unRankedHeats, age9BoysTeams);
-        startTime = addHeats(startTime, leg, unRankedHeats, age9GirlsTeams);
+        start = addHeats(start, leg, heatNo(unRankedHeats), unRankedHeats, filterByGender(Gender.BOYS, age8Teams));
+        start = addHeats(start, leg, heatNo(unRankedHeats), unRankedHeats, filterByGender(Gender.GIRLS, age8Teams));
+        start = addHeats(start, leg, heatNo(unRankedHeats), unRankedHeats, filterByGender(Gender.BOYS, age9Teams));
+        start = addHeats(start, leg, heatNo(unRankedHeats), unRankedHeats, filterByGender(Gender.GIRLS, age9Teams));
 
         // add L1 heats for age 10
         leg = 1;
-        startTime = addHeats(startTime, leg, unRankedHeats, age10BoysTeams);
-        startTime = addHeats(startTime, leg, unRankedHeats, age10GirlsTeams);
+        start = addHeats(start, leg, heatNo(unRankedHeats), unRankedHeats, filterByGender(Gender.BOYS, age10Teams));
+        start = addHeats(start, leg, heatNo(unRankedHeats), unRankedHeats, filterByGender(Gender.GIRLS, age10Teams));
 
         // add L2 heats for age 10
         leg = 2;
-        startTime = addHeats(startTime, leg, unRankedHeats, age10BoysTeams);
-        startTime = addHeats(startTime, leg, unRankedHeats, age10GirlsTeams);
+        start = addHeats(start, leg, heatNo(unRankedHeats), unRankedHeats, filterByGender(Gender.BOYS, age10Teams));
+        addHeats(start, leg, heatNo(unRankedHeats), unRankedHeats, filterByGender(Gender.GIRLS, age10Teams));
 
         return unRankedHeats;
     }
 
-    public List<Heat> getHeatsPrologRanked() {
-        List<Heat> unRankedHeats = new ArrayList<>();
+    public List<Heat> getHeatsRankedProlog() {
+        List<Heat> prologHeats = new ArrayList<>();
 
-        List<Team> age8Teams = teamRepository.findByAge(8);
-        List<Team> age9Teams = teamRepository.findByAge(9);
-        List<Team> age10Teams = teamRepository.findByAge(10);
+        List<Team> age11Teams = teamRepository.findByAge(11);
+        List<Team> age12Teams = teamRepository.findByAge(12);
+        List<Team> age13Teams = teamRepository.findByAge(13);
+        List<Team> age14Teams = teamRepository.findByAge(14);
 
-        List<Team> age8BoysTeams = filterTeamsByGender(Gender.BOYS, age8Teams);
-        List<Team> age8GirlsTeams = filterTeamsByGender(Gender.GIRLS, age8Teams);
-        List<Team> age9BoysTeams = filterTeamsByGender(Gender.BOYS, age9Teams);
-        List<Team> age9GirlsTeams = filterTeamsByGender(Gender.GIRLS, age9Teams);
-        List<Team> age10BoysTeams = filterTeamsByGender(Gender.BOYS, age10Teams);
-        List<Team> age10GirlsTeams = filterTeamsByGender(Gender.GIRLS, age10Teams);
+        LocalDateTime start = getStartTime(START_HOUR_RANKED);
 
-        LocalDateTime startTime = LocalDateTime.of(2021, Month.FEBRUARY, 13, START_HOUR, 00, 00);
-        ;
+        Integer lastHeatNo = getHeatsUnRanked().size();
 
-        // add L1 heats for age 8 and 9
-        int leg = 1;
-        startTime = addHeats(startTime, leg, unRankedHeats, age8BoysTeams);
-        startTime = addHeats(startTime, leg, unRankedHeats, age8GirlsTeams);
-        startTime = addHeats(startTime, leg, unRankedHeats, age9BoysTeams);
-        startTime = addHeats(startTime, leg, unRankedHeats, age9GirlsTeams);
+        // add prolog heats for age 11
+        start = addPrologHeats(start, prologHeatNo(lastHeatNo, prologHeats), prologHeats,
+            filterByGender(Gender.BOYS, age11Teams));
 
-        // add L2 heats for age 8 and 9
-        leg = 2;
-        startTime = addHeats(startTime, leg, unRankedHeats, age8BoysTeams);
-        startTime = addHeats(startTime, leg, unRankedHeats, age8GirlsTeams);
-        startTime = addHeats(startTime, leg, unRankedHeats, age9BoysTeams);
-        startTime = addHeats(startTime, leg, unRankedHeats, age9GirlsTeams);
+        start = addPrologHeats(start, prologHeatNo(lastHeatNo, prologHeats), prologHeats,
+            filterByGender(Gender.GIRLS, age11Teams));
 
-        // add L1 heats for age 10
-        leg = 1;
-        startTime = addHeats(startTime, leg, unRankedHeats, age10BoysTeams);
-        startTime = addHeats(startTime, leg, unRankedHeats, age10GirlsTeams);
+        // make room for final heats
+        int numberOfAge11Heats = prologHeats.size();
+        lastHeatNo = lastHeatNo + numberOfAge11Heats;
+        start = start.plusMinutes(numberOfAge11Heats * MINUTES_BETWEEN_HEATS);
 
-        // add L2 heats for age 10
-        leg = 2;
-        startTime = addHeats(startTime, leg, unRankedHeats, age10BoysTeams);
-        startTime = addHeats(startTime, leg, unRankedHeats, age10GirlsTeams);
+        // add prolog heats for age 12
+        start = addPrologHeats(start, prologHeatNo(lastHeatNo, prologHeats), prologHeats,
+            filterByGender(Gender.BOYS, age12Teams));
 
-        return unRankedHeats;
+        start = addPrologHeats(start, prologHeatNo(lastHeatNo, prologHeats), prologHeats,
+            filterByGender(Gender.GIRLS, age12Teams));
+
+        // make room for final heats
+        int numberOfAge12Heats = prologHeats.size() - numberOfAge11Heats;
+        lastHeatNo = lastHeatNo + numberOfAge12Heats;
+        start = start.plusMinutes(numberOfAge12Heats * MINUTES_BETWEEN_HEATS);
+
+        // add prolog heats for age 13
+        start = addPrologHeats(start, prologHeatNo(lastHeatNo, prologHeats), prologHeats,
+            filterByGender(Gender.BOYS, age13Teams));
+
+        start = addPrologHeats(start, prologHeatNo(lastHeatNo, prologHeats), prologHeats,
+            filterByGender(Gender.GIRLS, age13Teams));
+
+        // make room for final heats
+        int numberOfAge13Heats = prologHeats.size() - numberOfAge11Heats - numberOfAge12Heats;
+        lastHeatNo = lastHeatNo + numberOfAge13Heats;
+        start = start.plusMinutes(numberOfAge13Heats * MINUTES_BETWEEN_HEATS);
+
+        // add prolog heats for age 14
+        start = addPrologHeats(start, prologHeatNo(lastHeatNo, prologHeats), prologHeats,
+            filterByGender(Gender.BOYS, age14Teams));
+
+        addPrologHeats(start, prologHeatNo(lastHeatNo, prologHeats), prologHeats,
+            filterByGender(Gender.GIRLS, age14Teams));
+
+        return prologHeats;
     }
 
-    private List<Team> filterTeamsByGender(Gender gender, List<Team> teams) {
+    private LocalDateTime getStartTime(int startHourRanked) {
+        return LocalDateTime.of(2021, Month.FEBRUARY, 13, startHourRanked, 00, 00);
+    }
+
+    private int heatNo(List<Heat> heats) {
+        return heats.size() + 1;
+    }
+
+    private int prologHeatNo(Integer lastHeatNo, List<Heat> prologHeats) {
+        lastHeatNo = lastHeatNo + 1 + prologHeats.size();
+        return lastHeatNo;
+    }
+
+    private List<Team> filterByGender(Gender gender, List<Team> teams) {
         return teams.stream().filter(team -> team.getGenderClass().equals(gender.getValue()))
             .collect(Collectors.toList());
     }
 
-    private LocalDateTime addHeats(LocalDateTime startTime, int leg, List<Heat> unRankedHeats,
+    private LocalDateTime addPrologHeats(LocalDateTime startTime, int heatNumber, List<Heat> heats, List<Team> teams) {
+        return addHeats(startTime, 1, heatNumber, heats, teams);
+    }
+
+    private LocalDateTime addHeats(LocalDateTime startTime, int leg, int heatNumber, List<Heat> heats,
         List<Team> teams) {
         int teamsSize = teams.size();
         double numberOfHeatsEachRoundForCurrentGroup =
             teamsSize / MAX_HEAT_SIZE + (teamsSize % MAX_HEAT_SIZE > 0 ? 1 : 0);
-        int heatNumberCounter = unRankedHeats.size() + 1;
+        int heatNumberCounter = heatNumber;
 
-        List<Heat> heats = new ArrayList<>();
-        while (heats.size() < numberOfHeatsEachRoundForCurrentGroup) {
+        List<Heat> addHeats = new ArrayList<>();
+        while (addHeats.size() < numberOfHeatsEachRoundForCurrentGroup) {
             Heat heat = new Heat();
             heat.setHeatNumber(heatNumberCounter);
             heat.setStartTime(startTime.format(hourMinuteFormatter));
+            heat.setPrologHeat(leg == 1 ? true : false);
             heat.setTeams(new ArrayList<>());
-            heats.add(heat);
+            addHeats.add(heat);
             heatNumberCounter++;
-            startTime = startTime.plusMinutes(5);
+            startTime = startTime.plusMinutes(MINUTES_BETWEEN_HEATS);
         }
 
         sortTeamsByLeg(leg, teams);
 
         int heatIndex = 0;
         for (Team team : teams) {
-            Heat heat = heats.get(heatIndex);
+            Heat heat = addHeats.get(heatIndex);
             heat.setGroupName(team.getGroupName());
             heat.getTeams().add(team);
-            heatIndex = heatIndex == heats.size() - 1 ? 0 : heatIndex + 1;
+            heatIndex = heatIndex == addHeats.size() - 1 ? 0 : heatIndex + 1;
         }
 
-        unRankedHeats.addAll(heats);
+        heats.addAll(addHeats);
         return startTime;
     }
 
