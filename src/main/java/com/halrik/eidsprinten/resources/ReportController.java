@@ -23,30 +23,42 @@ public class ReportController {
 
     private ReportService reportService;
 
-    public ReportController(ReportService reportService) {
+    private final DateTimeFormatter dateTimeFormatter;
+
+    public ReportController(ReportService reportService, DateTimeFormatter dateTimeFormatter) {
         this.reportService = reportService;
+        this.dateTimeFormatter = dateTimeFormatter;
     }
 
     @GetMapping(value = "/startlist/unranked", produces = "application/pdf")
     public ResponseEntity<InputStreamResource> startListUnranked() throws IOException {
         byte[] pdfBytes = reportService.generateStartListUnrankedPdf();
-
-        String dateTimePattern = "dd-MM-yyyy-HHmm";
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(dateTimePattern);
         String downloadFileName = "startliste-urangert-" + LocalDateTime.now().format(dateTimeFormatter) + ".pdf";
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Type", "application/pdf");
-        headers.add("Content-Disposition", "attachment; filename=" + downloadFileName);
-
         ByteArrayInputStream inputStream = new ByteArrayInputStream(pdfBytes);
         return ResponseEntity
             .ok()
-            .headers(headers)
+            .headers(getHeaders(downloadFileName))
             .contentType(MediaType.APPLICATION_PDF)
             .body(new InputStreamResource(inputStream));
+    }
 
+    @GetMapping(value = "/startlist/ranked/prolog", produces = "application/pdf")
+    public ResponseEntity<InputStreamResource> startListRankedProlog() throws IOException {
+        byte[] pdfBytes = reportService.generateStartListPrologRankedPdf();
+        String downloadFileName = "startliste-rangert-prolog" + LocalDateTime.now().format(dateTimeFormatter) + ".pdf";
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(pdfBytes);
+        return ResponseEntity
+            .ok()
+            .headers(getHeaders(downloadFileName))
+            .contentType(MediaType.APPLICATION_PDF)
+            .body(new InputStreamResource(inputStream));
+    }
 
+    private HttpHeaders getHeaders(String downloadFileName) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Type", "application/pdf");
+        headers.add("Content-Disposition", "attachment; filename=" + downloadFileName);
+        return headers;
     }
 
 }

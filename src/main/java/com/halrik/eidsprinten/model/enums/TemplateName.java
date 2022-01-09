@@ -6,7 +6,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum TemplateName {
-    START_LIST_UNRANKED("startlist-unranked-heats.html");
+    START_LIST_HEATS("startlist-heats.html");
 
     private final String templateName;
 

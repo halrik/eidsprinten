@@ -1,6 +1,6 @@
 package com.halrik.eidsprinten.services;
 
-import static com.halrik.eidsprinten.model.enums.TemplateName.START_LIST_UNRANKED;
+import static com.halrik.eidsprinten.model.enums.TemplateName.START_LIST_HEATS;
 
 import com.halrik.eidsprinten.domain.Heat;
 import java.util.List;
@@ -13,10 +13,11 @@ import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 @Service
 public class TemplateService {
 
-    public String getStartListUnrankedHtml(List<Heat> heatsUnRanked) {
+    public String getStartListHeatsHtml(List<Heat> heats, String startListType) {
         Context context = new Context();
-        context.setVariable("heats", heatsUnRanked);
-        return parseThymeleafTemplate(START_LIST_UNRANKED.getTemplateName(), context);
+        context.setVariable("startListType", startListType);
+        context.setVariable("heats", heats);
+        return parseThymeleafTemplate(START_LIST_HEATS.getTemplateName(), context);
     }
 
     public String parseThymeleafTemplate(String templateName, Context context) {
