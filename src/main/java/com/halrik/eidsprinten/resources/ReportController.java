@@ -40,7 +40,7 @@ public class ReportController {
         @ApiResponse(code = SC_OK, message = "Successfully created PDF")
     })
     public ResponseEntity<InputStreamResource> startListUnranked() throws IOException {
-        byte[] pdfBytes = reportService.generatePdf();
+        byte[] pdfBytes = reportService.generateStartListUnrankedPdf();
 
         String dateTimePattern = "dd-MM-yyyy-HHmm";
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(dateTimePattern);

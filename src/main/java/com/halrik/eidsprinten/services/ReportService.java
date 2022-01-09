@@ -25,7 +25,7 @@ public class ReportService {
 
     }
 
-    public byte[] generatePdf() throws IOException {
+    public byte[] generateStartListUnrankedPdf() throws IOException {
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
             pdfBuilder.withHtmlContent(templateService.getStartListUnrankedHtml(), "")
                 .toStream(outputStream)

@@ -5,6 +5,7 @@ import com.halrik.eidsprinten.domain.Participant;
 import com.halrik.eidsprinten.domain.Team;
 import com.halrik.eidsprinten.excel.ExcelHelper;
 import com.halrik.eidsprinten.services.EidsprintenService;
+import com.halrik.eidsprinten.services.HeatsService;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,9 +28,12 @@ public class EidsprintenController {
     private static final Logger log = LoggerFactory.getLogger(EidsprintenController.class);
 
     private EidsprintenService eidsprintenService;
+    private HeatsService heatsService;
 
-    public EidsprintenController(EidsprintenService eidsprintenService) {
+    public EidsprintenController(EidsprintenService eidsprintenService,
+        HeatsService heatsService) {
         this.eidsprintenService = eidsprintenService;
+        this.heatsService = heatsService;
     }
 
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -79,7 +83,7 @@ public class EidsprintenController {
 
     @GetMapping(value = "/heats/unranked")
     public ResponseEntity<List<Heat>> getHeatsUnRanked() {
-        return new ResponseEntity<>(eidsprintenService.getHeatsUnRanked(), HttpStatus.OK);
+        return new ResponseEntity<>(heatsService.getHeatsUnRanked(), HttpStatus.OK);
     }
 
 }
