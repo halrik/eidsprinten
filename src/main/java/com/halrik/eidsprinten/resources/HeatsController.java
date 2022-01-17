@@ -51,7 +51,7 @@ public class HeatsController {
         return new ResponseEntity<>(heatsService.getHeatsRankedPrologAndSave(), HttpStatus.OK);
     }
 
-    @PostMapping(value = "/heats/{heatNumber}/result")
+    @PostMapping(value = "/heats/ranked/{heatNumber}/result")
     public ResponseEntity updateResult(@PathVariable Integer heatNumber, @RequestParam Integer no1,
         @RequestParam(required = false) Integer no2, @RequestParam(required = false) Integer no3,
         @RequestParam(required = false) Integer no4, @RequestParam(required = false) Integer no5,
@@ -76,6 +76,12 @@ public class HeatsController {
 
         return ResponseEntity.ok(heat);
     }
+
+    @PostMapping(value = "/heats/ranked/randomresults")
+    public ResponseEntity<List<Heat>> registerRandomRankedResults() {
+        return new ResponseEntity<>(heatsService.registerRandomRankedResults(), HttpStatus.OK);
+    }
+
 
     private void addResult(Integer result, Integer teamNumber, Map<Integer, Integer> resultMap) {
         if (teamNumber == null) {

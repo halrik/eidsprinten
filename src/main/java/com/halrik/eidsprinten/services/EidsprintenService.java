@@ -41,6 +41,31 @@ public class EidsprintenService {
         participantList.forEach(participant -> saveParticipant(savedParticipants, participant));
 
         savedParticipants.forEach(savedParticipant -> addToTeam(savedParticipant));
+
+        allocateBibs();
+    }
+
+    private void allocateBibs() {
+        List<Team> teams = teamRepository.findAll();
+
+        Map<Integer, Map<String, List<Team>>> ageGenderClassTeamMap = teams.stream()
+            .collect(Collectors.groupingBy(Team::getAge, Collectors.groupingBy(Team::getGenderClass)));
+
+        AtomicInteger bib = new AtomicInteger(1);
+        ageGenderClassTeamMap.forEach((age, genderTeamMap) ->
+            genderTeamMap.forEach((gender, teamMap) ->
+                teamMap.forEach(team -> {
+                    team.setBib(bib.get());
+                    incrementBib(bib);
+                    teamRepository.save(team);
+                })));
+    }
+
+    private void incrementBib(AtomicInteger bib) {
+        List<Integer> invalidBibs = List.of();
+        while (invalidBibs.contains(bib.incrementAndGet())) {
+            log.info("Skipped bib {}", bib.get());
+        }
     }
 
     public int validateTeams() {
