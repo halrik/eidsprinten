@@ -5,6 +5,7 @@ import com.halrik.eidsprinten.domain.Team;
 import com.halrik.eidsprinten.exception.NotFoundException;
 import com.halrik.eidsprinten.exception.ValidationException;
 import com.halrik.eidsprinten.model.enums.Gender;
+import com.halrik.eidsprinten.model.enums.Group;
 import com.halrik.eidsprinten.repository.HeatRepository;
 import com.halrik.eidsprinten.repository.TeamRepository;
 import java.time.LocalDateTime;
@@ -99,13 +100,12 @@ public class HeatsService {
         return unRankedHeats;
     }
 
-
-    public List<Heat> getHeatsRankedPrologAndSave() {
-        return heatRepository.saveAll(getHeatsRankedProlog());
+    public List<Heat> getHeatsRankedAndSave() {
+        return heatRepository.saveAll(getHeatsRanked());
     }
 
-    public List<Heat> getHeatsRankedProlog() {
-        List<Heat> prologHeats = new ArrayList<>();
+    public List<Heat> getHeatsRanked() {
+        List<Heat> rankedHeats = new ArrayList<>();
 
         List<Team> age11Teams = teamRepository.findByAge(11);
         List<Team> age12Teams = teamRepository.findByAge(12);
@@ -117,53 +117,64 @@ public class HeatsService {
         Integer lastHeatNo = getHeatsUnRanked().size();
 
         // add prolog heats for age 11
-        start = addPrologHeats(start, prologHeatNo(lastHeatNo, prologHeats), prologHeats,
+        start = addPrologHeats(start, nextHeatNo(lastHeatNo, rankedHeats), rankedHeats,
             filterByGender(Gender.BOYS, age11Teams));
-
-        start = addPrologHeats(start, prologHeatNo(lastHeatNo, prologHeats), prologHeats,
+        start = addPrologHeats(start, nextHeatNo(lastHeatNo, rankedHeats), rankedHeats,
             filterByGender(Gender.GIRLS, age11Teams));
 
-        // make room for final heats
-        int numberOfAge11Heats = prologHeats.size();
-        lastHeatNo = lastHeatNo + numberOfAge11Heats;
-        start = start.plusMinutes(numberOfAge11Heats * MINUTES_BETWEEN_HEATS);
+        // add empty final heats for age 11
+        start = addFinalHeats(start, nextHeatNo(lastHeatNo, rankedHeats), rankedHeats,
+            sizeOfPrologHeatsForGroup(Group.BOYS_11, rankedHeats), Group.BOYS_11);
+        start = addFinalHeats(start, nextHeatNo(lastHeatNo, rankedHeats), rankedHeats,
+            sizeOfPrologHeatsForGroup(Group.GIRLS_11, rankedHeats), Group.GIRLS_11);
 
         // add prolog heats for age 12
-        start = addPrologHeats(start, prologHeatNo(lastHeatNo, prologHeats), prologHeats,
+        start = addPrologHeats(start, nextHeatNo(lastHeatNo, rankedHeats), rankedHeats,
             filterByGender(Gender.BOYS, age12Teams));
-
-        start = addPrologHeats(start, prologHeatNo(lastHeatNo, prologHeats), prologHeats,
+        start = addPrologHeats(start, nextHeatNo(lastHeatNo, rankedHeats), rankedHeats,
             filterByGender(Gender.GIRLS, age12Teams));
 
-        // make room for final heats
-        int numberOfAge12Heats = prologHeats.size() - numberOfAge11Heats;
-        lastHeatNo = lastHeatNo + numberOfAge12Heats;
-        start = start.plusMinutes(numberOfAge12Heats * MINUTES_BETWEEN_HEATS);
+        // add empty final heats for age 12
+        start = addFinalHeats(start, nextHeatNo(lastHeatNo, rankedHeats), rankedHeats,
+            sizeOfPrologHeatsForGroup(Group.BOYS_12, rankedHeats), Group.BOYS_12);
+        start = addFinalHeats(start, nextHeatNo(lastHeatNo, rankedHeats), rankedHeats,
+            sizeOfPrologHeatsForGroup(Group.GIRLS_12, rankedHeats), Group.GIRLS_12);
 
         // add prolog heats for age 13
-        start = addPrologHeats(start, prologHeatNo(lastHeatNo, prologHeats), prologHeats,
+        start = addPrologHeats(start, nextHeatNo(lastHeatNo, rankedHeats), rankedHeats,
             filterByGender(Gender.BOYS, age13Teams));
-
-        start = addPrologHeats(start, prologHeatNo(lastHeatNo, prologHeats), prologHeats,
+        start = addPrologHeats(start, nextHeatNo(lastHeatNo, rankedHeats), rankedHeats,
             filterByGender(Gender.GIRLS, age13Teams));
 
-        // make room for final heats
-        int numberOfAge13Heats = prologHeats.size() - numberOfAge11Heats - numberOfAge12Heats;
-        lastHeatNo = lastHeatNo + numberOfAge13Heats;
-        start = start.plusMinutes(numberOfAge13Heats * MINUTES_BETWEEN_HEATS);
+        // add empty final heats for age 13
+        start = addFinalHeats(start, nextHeatNo(lastHeatNo, rankedHeats), rankedHeats,
+            sizeOfPrologHeatsForGroup(Group.BOYS_13, rankedHeats), Group.BOYS_13);
+        start = addFinalHeats(start, nextHeatNo(lastHeatNo, rankedHeats), rankedHeats,
+            sizeOfPrologHeatsForGroup(Group.GIRLS_13, rankedHeats), Group.GIRLS_13);
 
         // add prolog heats for age 14
-        start = addPrologHeats(start, prologHeatNo(lastHeatNo, prologHeats), prologHeats,
+        start = addPrologHeats(start, nextHeatNo(lastHeatNo, rankedHeats), rankedHeats,
             filterByGender(Gender.BOYS, age14Teams));
-
-        addPrologHeats(start, prologHeatNo(lastHeatNo, prologHeats), prologHeats,
+        start = addPrologHeats(start, nextHeatNo(lastHeatNo, rankedHeats), rankedHeats,
             filterByGender(Gender.GIRLS, age14Teams));
 
-        prologHeats.forEach(heat ->
+        // add empty final heats for age 14
+        start = addFinalHeats(start, nextHeatNo(lastHeatNo, rankedHeats), rankedHeats,
+            sizeOfPrologHeatsForGroup(Group.BOYS_14, rankedHeats), Group.BOYS_14);
+        addFinalHeats(start, nextHeatNo(lastHeatNo, rankedHeats), rankedHeats,
+            sizeOfPrologHeatsForGroup(Group.GIRLS_14, rankedHeats), Group.GIRLS_14);
+
+        rankedHeats.forEach(heat ->
             heat.setTeams(heat.getTeams().stream().sorted(Comparator.comparingInt(Team::getBib))
                 .collect(Collectors.toList())));
 
-        return prologHeats;
+        return rankedHeats;
+    }
+
+    private int sizeOfPrologHeatsForGroup(Group group, List<Heat> heats) {
+        return heats.stream()
+            .filter(heat -> heat.isPrologHeat() && heat.getGroupName().equals(group.getValue()))
+            .collect(Collectors.toList()).size();
     }
 
     public Heat registerResult(Integer heatNumber, Map<Integer, Integer> resultNumberMap) {
@@ -191,62 +202,33 @@ public class HeatsService {
     public List<Heat> getHeatsRankedFinals() {
         List<Heat> finalHeats = new ArrayList<>();
 
-        // get all prolog heats
-        // for each group create final heats based on results
+        List<Heat> prologHeats = heatRepository.findAll().stream()
+            .filter(heat -> heat.isRankedHeat() && heat.isPrologHeat())
+            .collect(Collectors.toList());
 
-        List<Team> age11Teams = teamRepository.findByAge(11);
-        List<Team> age12Teams = teamRepository.findByAge(12);
-        List<Team> age13Teams = teamRepository.findByAge(13);
-        List<Team> age14Teams = teamRepository.findByAge(14);
+        List<Heat> prologHeatsAge11Boys = prologHeats.stream()
+            .filter(heat -> heat.getGroupName().equals(Group.BOYS_11.getValue()))
+            .collect(Collectors.toList());
 
-        LocalDateTime start = getStartTime(START_HOUR_RANKED);
+        List<Heat> prologHeatsAge11Girls = prologHeats.stream()
+            .filter(heat -> heat.getGroupName().equals(Group.GIRLS_11.getValue()))
+            .collect(Collectors.toList());
 
-        Integer lastHeatNo = getHeatsUnRanked().size();
-
-        // add prolog heats for age 11
-        start = addPrologHeats(start, prologHeatNo(lastHeatNo, finalHeats), finalHeats,
-            filterByGender(Gender.BOYS, age11Teams));
-
-        start = addPrologHeats(start, prologHeatNo(lastHeatNo, finalHeats), finalHeats,
-            filterByGender(Gender.GIRLS, age11Teams));
-
-        // make room for final heats
-        int numberOfAge11Heats = finalHeats.size();
-        lastHeatNo = lastHeatNo + numberOfAge11Heats;
-        start = start.plusMinutes(numberOfAge11Heats * MINUTES_BETWEEN_HEATS);
-
-        // add prolog heats for age 12
-        start = addPrologHeats(start, prologHeatNo(lastHeatNo, finalHeats), finalHeats,
-            filterByGender(Gender.BOYS, age12Teams));
-
-        start = addPrologHeats(start, prologHeatNo(lastHeatNo, finalHeats), finalHeats,
-            filterByGender(Gender.GIRLS, age12Teams));
-
-        // make room for final heats
-        int numberOfAge12Heats = finalHeats.size() - numberOfAge11Heats;
-        lastHeatNo = lastHeatNo + numberOfAge12Heats;
-        start = start.plusMinutes(numberOfAge12Heats * MINUTES_BETWEEN_HEATS);
-
-        // add prolog heats for age 13
-        start = addPrologHeats(start, prologHeatNo(lastHeatNo, finalHeats), finalHeats,
-            filterByGender(Gender.BOYS, age13Teams));
-
-        start = addPrologHeats(start, prologHeatNo(lastHeatNo, finalHeats), finalHeats,
-            filterByGender(Gender.GIRLS, age13Teams));
-
-        // make room for final heats
-        int numberOfAge13Heats = finalHeats.size() - numberOfAge11Heats - numberOfAge12Heats;
-        lastHeatNo = lastHeatNo + numberOfAge13Heats;
-        start = start.plusMinutes(numberOfAge13Heats * MINUTES_BETWEEN_HEATS);
-
-        // add prolog heats for age 14
-        start = addPrologHeats(start, prologHeatNo(lastHeatNo, finalHeats), finalHeats,
-            filterByGender(Gender.BOYS, age14Teams));
-
-        addPrologHeats(start, prologHeatNo(lastHeatNo, finalHeats), finalHeats,
-            filterByGender(Gender.GIRLS, age14Teams));
+        updateFinalHeats(prologHeatsAge11Boys, prologHeatsAge11Girls);
 
         return finalHeats;
+    }
+
+    private void updateFinalHeats(List<Heat> prologHeatsAge11Boys, List<Heat> prologHeatsAge11Girls) {
+        // TODO update final heats with correct teams based on results in prolog
+
+        Integer firstFinalHeatAge11 = prologHeatsAge11Girls.get(prologHeatsAge11Girls.size() - 1).getHeatNumber() + 1;
+
+        int numberOfHeatsAge11Boys = prologHeatsAge11Boys.size();
+        int numberOfTeamsAge11Boys = prologHeatsAge11Boys.stream().map(Heat::getResult).mapToInt(Map::size).sum();
+
+        List<Heat> finalHeatsAge11Boys = new ArrayList<>();
+
     }
 
     private LocalDateTime getStartTime(int startHourRanked) {
@@ -257,8 +239,8 @@ public class HeatsService {
         return heats.size() + 1;
     }
 
-    private int prologHeatNo(Integer lastHeatNo, List<Heat> prologHeats) {
-        lastHeatNo = lastHeatNo + 1 + prologHeats.size();
+    private int nextHeatNo(Integer lastHeatNo, List<Heat> heats) {
+        lastHeatNo = lastHeatNo + 1 + heats.size();
         return lastHeatNo;
     }
 
@@ -269,11 +251,99 @@ public class HeatsService {
 
     private LocalDateTime addUnrankedHeats(LocalDateTime startTime, int leg, int heatNumber, List<Heat> heats,
         List<Team> teams) {
-        return addHeats(startTime, 1, false, heatNumber, heats, teams);
+        return addHeats(startTime, leg, false, heatNumber, heats, teams);
     }
 
     private LocalDateTime addPrologHeats(LocalDateTime startTime, int heatNumber, List<Heat> heats, List<Team> teams) {
         return addHeats(startTime, 1, true, heatNumber, heats, teams);
+    }
+
+    private LocalDateTime addFinalHeats(LocalDateTime startTime, int heatNumber, List<Heat> heats,
+        int numberOfFinalHeatsForCurrentGroup, Group groupName) {
+        int heatNumberCounter = heatNumber;
+
+        List<Heat> addHeats = new ArrayList<>();
+        while (addHeats.size() < numberOfFinalHeatsForCurrentGroup) {
+            Heat heat = new Heat();
+            heat.setHeatNumber(heatNumberCounter);
+            heat.setHeatName(getFinalHeatName(numberOfFinalHeatsForCurrentGroup, addHeats.size()));
+            heat.setStartTime(startTime.format(hourMinuteFormatter));
+            heat.setGroupName(groupName.getValue());
+            heat.setPrologHeat(false);
+            heat.setRankedHeat(true);
+            heat.setTeams(new ArrayList<>());
+            addHeats.add(heat);
+            heatNumberCounter++;
+            startTime = startTime.plusMinutes(MINUTES_BETWEEN_HEATS);
+        }
+
+        heats.addAll(addHeats);
+        return startTime;
+    }
+
+    private String getFinalHeatName(Integer numberOfFinalHeatsForCurrentGroup, int heatsAdded) {
+        String finalHeatNamePostFix = " - finale";
+
+        switch (numberOfFinalHeatsForCurrentGroup) {
+            case 1:
+                if (heatsAdded == 0) {
+                    return "B " + finalHeatNamePostFix;
+                }
+                break;
+            case 2:
+                if (heatsAdded == 0) {
+                    return "B " + finalHeatNamePostFix;
+                }
+                if (heatsAdded == 1) {
+                    return "A " + finalHeatNamePostFix;
+                }
+                break;
+            case 3:
+                if (heatsAdded == 0) {
+                    return "C " + finalHeatNamePostFix;
+                }
+                if (heatsAdded == 1) {
+                    return "B " + finalHeatNamePostFix;
+                }
+                if (heatsAdded == 2) {
+                    return "A " + finalHeatNamePostFix;
+                }
+                break;
+            case 4:
+                if (heatsAdded == 0) {
+                    return "D " + finalHeatNamePostFix;
+                }
+                if (heatsAdded == 1) {
+                    return "C " + finalHeatNamePostFix;
+                }
+                if (heatsAdded == 2) {
+                    return "B " + finalHeatNamePostFix;
+                }
+                if (heatsAdded == 3) {
+                    return "A " + finalHeatNamePostFix;
+                }
+                break;
+            case 5:
+                if (heatsAdded == 0) {
+                    return "E " + finalHeatNamePostFix;
+                }
+                if (heatsAdded == 1) {
+                    return "D " + finalHeatNamePostFix;
+                }
+                if (heatsAdded == 2) {
+                    return "C " + finalHeatNamePostFix;
+                }
+                if (heatsAdded == 3) {
+                    return "B " + finalHeatNamePostFix;
+                }
+                if (heatsAdded == 4) {
+                    return "A " + finalHeatNamePostFix;
+                }
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + numberOfFinalHeatsForCurrentGroup);
+        }
+        throw new IllegalStateException("Could not decide final heat name!");
     }
 
     private LocalDateTime addHeats(LocalDateTime startTime, int leg, boolean isRankedHeat, int heatNumber,
@@ -288,8 +358,11 @@ public class HeatsService {
         while (addHeats.size() < numberOfHeatsEachRoundForCurrentGroup) {
             Heat heat = new Heat();
             heat.setHeatNumber(heatNumberCounter);
+            if (isRankedHeat) {
+                heat.setHeatName("Innledende");
+            }
             heat.setStartTime(startTime.format(hourMinuteFormatter));
-            heat.setPrologHeat(leg == 1 ? true : false);
+            heat.setPrologHeat(leg == 1);
             heat.setRankedHeat(isRankedHeat);
             heat.setTeams(new ArrayList<>());
             addHeats.add(heat);

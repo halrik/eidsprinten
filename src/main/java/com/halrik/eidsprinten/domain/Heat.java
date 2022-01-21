@@ -13,6 +13,7 @@ public class Heat {
 
     @Id
     private Integer heatNumber;
+    private String heatName;
     private boolean rankedHeat;
     private boolean prologHeat;
     private String groupName;

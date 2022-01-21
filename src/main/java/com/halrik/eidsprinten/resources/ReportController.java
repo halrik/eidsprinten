@@ -33,7 +33,7 @@ public class ReportController {
     @GetMapping(value = "/startlist/unranked", produces = "application/pdf")
     public ResponseEntity<InputStreamResource> startListUnranked() throws IOException {
         byte[] pdfBytes = reportService.generateStartListUnrankedPdf();
-        String downloadFileName = "startliste-urangert-" + LocalDateTime.now().format(dateTimeFormatter) + ".pdf";
+        String downloadFileName = "startliste-urangerte-" + LocalDateTime.now().format(dateTimeFormatter) + ".pdf";
         ByteArrayInputStream inputStream = new ByteArrayInputStream(pdfBytes);
         return ResponseEntity
             .ok()
@@ -42,10 +42,10 @@ public class ReportController {
             .body(new InputStreamResource(inputStream));
     }
 
-    @GetMapping(value = "/startlist/ranked/prolog", produces = "application/pdf")
+    @GetMapping(value = "/startlist/ranked", produces = "application/pdf")
     public ResponseEntity<InputStreamResource> startListRankedProlog() throws IOException {
-        byte[] pdfBytes = reportService.generateStartListRankedPrologPdf();
-        String downloadFileName = "startliste-rangert-prolog" + LocalDateTime.now().format(dateTimeFormatter) + ".pdf";
+        byte[] pdfBytes = reportService.generateStartListRankedPdf();
+        String downloadFileName = "startliste-rangerte-" + LocalDateTime.now().format(dateTimeFormatter) + ".pdf";
         ByteArrayInputStream inputStream = new ByteArrayInputStream(pdfBytes);
         return ResponseEntity
             .ok()

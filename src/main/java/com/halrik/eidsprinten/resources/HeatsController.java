@@ -41,14 +41,19 @@ public class HeatsController {
         return new ResponseEntity<>(heatsService.getHeatsUnRankedAndSave(), HttpStatus.OK);
     }
 
-    @GetMapping(value = "/heats/ranked/prolog")
-    public ResponseEntity<List<Heat>> getHeatsRankedProlog() {
-        return new ResponseEntity<>(heatsService.getHeatsRankedProlog(), HttpStatus.OK);
+    @GetMapping(value = "/heats/ranked/")
+    public ResponseEntity<List<Heat>> getHeatsRanked() {
+        return new ResponseEntity<>(heatsService.getHeatsRanked(), HttpStatus.OK);
     }
 
-    @GetMapping(value = "/heats/ranked/prolog/save")
-    public ResponseEntity<List<Heat>> getHeatsRankedPrologAndSave() {
-        return new ResponseEntity<>(heatsService.getHeatsRankedPrologAndSave(), HttpStatus.OK);
+    @GetMapping(value = "/heats/ranked/save")
+    public ResponseEntity<List<Heat>> getHeatsRankedAndSave() {
+        return new ResponseEntity<>(heatsService.getHeatsRankedAndSave(), HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/heats/ranked/finals")
+    public ResponseEntity<List<Heat>> getHeatsRankedFinals() {
+        return new ResponseEntity<>(heatsService.getHeatsRankedFinals(), HttpStatus.OK);
     }
 
     @PostMapping(value = "/heats/ranked/{heatNumber}/result")

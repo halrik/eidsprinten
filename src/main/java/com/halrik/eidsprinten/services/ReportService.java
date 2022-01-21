@@ -33,7 +33,7 @@ public class ReportService {
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
             List<Heat> heatsUnRanked = heatsService.getHeatsUnRanked();
 
-            pdfBuilder.withHtmlContent(templateService.getStartListHeatsHtml(heatsUnRanked, "Urangert"), "")
+            pdfBuilder.withHtmlContent(templateService.getStartListHeatsHtml(heatsUnRanked, "Urangerte"), "")
                 .toStream(outputStream)
                 .run();
 
@@ -41,11 +41,11 @@ public class ReportService {
         }
     }
 
-    public byte[] generateStartListRankedPrologPdf() throws IOException {
+    public byte[] generateStartListRankedPdf() throws IOException {
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-            List<Heat> heatsUnRanked = heatsService.getHeatsRankedProlog();
+            List<Heat> heatsRanked = heatsService.getHeatsRanked();
 
-            pdfBuilder.withHtmlContent(templateService.getStartListHeatsHtml(heatsUnRanked, "Rangert - Prolog"), "")
+            pdfBuilder.withHtmlContent(templateService.getStartListHeatsHtml(heatsRanked, "Rangerte"), "")
                 .toStream(outputStream)
                 .run();
 

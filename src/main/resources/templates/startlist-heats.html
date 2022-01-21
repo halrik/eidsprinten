@@ -44,7 +44,7 @@
 </head>
 <body>
 <h3>
-  <span th:text="'Eidsprinten - Startliste - ' + ${startListType}"></span>
+  <span th:text="'Eidsprinten 2022 - Startliste - ' + ${startListType}"></span>
 </h3>
 
 <table>
@@ -62,13 +62,14 @@
     <td th:text="${heat.heatNumber}"/>
     <td th:text="${heat.groupName}"/>
     <td th:text="${heat.startTime}"/>
-    <td>
+    <td th:if="${heat.isPrologHeat()}">
       <table class="inline">
         <tr th:each="team, iterStat: ${heat.teams}">
           <td th:class="${iterStat.last}? 'inline last' : 'inline'" th:text="${team.teamName}"/>
         </tr>
       </table>
     </td>
+    <td th:unless="${heat.isPrologHeat()}" th:text="${heat.heatName}"/>
     <td>
       <table class="inline">
         <tr th:each="team, iterStat: ${heat.teams}">
