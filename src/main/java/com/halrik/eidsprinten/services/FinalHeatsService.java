@@ -2,6 +2,7 @@ package com.halrik.eidsprinten.services;
 
 import com.halrik.eidsprinten.domain.Heat;
 import com.halrik.eidsprinten.domain.HeatAdvancement;
+import com.halrik.eidsprinten.domain.Team;
 import com.halrik.eidsprinten.model.enums.FinalHeat;
 import com.halrik.eidsprinten.model.enums.Group;
 import com.halrik.eidsprinten.repository.HeatRepository;
@@ -142,7 +143,13 @@ public class FinalHeatsService {
             Heat toHeat = finalHeats.stream()
                 .filter(heat -> heat.getHeatNumber().equals(heatAdvancement.getToHeatNumber()))
                 .findFirst().orElseThrow(() -> new IllegalStateException("To heat is not present!"));
-            toHeat.getTeams().add(fromHeat.getResult().get(heatAdvancement.getResult()));
+
+            Team teamWithResultInProlog = fromHeat.getResult().get(heatAdvancement.getResult());
+
+            List<Team> teams = toHeat.getTeams();
+            if (teams.stream().noneMatch(team -> team.getId().equals(teamWithResultInProlog.getId()))) {
+                teams.add(teamWithResultInProlog);
+            }
         });
 
         return finalHeats;
