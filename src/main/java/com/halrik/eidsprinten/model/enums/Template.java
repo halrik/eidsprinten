@@ -7,6 +7,7 @@ import lombok.Getter;
 @Getter
 public enum Template {
     START_LIST_HEATS("startlist-heats.html"),
+    START_LIST_FINALS("startlist-finals.html"),
     ADVANCEMENT_SETUP("advancement-setup.html");
 
     private final String templateName;

@@ -66,7 +66,7 @@ public class ReportService {
                 .filter(heat -> heat.getGroupName().equals(group.getValue())).collect(Collectors.toList());
             heatsRankedFinals.sort(Comparator.comparingInt(Heat::getHeatNumber));
             pdfBuilder.withHtmlContent(
-                    templateService.getStartListHeatsHtml(heatsRankedFinals, "Finaler " + group.getValue()), "")
+                    templateService.getStartListFinalsHtml(heatsRankedFinals, "Finaler - " + group.getValue()), "")
                 .toStream(outputStream)
                 .run();
 

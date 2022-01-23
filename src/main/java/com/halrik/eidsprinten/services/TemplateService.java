@@ -1,6 +1,7 @@
 package com.halrik.eidsprinten.services;
 
 import static com.halrik.eidsprinten.model.enums.Template.ADVANCEMENT_SETUP;
+import static com.halrik.eidsprinten.model.enums.Template.START_LIST_FINALS;
 import static com.halrik.eidsprinten.model.enums.Template.START_LIST_HEATS;
 
 import com.halrik.eidsprinten.domain.Heat;
@@ -22,6 +23,13 @@ public class TemplateService {
         context.setVariable("startListType", startListType);
         context.setVariable("heats", heats);
         return parseThymeleafTemplate(START_LIST_HEATS.getTemplateName(), context);
+    }
+
+    public String getStartListFinalsHtml(List<Heat> heats, String startListType) {
+        Context context = new Context();
+        context.setVariable("startListType", startListType);
+        context.setVariable("heats", heats);
+        return parseThymeleafTemplate(START_LIST_FINALS.getTemplateName(), context);
     }
 
     public String getAdvancementsSetupHtml(List<HeatAdvancement> advancements) {
