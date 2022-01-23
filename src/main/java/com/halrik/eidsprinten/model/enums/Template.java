@@ -5,8 +5,9 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public enum TemplateName {
-    START_LIST_HEATS("startlist-heats.html");
+public enum Template {
+    START_LIST_HEATS("startlist-heats.html"),
+    ADVANCEMENT_SETUP("advancement-setup.html");
 
     private final String templateName;
 

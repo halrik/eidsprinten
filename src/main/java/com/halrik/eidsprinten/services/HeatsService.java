@@ -4,6 +4,7 @@ import com.halrik.eidsprinten.domain.Heat;
 import com.halrik.eidsprinten.domain.Team;
 import com.halrik.eidsprinten.exception.NotFoundException;
 import com.halrik.eidsprinten.exception.ValidationException;
+import com.halrik.eidsprinten.model.enums.FinalHeat;
 import com.halrik.eidsprinten.model.enums.Gender;
 import com.halrik.eidsprinten.model.enums.Group;
 import com.halrik.eidsprinten.repository.HeatRepository;
@@ -189,46 +190,14 @@ public class HeatsService {
     private Map<Integer, Team> convertToResultTeamMap(Map<Integer, Integer> resultNumberMap, List<Team> teams) {
         Map<Integer, Team> resultTeamMap = new HashMap<>();
 
-        resultNumberMap.forEach((result, teamNumber) -> {
-            Team team = teams.stream().filter(t -> t.getId().equals(teamNumber))
+        resultNumberMap.forEach((result, bib) -> {
+            Team team = teams.stream().filter(t -> t.getBib().equals(bib))
                 .findFirst()
-                .orElseThrow(() -> new ValidationException("Could not find team " + teamNumber + " in heat!"));
+                .orElseThrow(() -> new ValidationException("Could not find team " + bib + " in heat!"));
             resultTeamMap.put(result, team);
         });
 
         return resultTeamMap;
-    }
-
-    public List<Heat> getHeatsRankedFinals() {
-        List<Heat> finalHeats = new ArrayList<>();
-
-        List<Heat> prologHeats = heatRepository.findAll().stream()
-            .filter(heat -> heat.isRankedHeat() && heat.isPrologHeat())
-            .collect(Collectors.toList());
-
-        List<Heat> prologHeatsAge11Boys = prologHeats.stream()
-            .filter(heat -> heat.getGroupName().equals(Group.BOYS_11.getValue()))
-            .collect(Collectors.toList());
-
-        List<Heat> prologHeatsAge11Girls = prologHeats.stream()
-            .filter(heat -> heat.getGroupName().equals(Group.GIRLS_11.getValue()))
-            .collect(Collectors.toList());
-
-        updateFinalHeats(prologHeatsAge11Boys, prologHeatsAge11Girls);
-
-        return finalHeats;
-    }
-
-    private void updateFinalHeats(List<Heat> prologHeatsAge11Boys, List<Heat> prologHeatsAge11Girls) {
-        // TODO update final heats with correct teams based on results in prolog
-
-        Integer firstFinalHeatAge11 = prologHeatsAge11Girls.get(prologHeatsAge11Girls.size() - 1).getHeatNumber() + 1;
-
-        int numberOfHeatsAge11Boys = prologHeatsAge11Boys.size();
-        int numberOfTeamsAge11Boys = prologHeatsAge11Boys.stream().map(Heat::getResult).mapToInt(Map::size).sum();
-
-        List<Heat> finalHeatsAge11Boys = new ArrayList<>();
-
     }
 
     private LocalDateTime getStartTime(int startHourRanked) {
@@ -282,62 +251,60 @@ public class HeatsService {
     }
 
     private String getFinalHeatName(Integer numberOfFinalHeatsForCurrentGroup, int heatsAdded) {
-        String finalHeatNamePostFix = " - finale";
-
         switch (numberOfFinalHeatsForCurrentGroup) {
             case 1:
                 if (heatsAdded == 0) {
-                    return "B " + finalHeatNamePostFix;
+                    return FinalHeat.A_FINAL_HEAT.getValue();
                 }
                 break;
             case 2:
                 if (heatsAdded == 0) {
-                    return "B " + finalHeatNamePostFix;
+                    return FinalHeat.B_FINAL_HEAT.getValue();
                 }
                 if (heatsAdded == 1) {
-                    return "A " + finalHeatNamePostFix;
+                    return FinalHeat.A_FINAL_HEAT.getValue();
                 }
                 break;
             case 3:
                 if (heatsAdded == 0) {
-                    return "C " + finalHeatNamePostFix;
+                    return FinalHeat.C_FINAL_HEAT.getValue();
                 }
                 if (heatsAdded == 1) {
-                    return "B " + finalHeatNamePostFix;
+                    return FinalHeat.B_FINAL_HEAT.getValue();
                 }
                 if (heatsAdded == 2) {
-                    return "A " + finalHeatNamePostFix;
+                    return FinalHeat.A_FINAL_HEAT.getValue();
                 }
                 break;
             case 4:
                 if (heatsAdded == 0) {
-                    return "D " + finalHeatNamePostFix;
+                    return FinalHeat.D_FINAL_HEAT.getValue();
                 }
                 if (heatsAdded == 1) {
-                    return "C " + finalHeatNamePostFix;
+                    return FinalHeat.C_FINAL_HEAT.getValue();
                 }
                 if (heatsAdded == 2) {
-                    return "B " + finalHeatNamePostFix;
+                    return FinalHeat.B_FINAL_HEAT.getValue();
                 }
                 if (heatsAdded == 3) {
-                    return "A " + finalHeatNamePostFix;
+                    return FinalHeat.A_FINAL_HEAT.getValue();
                 }
                 break;
             case 5:
                 if (heatsAdded == 0) {
-                    return "E " + finalHeatNamePostFix;
+                    return FinalHeat.E_FINAL_HEAT.getValue();
                 }
                 if (heatsAdded == 1) {
-                    return "D " + finalHeatNamePostFix;
+                    return FinalHeat.D_FINAL_HEAT.getValue();
                 }
                 if (heatsAdded == 2) {
-                    return "C " + finalHeatNamePostFix;
+                    return FinalHeat.C_FINAL_HEAT.getValue();
                 }
                 if (heatsAdded == 3) {
-                    return "B " + finalHeatNamePostFix;
+                    return FinalHeat.B_FINAL_HEAT.getValue();
                 }
                 if (heatsAdded == 4) {
-                    return "A " + finalHeatNamePostFix;
+                    return FinalHeat.A_FINAL_HEAT.getValue();
                 }
                 break;
             default:
@@ -401,25 +368,23 @@ public class HeatsService {
         }
     }
 
-    public List<Heat> registerRandomRankedResults() {
+    public List<Heat> registerRandomRankedResults(boolean isPrologHeat) {
         List<Heat> savedHeats = new ArrayList<>();
 
-        List<Heat> heats = heatRepository.findAll();
+        List<Heat> heats = heatRepository.findByRankedHeatAndPrologHeat(true, isPrologHeat);
 
         heats.forEach(heat -> {
-            if (heat.isPrologHeat() && heat.isRankedHeat()) {
-                List<Team> teams = heat.getTeams();
+            List<Team> teams = heat.getTeams();
 
-                List<Integer> teamNumbers = teams.stream().map(Team::getId).collect(Collectors.toList());
-                Collections.shuffle(teamNumbers);
+            List<Integer> bibs = teams.stream().map(Team::getBib).collect(Collectors.toList());
+            Collections.shuffle(bibs);
 
-                Map<Integer, Integer> resultMap = new HashMap<>();
-                teamNumbers.forEach(teamNumber -> resultMap.put(resultMap.size() + 1, teamNumber));
+            Map<Integer, Integer> resultMap = new HashMap<>();
+            bibs.forEach(bib -> resultMap.put(resultMap.size() + 1, bib));
 
-                heat.setResult(convertToResultTeamMap(resultMap, teams));
+            heat.setResult(convertToResultTeamMap(resultMap, teams));
 
-                savedHeats.add(heatRepository.save(heat));
-            }
+            savedHeats.add(heatRepository.save(heat));
         });
 
         return savedHeats;

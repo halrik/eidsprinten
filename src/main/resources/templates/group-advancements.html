@@ -1,0 +1,31 @@
+<h3>
+  <span th:text="'Eidsprinten 2022 - Avansement - Rangerte - ' + ${groupAdvancements[0].groupName}"></span>
+</h3>
+
+<table>
+  <tbody>
+  <tr>
+    <th colspan="3">Fra løp 1</th>
+    <th></th>
+    <th colspan="3">Til løp 2</th>
+  </tr>
+  <tr>
+    <th>Heat nr.</th>
+    <th>Klasse</th>
+    <th>Løp</th>
+    <th>Resultat</th>
+    <th>Heat nr.</th>
+    <th>Klasse</th>
+    <th>Løp</th>
+  </tr>
+  <tr th:each="advancement: ${groupAdvancements}">
+    <td th:text="${advancement.fromHeatNumber}"/>
+    <td th:text="${advancement.groupName}"/>
+    <td th:text="${advancement.fromHeatName}"/>
+    <td th:text="${advancement.result}"/>
+    <td th:text="${advancement.toHeatNumber}"/>
+    <td th:text="${advancement.groupName}"/>
+    <td th:text="${advancement.toHeatName}"/>
+  </tr>
+  </tbody>
+</table>
