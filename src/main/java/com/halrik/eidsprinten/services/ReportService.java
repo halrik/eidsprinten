@@ -2,6 +2,7 @@ package com.halrik.eidsprinten.services;
 
 import com.halrik.eidsprinten.domain.Heat;
 import com.halrik.eidsprinten.domain.HeatAdvancement;
+import com.halrik.eidsprinten.domain.Result;
 import com.halrik.eidsprinten.model.enums.Group;
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
 import com.openhtmltopdf.svgsupport.BatikSVGDrawer;
@@ -67,6 +68,18 @@ public class ReportService {
             heatsRankedFinals.sort(Comparator.comparingInt(Heat::getHeatNumber));
             pdfBuilder.withHtmlContent(
                     templateService.getStartListFinalsHtml(heatsRankedFinals, "Finaler - " + group.getValue()), "")
+                .toStream(outputStream)
+                .run();
+
+            return outputStream.toByteArray();
+        }
+    }
+
+    public byte[] generateResultListPdf(Group group) throws IOException {
+        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+            List<Result> resultList = finalHeatsService.getHeatsRankedResults(group);
+            pdfBuilder.withHtmlContent(
+                    templateService.getResultListHtml(resultList, group.getValue()), "")
                 .toStream(outputStream)
                 .run();
 

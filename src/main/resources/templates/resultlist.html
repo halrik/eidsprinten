@@ -1,0 +1,52 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <style>
+    table {
+      width: 100%;
+      font-size: 12px;
+    }
+
+    table, th, td {
+      border: 2px solid black;
+      border-collapse: collapse;
+      padding: 2px;
+    }
+
+    h3 {
+      color: green;
+      text-align: left;
+    }
+
+    @page {
+      size: landscape;
+    }
+    body {
+      writing-mode: tb-rl;
+    }
+  </style>
+</head>
+<body>
+<h3>
+  <span th:text="'Eidsprinten 2022 - Resultatliste - ' + ${groupName}"></span>
+</h3>
+
+<table>
+  <tbody>
+  <tr>
+    <th style="text-align: center">Resultat</th>
+    <th>Stafettlag</th>
+    <th>Navn 1</th>
+    <th>Navn 2</th>
+    <th style="text-align: center">Startnr</th>
+  </tr>
+  <tr th:each="resultItem: ${resultList}">
+    <td style="text-align: center" th:text="${resultItem.result}"/>
+    <td th:text="${resultItem.team.getTeamName()}"/>
+    <td th:text="${resultItem.team.getParticipantLeg1Name()}"/>
+    <td th:text="${resultItem.team.getParticipantLeg2Name()}"/>
+    <td  style="text-align: center" th:text="${resultItem.team.getBib()}"/>
+  </tr>
+  </tbody>
+</table>
+</body>
+</html>

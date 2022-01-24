@@ -2,6 +2,7 @@ package com.halrik.eidsprinten.services;
 
 import com.halrik.eidsprinten.domain.Heat;
 import com.halrik.eidsprinten.domain.HeatAdvancement;
+import com.halrik.eidsprinten.domain.Result;
 import com.halrik.eidsprinten.domain.Team;
 import com.halrik.eidsprinten.model.enums.FinalHeat;
 import com.halrik.eidsprinten.model.enums.Group;
@@ -130,6 +131,20 @@ public class FinalHeatsService {
         return finalHeats;
     }
 
+    public List<Result> getHeatsRankedResults(Group group) {
+        List<Result> resultList = new ArrayList<>();
+        List<Heat> finalHeats = heatRepository.findByGroupNameAndPrologHeat(group.getValue(), false);
+
+        AtomicInteger result = new AtomicInteger(1);
+        finalHeats.forEach(heat -> heat.getResult()
+            .forEach((resultInHeat, team) -> {
+                resultList.add(new Result(result.get(), team));
+                result.getAndIncrement();
+            }));
+
+        return resultList;
+    }
+
 
     private List<Heat> updateFinalHeats(Group ageGroup, List<HeatAdvancement> advancementSetup) {
         List<Heat> prologHeats = heatRepository.findByGroupNameAndPrologHeat(ageGroup.getValue(), true);
@@ -155,7 +170,7 @@ public class FinalHeatsService {
         return finalHeats;
     }
 
-    public List<HeatAdvancement> filterAdvancementSetup(List<HeatAdvancement> advancementSetup, Group group) {
+    private List<HeatAdvancement> filterAdvancementSetup(List<HeatAdvancement> advancementSetup, Group group) {
         return advancementSetup.stream()
             .filter(heatAdvancement -> group.getValue().equals(heatAdvancement.getGroupName()))
             .collect(Collectors.toList());

@@ -65,6 +65,19 @@ public class ReportController {
             .body(new InputStreamResource(inputStream));
     }
 
+    @GetMapping(value = "/startlist/ranked/results/", produces = "application/pdf")
+    public ResponseEntity<InputStreamResource> resultList(@RequestParam Group group) throws IOException {
+        byte[] pdfBytes = reportService.generateResultListPdf(group);
+        String downloadFileName =
+            "resultatliste-rangerte-" + group + "-" + LocalDateTime.now().format(dateTimeFormatter) + ".pdf";
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(pdfBytes);
+        return ResponseEntity
+            .ok()
+            .headers(getHeaders(downloadFileName))
+            .contentType(MediaType.APPLICATION_PDF)
+            .body(new InputStreamResource(inputStream));
+    }
+
     @GetMapping(value = "/advancement-setup", produces = "application/pdf")
     public ResponseEntity<InputStreamResource> advancementSetup() throws IOException {
         byte[] pdfBytes = reportService.generateAdvancementSetupPdf();

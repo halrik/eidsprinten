@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/teams")
+@RequestMapping("/api/heats")
 public class HeatsController {
 
     private HeatsService heatsService;
@@ -24,37 +24,37 @@ public class HeatsController {
         this.finalHeatsService = finalHeatsService;
     }
 
-    @GetMapping(value = "/heats/unranked")
+    @GetMapping(value = "/unranked")
     public ResponseEntity<List<Heat>> getHeatsUnRanked() {
         return new ResponseEntity<>(heatsService.getHeatsUnRanked(), HttpStatus.OK);
     }
 
-    @GetMapping(value = "/heats/unranked/save")
+    @GetMapping(value = "/unranked/save")
     public ResponseEntity<List<Heat>> getHeatsUnRankedAndSave() {
         return new ResponseEntity<>(heatsService.getHeatsUnRankedAndSave(), HttpStatus.OK);
     }
 
-    @GetMapping(value = "/heats/ranked/")
+    @GetMapping(value = "/ranked/")
     public ResponseEntity<List<Heat>> getHeatsRanked() {
         return new ResponseEntity<>(heatsService.getHeatsRanked(), HttpStatus.OK);
     }
 
-    @GetMapping(value = "/heats/ranked/save")
+    @GetMapping(value = "/ranked/save")
     public ResponseEntity<List<Heat>> getHeatsRankedAndSave() {
         return new ResponseEntity<>(heatsService.getHeatsRankedAndSave(), HttpStatus.OK);
     }
 
-    @GetMapping(value = "/heats/ranked/advancement")
+    @GetMapping(value = "/ranked/advancement")
     public ResponseEntity<List<HeatAdvancement>> getHeatsRankedAdvancement() {
         return new ResponseEntity<>(finalHeatsService.getAdvancementSetup(), HttpStatus.OK);
     }
 
-    @GetMapping(value = "/heats/ranked/finals")
+    @GetMapping(value = "/ranked/finals")
     public ResponseEntity<List<Heat>> getHeatsRankedFinals() {
         return new ResponseEntity<>(finalHeatsService.getHeatsRankedFinals(), HttpStatus.OK);
     }
 
-    @GetMapping(value = "/heats/ranked/finals/save")
+    @GetMapping(value = "/ranked/finals/save")
     public ResponseEntity<List<Heat>> getHeatsRankedFinalsAndSave() {
         return new ResponseEntity<>(finalHeatsService.getHeatsRankedFinalsAndSave(), HttpStatus.OK);
     }

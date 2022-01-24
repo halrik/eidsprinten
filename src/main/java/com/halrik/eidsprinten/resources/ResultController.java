@@ -1,7 +1,10 @@
 package com.halrik.eidsprinten.resources;
 
 import com.halrik.eidsprinten.domain.Heat;
+import com.halrik.eidsprinten.domain.Result;
 import com.halrik.eidsprinten.exception.ValidationException;
+import com.halrik.eidsprinten.model.enums.Group;
+import com.halrik.eidsprinten.services.FinalHeatsService;
 import com.halrik.eidsprinten.services.HeatsService;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -10,6 +13,7 @@ import java.util.Map;
 import java.util.Set;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,16 +21,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/teams")
+@RequestMapping("/api")
 public class ResultController {
 
     private HeatsService heatsService;
+    private FinalHeatsService finalHeatsService;
 
-    public ResultController(HeatsService heatsService) {
+    public ResultController(HeatsService heatsService, FinalHeatsService finalHeatsService) {
         this.heatsService = heatsService;
+        this.finalHeatsService = finalHeatsService;
     }
 
-    @PostMapping(value = "/heats/ranked/{heatNumber}/result")
+    @PostMapping(value = "/ranked/{heatNumber}/result")
     public ResponseEntity updateResult(@PathVariable Integer heatNumber, @RequestParam Integer no1,
         @RequestParam(required = false) Integer no2, @RequestParam(required = false) Integer no3,
         @RequestParam(required = false) Integer no4, @RequestParam(required = false) Integer no5,
@@ -52,14 +58,19 @@ public class ResultController {
         return ResponseEntity.ok(heat);
     }
 
-    @PostMapping(value = "/heats/ranked/randomresults")
+    @PostMapping(value = "/ranked/randomresults")
     public ResponseEntity<List<Heat>> registerRandomRankedResults() {
         return new ResponseEntity<>(heatsService.registerRandomRankedResults(true), HttpStatus.OK);
     }
 
-    @PostMapping(value = "/heats/ranked/finals/randomresults")
+    @PostMapping(value = "/ranked/finals/randomresults")
     public ResponseEntity<List<Heat>> registerRandomRankedFinalsResults() {
         return new ResponseEntity<>(heatsService.registerRandomRankedResults(false), HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/ranked/result")
+    public ResponseEntity<List<Result>> getHeatsRankedResult(@RequestParam Group group) {
+        return new ResponseEntity<>(finalHeatsService.getHeatsRankedResults(group), HttpStatus.OK);
     }
 
     private void addResult(Integer result, Integer teamNumber, Map<Integer, Integer> resultMap) {
