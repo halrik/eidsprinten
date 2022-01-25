@@ -3,7 +3,7 @@
   <style>
     table {
       width: 100%;
-      font-size: 10px;
+      font-size: 12px;
     }
 
     table, th, td {
@@ -40,6 +40,13 @@
       color: green;
       text-align: left;
     }
+
+    @page {
+      size: landscape;
+    }
+    body {
+      writing-mode: tb-rl;
+    }
   </style>
 </head>
 <body>
@@ -62,14 +69,14 @@
     <td th:text="${heat.heatNumber}"/>
     <td th:text="${heat.groupName}"/>
     <td th:text="${heat.startTime}"/>
-    <td th:if="${heat.isPrologHeat()}">
+    <td th:if="${!heat.isRankedHeat() || heat.isPrologHeat()}">
       <table class="inline">
         <tr th:each="team, iterStat: ${heat.teams}">
           <td th:class="${iterStat.last}? 'inline last' : 'inline'" th:text="${team.teamName}"/>
         </tr>
       </table>
     </td>
-    <td th:unless="${heat.isPrologHeat()}" th:text="${heat.heatName}"/>
+    <td th:unless="${!heat.isRankedHeat() || heat.isPrologHeat()}" th:text="${heat.heatName}"/>
     <td>
       <table class="inline">
         <tr th:each="team, iterStat: ${heat.teams}">
