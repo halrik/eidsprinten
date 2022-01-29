@@ -12,6 +12,10 @@
       padding: 2px;
     }
 
+    td {
+      text-align: center;
+    }
+
     tr {
       page-break-inside: avoid;
       page-break-after: auto;
@@ -24,27 +28,27 @@
   </style>
 </head>
 <body>
-<div th:with="groupAdvancements=${advancementsBoys11}" th:insert="group-advancements.html "></div>
+<div th:with="showPrefix=true, groupAdvancements=${advancementsBoys11}" th:insert="group-advancements.html "></div>
 
 <div style="page-break-before:always"/>
-<div th:with="groupAdvancements=${advancementsGirls11}" th:insert="group-advancements.html "></div>
+<div th:with="showPrefix=true, groupAdvancements=${advancementsGirls11}" th:insert="group-advancements.html "></div>
 
 <div style="page-break-before:always"/>
-<div th:with="groupAdvancements=${advancementsBoys12}" th:insert="group-advancements.html "></div>
+<div th:with="showPrefix=true, groupAdvancements=${advancementsBoys12}" th:insert="group-advancements.html "></div>
 
 <div style="page-break-before:always"/>
-<div th:with="groupAdvancements=${advancementsGirls12}" th:insert="group-advancements.html "></div>
+<div th:with="showPrefix=true, groupAdvancements=${advancementsGirls12}" th:insert="group-advancements.html "></div>
 
 <div style="page-break-before:always"/>
-<div th:with="groupAdvancements=${advancementsBoys13}" th:insert="group-advancements.html "></div>
+<div th:with="showPrefix=true, groupAdvancements=${advancementsBoys13}" th:insert="group-advancements.html "></div>
 
 <div style="page-break-before:always"/>
-<div th:with="groupAdvancements=${advancementsGirls13}" th:insert="group-advancements.html "></div>
+<div th:with="showPrefix=true, groupAdvancements=${advancementsGirls13}" th:insert="group-advancements.html "></div>
 
 <div style="page-break-before:always"/>
-<div th:with="groupAdvancements=${advancementsBoys14}" th:insert="group-advancements.html "></div>
+<div th:with="showPrefix=true, groupAdvancements=${advancementsBoys14}" th:insert="group-advancements.html "></div>
 
 <div style="page-break-before:always"/>
-<div th:with="groupAdvancements=${advancementsGirls14}" th:insert="group-advancements.html "></div>
+<div th:with="showPrefix=true, groupAdvancements=${advancementsGirls14}" th:insert="group-advancements.html "></div>
 </body>
 </html>

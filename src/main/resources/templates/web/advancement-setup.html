@@ -1,0 +1,93 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <style>
+    html * {
+      font-family: "Open Sans", Arial, ArialMT, sans-serif;
+    }
+
+    .header {
+      width: 100%;
+      height: 200px;
+      float: left;
+      margin: auto;
+    }
+
+    .header img {
+      float: left;
+      width: 150px;
+      height: 150px;
+    }
+
+    .header h1 {
+      color: green;
+      position: relative;
+      top: 18px;
+      left: 10px;
+      font-size: 45px;
+    }
+
+    table {
+      width: 90%;
+      font-size: 20px;
+      margin: 20px;
+      margin-bottom: 50px;
+    }
+
+    table, th, td {
+      border: 2px solid black;
+      border-collapse: collapse;
+      padding: 2px;
+    }
+
+    td {
+      text-align: center;
+    }
+
+    tr {
+      page-break-inside: avoid;
+      page-break-after: auto;
+    }
+
+    h3 {
+      color: green;
+      font-size: 2vw;
+      text-align: left;
+      margin: 20px;
+    }
+
+    p {
+      font-size: 16px;
+      margin: 20px;
+    }
+  </style>
+</head>
+<body>
+<div th:insert="web/header.html"></div>
+
+<p><a href="/eidsprinten">Tilbake til forsiden</a></p>
+
+<div th:if="${advancementsBoys11}" th:with="groupAdvancements=${advancementsBoys11}"
+     th:insert="group-advancements.html"></div>
+
+<div th:if="${advancementsGirls11}" th:with="groupAdvancements=${advancementsGirls11}"
+     th:insert="group-advancements.html"></div>
+
+<div th:if="${advancementsBoys12}" th:with="groupAdvancements=${advancementsBoys12}"
+     th:insert="group-advancements.html"></div>
+
+<div th:if="${advancementsGirls12}" th:with="groupAdvancements=${advancementsGirls12}"
+     th:insert="group-advancements.html"></div>
+
+<div th:if="${advancementsBoys13}" th:with="groupAdvancements=${advancementsBoys13}"
+     th:insert="group-advancements.html"></div>
+
+<div th:if="${advancementsGirls13}" th:with="groupAdvancements=${advancementsGirls13}"
+     th:insert="group-advancements.html"></div>
+
+<div th:if="${advancementsBoys14}" th:with="groupAdvancements=${advancementsBoys14}"
+     th:insert="group-advancements.html"></div>
+
+<div th:if="${advancementsGirls14}" th:with="groupAdvancements=${advancementsGirls14}"
+     th:insert="group-advancements.html"></div>
+</body>
+</html>

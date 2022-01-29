@@ -1,5 +1,10 @@
 <h3>
-  <span th:text="'Eidsprinten 2022 - Avansement - Rangerte - ' + ${groupAdvancements[0].groupName}"></span>
+  <div th:if="${showPrefix}">
+    <span th:text="'Eidsprinten 2022 - Avansement - Rangerte - ' + ${groupAdvancements[0].groupName}"></span>
+  </div>
+  <div th:unless="${showPrefix}">
+    <span th:text="'Avansement - Rangerte - ' + ${groupAdvancements[0].groupName}"></span>
+  </div>
 </h3>
 
 <table>

@@ -4,13 +4,13 @@ import static com.halrik.eidsprinten.model.enums.Template.ADVANCEMENT_SETUP;
 import static com.halrik.eidsprinten.model.enums.Template.RESULT_LIST;
 import static com.halrik.eidsprinten.model.enums.Template.START_LIST_FINALS;
 import static com.halrik.eidsprinten.model.enums.Template.START_LIST_HEATS;
+import static com.halrik.eidsprinten.utils.HeatsUtil.getAdvancementsForGroup;
 
 import com.halrik.eidsprinten.domain.Heat;
 import com.halrik.eidsprinten.domain.HeatAdvancement;
 import com.halrik.eidsprinten.domain.Result;
 import com.halrik.eidsprinten.model.enums.Group;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -52,12 +52,6 @@ public class TemplateService {
         context.setVariable("advancementsBoys14", getAdvancementsForGroup(advancements, Group.BOYS_14));
         context.setVariable("advancementsGirls14", getAdvancementsForGroup(advancements, Group.GIRLS_14));
         return parseThymeleafTemplate(ADVANCEMENT_SETUP.getTemplateName(), context);
-    }
-
-    private List<HeatAdvancement> getAdvancementsForGroup(List<HeatAdvancement> advancements, Group group) {
-        return advancements.stream()
-            .filter(heatAdvancement -> heatAdvancement.getGroupName().equals(group.getValue()))
-            .collect(Collectors.toList());
     }
 
     public String parseThymeleafTemplate(String templateName, Context context) {
