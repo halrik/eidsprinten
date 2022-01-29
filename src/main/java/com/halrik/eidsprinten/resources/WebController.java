@@ -2,9 +2,11 @@ package com.halrik.eidsprinten.resources;
 
 import static com.halrik.eidsprinten.utils.HeatsUtil.getAdvancementsForGroup;
 
+import com.halrik.eidsprinten.domain.Heat;
 import com.halrik.eidsprinten.domain.HeatAdvancement;
 import com.halrik.eidsprinten.model.enums.Group;
 import com.halrik.eidsprinten.services.FinalHeatsService;
+import com.halrik.eidsprinten.services.HeatsService;
 import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,15 +16,29 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class WebController {
 
+    private HeatsService heatsService;
     private FinalHeatsService finalHeatsService;
 
-    public WebController(FinalHeatsService finalHeatsService) {
+    public WebController(HeatsService heatsService, FinalHeatsService finalHeatsService) {
+        this.heatsService = heatsService;
         this.finalHeatsService = finalHeatsService;
     }
 
     @GetMapping("/")
     public String index() {
         return "web/index.html";
+    }
+
+    @GetMapping("/startliste-urangerte")
+    public String startListUnranked(Model model) {
+        List<Heat> heatsUnRanked = heatsService.getHeatsUnRanked();
+        model.addAttribute("heats", heatsUnRanked);
+        return "web/startlist-unranked.html";
+    }
+
+    @GetMapping("/avansement-meny")
+    public String advancementSetupMenu() {
+        return "web/menu-advancement-setup.html";
     }
 
     @GetMapping("/avansement")

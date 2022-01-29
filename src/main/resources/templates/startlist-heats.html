@@ -40,17 +40,20 @@
       color: green;
       text-align: left;
     }
-
+  </style>
+  <style type="text/css" media="print">
     @page {
       size: landscape;
     }
+
     body {
       writing-mode: tb-rl;
     }
   </style>
 </head>
 <body>
-<h3>
+
+<h3 th:if="${!hideTitle}">
   <span th:text="'Eidsprinten 2022 - Startliste - ' + ${startListType}"></span>
 </h3>
 
@@ -60,15 +63,15 @@
     <th>Heat</th>
     <th>Klasse</th>
     <th style="width:5%;">Start</th>
-    <th style="width:25%;">Stafettlag</th>
+    <th style="width:25%; text-align: left;">Stafettlag</th>
     <th>Startnr</th>
-    <th style="width:25%;">Etappe 1</th>
-    <th style="width:25%;">Etappe 2</th>
+    <th style="width:25%; text-align: left;">Etappe 1</th>
+    <th style="width:25%; text-align: left;">Etappe 2</th>
   </tr>
   <tr th:each="heat: ${heats}">
-    <td th:text="${heat.heatNumber}"/>
-    <td th:text="${heat.groupName}"/>
-    <td th:text="${heat.startTime}"/>
+    <td style="text-align: center;" th:text="${heat.heatNumber}"/>
+    <td style="text-align: center;" th:text="${heat.groupName}"/>
+    <td style="text-align: center;" th:text="${heat.startTime}"/>
     <td th:if="${!heat.isRankedHeat() || heat.isPrologHeat()}">
       <table class="inline">
         <tr th:each="team, iterStat: ${heat.teams}">
@@ -80,7 +83,7 @@
     <td>
       <table class="inline">
         <tr th:each="team, iterStat: ${heat.teams}">
-          <td th:class="${iterStat.last}? 'inline last' : 'inline'" th:text="${team.bib}"/>
+          <td style="text-align: center;" th:class="${iterStat.last}? 'inline last' : 'inline'" th:text="${team.bib}"/>
         </tr>
       </table>
     </td>
