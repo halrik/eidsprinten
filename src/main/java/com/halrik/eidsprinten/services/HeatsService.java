@@ -193,7 +193,7 @@ public class HeatsService {
         resultNumberMap.forEach((result, bib) -> {
             Team team = teams.stream().filter(t -> t.getBib().equals(bib))
                 .findFirst()
-                .orElseThrow(() -> new ValidationException("Could not find team " + bib + " in heat!"));
+                .orElseThrow(() -> new ValidationException("Kunne ikke finne team " + bib + " i heatet!"));
             resultTeamMap.put(result, team);
         });
 

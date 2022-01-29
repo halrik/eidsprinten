@@ -14,7 +14,6 @@ import java.util.Set;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -32,8 +31,8 @@ public class ResultController {
         this.finalHeatsService = finalHeatsService;
     }
 
-    @PostMapping(value = "/ranked/{heatNumber}/result")
-    public ResponseEntity updateResult(@PathVariable Integer heatNumber, @RequestParam Integer no1,
+    @PostMapping(value = "/ranked/result")
+    public ResponseEntity updateResult(@RequestParam Integer heatNumber, @RequestParam Integer no1,
         @RequestParam(required = false) Integer no2, @RequestParam(required = false) Integer no3,
         @RequestParam(required = false) Integer no4, @RequestParam(required = false) Integer no5,
         @RequestParam(required = false) Integer no6, @RequestParam(required = false) Integer no7,
@@ -84,12 +83,12 @@ public class ResultController {
         Set<Integer> resultPlaceList = resultMap.keySet();
         for (int result = 2; result <= 9; result++) {
             if (resultPlaceList.contains(result) && !resultPlaceList.contains(result - 1)) {
-                throw new ValidationException("Result " + (result - 1) + " is missing!");
+                throw new ValidationException("Resultat " + (result - 1) + " mangler!");
             }
         }
 
         if (new HashSet<>(resultMap.values()).size() != resultMap.values().size()) {
-            throw new ValidationException("Duplicate teams in result!");
+            throw new ValidationException("Duplikate teams i resultatet!");
         }
     }
 

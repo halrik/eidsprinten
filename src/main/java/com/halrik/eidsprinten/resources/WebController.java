@@ -41,6 +41,11 @@ public class WebController {
         return "web/menu-advancement-setup.html";
     }
 
+    @GetMapping("/registrer-resultat")
+    public String registerResult() {
+        return "web/register-result.html";
+    }
+
     @GetMapping("/avansement")
     public String advancementSetup(@RequestParam(name = "group", required = false) String group, Model model) {
         List<HeatAdvancement> advancements = finalHeatsService.getAdvancementSetup();
