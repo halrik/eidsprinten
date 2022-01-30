@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -40,6 +41,12 @@ public class TeamsController {
     @GetMapping(value = "/{age}")
     public ResponseEntity<List<Team>> getTeamsByAge(@PathVariable Integer age) {
         return new ResponseEntity<>(eidsprintenService.getTeamsByAge(age), HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/bibs/allocate")
+    public ResponseEntity allocateBibs() {
+        eidsprintenService.allocateBibs();
+        return ResponseEntity.ok("Bibs allocated");
     }
 
 }

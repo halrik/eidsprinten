@@ -22,6 +22,8 @@ public class EidsprintenService {
 
     private static final Logger log = LoggerFactory.getLogger(EidsprintenService.class);
 
+    private static final List<Integer> INVALID_BIBS = List.of();
+
     private ParticipantRepository participantRepository;
     private TeamRepository teamRepository;
 
@@ -45,25 +47,31 @@ public class EidsprintenService {
         allocateBibs();
     }
 
-    private void allocateBibs() {
+    public void allocateBibs() {
         List<Team> teams = teamRepository.findAll();
 
         Map<Integer, Map<String, List<Team>>> ageGenderClassTeamMap = teams.stream()
             .collect(Collectors.groupingBy(Team::getAge, Collectors.groupingBy(Team::getGenderClass)));
 
-        AtomicInteger bib = new AtomicInteger(1);
+        AtomicInteger bib = new AtomicInteger(0);
         ageGenderClassTeamMap.forEach((age, genderTeamMap) ->
-            genderTeamMap.forEach((gender, teamMap) ->
-                teamMap.forEach(team -> {
-                    team.setBib(bib.get());
-                    incrementBib(bib);
-                    teamRepository.save(team);
-                })));
+            genderTeamMap.forEach((gender, teamMap) -> {
+                    teamMap.forEach(team -> {
+                        incrementBib(bib);
+                        log.info("Set bib {} for team {}", bib.get(), team);
+                        team.setBib(bib.get());
+                        teamRepository.save(team);
+                    });
+                    // make room for some late arrivals
+                    for (int i = 0; i < 2; i++) {
+                        incrementBib(bib);
+                    }
+                }
+            ));
     }
 
     private void incrementBib(AtomicInteger bib) {
-        List<Integer> invalidBibs = List.of();
-        while (invalidBibs.contains(bib.incrementAndGet())) {
+        while (INVALID_BIBS.contains(bib.incrementAndGet())) {
             log.info("Skipped bib {}", bib.get());
         }
     }
