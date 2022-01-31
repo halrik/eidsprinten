@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Set;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -65,6 +66,16 @@ public class ResultController {
     @PostMapping(value = "/ranked/finals/randomresults")
     public ResponseEntity<List<Heat>> registerRandomRankedFinalsResults() {
         return new ResponseEntity<>(heatsService.registerRandomRankedResults(false), HttpStatus.OK);
+    }
+
+    @DeleteMapping(value = "/ranked")
+    public ResponseEntity<List<Heat>> deleteRankedResults() {
+        return new ResponseEntity<>(heatsService.deleteRankedResults(true), HttpStatus.OK);
+    }
+
+    @DeleteMapping(value = "/ranked/finals")
+    public ResponseEntity<List<Heat>> deleteRankedFinalsResults() {
+        return new ResponseEntity<>(heatsService.deleteRankedResults(false), HttpStatus.OK);
     }
 
     @GetMapping(value = "/ranked/result")

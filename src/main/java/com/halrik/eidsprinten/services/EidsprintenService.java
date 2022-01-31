@@ -4,6 +4,7 @@ import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatc
 
 import com.halrik.eidsprinten.domain.Participant;
 import com.halrik.eidsprinten.domain.Team;
+import com.halrik.eidsprinten.repository.HeatRepository;
 import com.halrik.eidsprinten.repository.ParticipantRepository;
 import com.halrik.eidsprinten.repository.TeamRepository;
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+import javax.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Example;
@@ -26,11 +28,13 @@ public class EidsprintenService {
 
     private ParticipantRepository participantRepository;
     private TeamRepository teamRepository;
+    private HeatRepository heatRepository;
 
     public EidsprintenService(ParticipantRepository participantRepository,
-        TeamRepository teamRepository) {
+        TeamRepository teamRepository, HeatRepository heatRepository) {
         this.participantRepository = participantRepository;
         this.teamRepository = teamRepository;
+        this.heatRepository = heatRepository;
     }
 
     public void saveParticipantsAndTeams(List<Participant> participantList) {
@@ -165,6 +169,14 @@ public class EidsprintenService {
 
     public List<Team> getTeamsByAge(Integer age) {
         return teamRepository.findByAge(age);
+    }
+
+    @Transactional
+    public long deleteTeam(Integer bib) {
+        teamRepository.findByBib(bib).stream().findFirst().ifPresent(team -> {
+            team.getHeats().forEach(heat -> heat.removeTeam(team));
+        });
+        return teamRepository.deleteByBib(bib);
     }
 
 }

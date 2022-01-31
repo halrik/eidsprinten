@@ -16,9 +16,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +50,26 @@ public class HeatsService {
     }
 
     public List<Heat> getHeatsUnRankedAndSave() {
+        deleteHeats(false, true);
+        deleteHeats(false, false);
         return heatRepository.saveAll(getHeatsUnRanked());
+    }
+
+    public void deleteAllHeats() {
+        deleteHeats(false, true);
+        deleteHeats(false, false);
+        deleteHeats(true, true);
+        deleteHeats(true, false);
+    }
+
+    public void deleteHeats(boolean isRanked, boolean isProlog) {
+        List<Heat> heats = heatRepository.findByRankedHeatAndPrologHeat(isRanked, isProlog);
+        heats.forEach(heat -> {
+            Set<Team> teams = new HashSet(heat.getTeams());
+            teams.forEach(team -> heat.removeTeam(team));
+            heatRepository.save(heat);
+        });
+        heatRepository.deleteAll(heats);
     }
 
     public List<Heat> getHeatsUnRanked() {
@@ -96,12 +118,13 @@ public class HeatsService {
 
         unRankedHeats.forEach(heat ->
             heat.setTeams(heat.getTeams().stream().sorted(Comparator.comparingInt(Team::getBib))
-                .collect(Collectors.toList())));
+                .collect(Collectors.toCollection(LinkedHashSet::new))));
 
         return unRankedHeats;
     }
 
     public List<Heat> getHeatsRankedAndSave() {
+        deleteHeats(true, true);
         return heatRepository.saveAll(getHeatsRanked());
     }
 
@@ -167,7 +190,7 @@ public class HeatsService {
 
         rankedHeats.forEach(heat ->
             heat.setTeams(heat.getTeams().stream().sorted(Comparator.comparingInt(Team::getBib))
-                .collect(Collectors.toList())));
+                .collect(Collectors.toCollection(LinkedHashSet::new))));
 
         return rankedHeats;
     }
@@ -187,7 +210,7 @@ public class HeatsService {
         return heatRepository.save(heat);
     }
 
-    private Map<Integer, Team> convertToResultTeamMap(Map<Integer, Integer> resultNumberMap, List<Team> teams) {
+    private Map<Integer, Team> convertToResultTeamMap(Map<Integer, Integer> resultNumberMap, Set<Team> teams) {
         Map<Integer, Team> resultTeamMap = new HashMap<>();
 
         resultNumberMap.forEach((result, bib) -> {
@@ -240,7 +263,7 @@ public class HeatsService {
             heat.setGroupName(groupName.getValue());
             heat.setPrologHeat(false);
             heat.setRankedHeat(true);
-            heat.setTeams(new ArrayList<>());
+            heat.setTeams(new HashSet<>());
             addHeats.add(heat);
             heatNumberCounter++;
             startTime = startTime.plusMinutes(MINUTES_BETWEEN_HEATS);
@@ -331,7 +354,7 @@ public class HeatsService {
             heat.setStartTime(startTime.format(hourMinuteFormatter));
             heat.setPrologHeat(leg == 1);
             heat.setRankedHeat(isRankedHeat);
-            heat.setTeams(new ArrayList<>());
+            heat.setTeams(new HashSet<>());
             addHeats.add(heat);
             heatNumberCounter++;
             startTime = startTime.plusMinutes(MINUTES_BETWEEN_HEATS);
@@ -343,7 +366,7 @@ public class HeatsService {
         for (Team team : teams) {
             Heat heat = addHeats.get(heatIndex);
             heat.setGroupName(team.getGroupName());
-            heat.getTeams().add(team);
+            heat.addTeam(team);
             heatIndex = heatIndex == addHeats.size() - 1 ? 0 : heatIndex + 1;
         }
 
@@ -374,7 +397,7 @@ public class HeatsService {
         List<Heat> heats = heatRepository.findByRankedHeatAndPrologHeat(true, isPrologHeat);
 
         heats.forEach(heat -> {
-            List<Team> teams = heat.getTeams();
+            Set<Team> teams = heat.getTeams();
 
             List<Integer> bibs = teams.stream().map(Team::getBib).collect(Collectors.toList());
             Collections.shuffle(bibs);
@@ -389,4 +412,18 @@ public class HeatsService {
 
         return savedHeats;
     }
+
+    public List<Heat> deleteRankedResults(boolean isPrologHeat) {
+        List<Heat> savedHeats = new ArrayList<>();
+
+        List<Heat> heats = heatRepository.findByRankedHeatAndPrologHeat(true, isPrologHeat);
+
+        heats.forEach(heat -> {
+            heat.setResult(null);
+            savedHeats.add(heatRepository.save(heat));
+        });
+
+        return savedHeats;
+    }
+
 }

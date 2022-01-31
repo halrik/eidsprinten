@@ -7,6 +7,7 @@ import com.halrik.eidsprinten.services.HeatsService;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -57,6 +58,12 @@ public class HeatsController {
     @GetMapping(value = "/ranked/finals/save")
     public ResponseEntity<List<Heat>> getHeatsRankedFinalsAndSave() {
         return new ResponseEntity<>(finalHeatsService.getHeatsRankedFinalsAndSave(), HttpStatus.OK);
+    }
+
+    @DeleteMapping(value = "/")
+    public ResponseEntity<String> deleteAllHeats() {
+        heatsService.deleteAllHeats();
+        return new ResponseEntity<>("All heats deleted", HttpStatus.OK);
     }
 
 }

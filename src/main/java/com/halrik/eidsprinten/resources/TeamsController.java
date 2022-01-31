@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -47,6 +48,11 @@ public class TeamsController {
     public ResponseEntity allocateBibs() {
         eidsprintenService.allocateBibs();
         return ResponseEntity.ok("Bibs allocated");
+    }
+
+    @DeleteMapping(value = "/{bib}")
+    public ResponseEntity<String> deleteTeam(@PathVariable Integer bib) {
+        return new ResponseEntity<>(eidsprintenService.deleteTeam(bib) + " team deleted", HttpStatus.OK);
     }
 
 }

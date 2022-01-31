@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -19,9 +20,11 @@ import org.springframework.stereotype.Service;
 public class FinalHeatsService {
 
     private HeatRepository heatRepository;
+    private HeatsService heatsService;
 
-    public FinalHeatsService(HeatRepository heatRepository) {
+    public FinalHeatsService(HeatRepository heatRepository, HeatsService heatsService) {
         this.heatRepository = heatRepository;
+        this.heatsService = heatsService;
     }
 
     public List<HeatAdvancement> getAdvancementSetup() {
@@ -111,6 +114,7 @@ public class FinalHeatsService {
     }
 
     public List<Heat> getHeatsRankedFinalsAndSave() {
+        heatsService.deleteHeats(true, false);
         return heatRepository.saveAll(getHeatsRankedFinals());
     }
 
@@ -161,7 +165,7 @@ public class FinalHeatsService {
 
             Team teamWithResultInProlog = fromHeat.getResult().get(heatAdvancement.getResult());
 
-            List<Team> teams = toHeat.getTeams();
+            Set<Team> teams = toHeat.getTeams();
             if (teams.stream().noneMatch(team -> team.getId().equals(teamWithResultInProlog.getId()))) {
                 teams.add(teamWithResultInProlog);
             }

@@ -1,16 +1,20 @@
 package com.halrik.eidsprinten.domain;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @Entity
 @Data
+@ToString(exclude = "heats")
+@EqualsAndHashCode(exclude = "heats")
 public class Team {
 
     @Id
@@ -32,6 +36,8 @@ public class Team {
     private Long participantLeg2Id;
     private String participantLeg2Name;
 
-    @ManyToMany
-    private List<Heat> heats = new ArrayList<>();
+    @ManyToMany(mappedBy = "teams")
+    @JsonIgnore
+    private Set<Heat> heats;
+
 }
