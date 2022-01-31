@@ -1,5 +1,7 @@
 package com.halrik.eidsprinten.services;
 
+import static com.halrik.eidsprinten.utils.HeatsUtil.sortTeamsWithinHeatByBibAndSortHeatsByHeatNumber;
+
 import com.halrik.eidsprinten.domain.Heat;
 import com.halrik.eidsprinten.domain.HeatAdvancement;
 import com.halrik.eidsprinten.domain.Result;
@@ -111,6 +113,11 @@ public class FinalHeatsService {
             .collect(Collectors.toList())
             .forEach(teamList -> numberOfTeamsInProlog.set(numberOfTeamsInProlog.get() + teamList.size()));
         return numberOfTeamsInProlog.get();
+    }
+
+    public List<Heat> getHeatsRankedFinalsStored() {
+        List<Heat> rankedFinalHeats = heatRepository.findByRankedHeatAndPrologHeat(true, false);
+        return sortTeamsWithinHeatByBibAndSortHeatsByHeatNumber(rankedFinalHeats);
     }
 
     public List<Heat> getHeatsRankedFinalsAndSave() {

@@ -1,5 +1,7 @@
 package com.halrik.eidsprinten.services;
 
+import static com.halrik.eidsprinten.utils.HeatsUtil.sortTeamsWithinHeatByBibAndSortHeatsByHeatNumber;
+
 import com.halrik.eidsprinten.domain.Heat;
 import com.halrik.eidsprinten.domain.Team;
 import com.halrik.eidsprinten.exception.NotFoundException;
@@ -127,14 +129,6 @@ public class HeatsService {
         addUnrankedHeats(start, leg, heatNo(unRankedHeats), unRankedHeats, filterByGender(Gender.GIRLS, age10Teams));
 
         return sortTeamsWithinHeatByBibAndSortHeatsByHeatNumber(unRankedHeats);
-    }
-
-    private List<Heat> sortTeamsWithinHeatByBibAndSortHeatsByHeatNumber(List<Heat> heats) {
-        heats.forEach(heat ->
-            heat.setTeams(heat.getTeams().stream().sorted(Comparator.comparingInt(Team::getBib))
-                .collect(Collectors.toCollection(LinkedHashSet::new))));
-
-        return heats.stream().sorted(Comparator.comparingInt(Heat::getHeatNumber)).collect(Collectors.toList());
     }
 
     public List<Heat> getHeatsRankedAndSave() {

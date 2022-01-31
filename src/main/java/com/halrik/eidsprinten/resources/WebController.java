@@ -1,6 +1,7 @@
 package com.halrik.eidsprinten.resources;
 
 import static com.halrik.eidsprinten.utils.HeatsUtil.getAdvancementsForGroup;
+import static com.halrik.eidsprinten.utils.HeatsUtil.getHeatsRankedFinalsForGroup;
 
 import com.halrik.eidsprinten.domain.Heat;
 import com.halrik.eidsprinten.domain.HeatAdvancement;
@@ -43,6 +44,54 @@ public class WebController {
         model.addAttribute("title", "Startliste rangerte");
         model.addAttribute("heats", heatsRanked);
         return "web/startlist.html";
+    }
+
+    @GetMapping("/startlister-finaler")
+    public String startlistFinalsMenu() {
+        return "web/startlist-finals-menu.html";
+    }
+
+    @GetMapping("/startliste-finale")
+    public String startlistFinal(@RequestParam(name = "group", required = false) String group, Model model) {
+        List<Heat> heatsRankedFinals = finalHeatsService.getHeatsRankedFinalsStored();
+
+        if (group != null) {
+            switch (group) {
+                case "G11":
+                    model.addAttribute("title", "Startliste finaler " + Group.BOYS_11.getValue());
+                    model.addAttribute("heats", getHeatsRankedFinalsForGroup(heatsRankedFinals, Group.BOYS_11));
+                    return "web/startlist-finals.html";
+                case "J11":
+                    model.addAttribute("title", "Startliste finaler " + Group.GIRLS_11.getValue());
+                    model.addAttribute("heats", getHeatsRankedFinalsForGroup(heatsRankedFinals, Group.GIRLS_11));
+                    return "web/startlist-finals.html";
+                case "G12":
+                    model.addAttribute("title", "Startliste finaler " + Group.BOYS_12.getValue());
+                    model.addAttribute("heats", getHeatsRankedFinalsForGroup(heatsRankedFinals, Group.BOYS_12));
+                    return "web/startlist-finals.html";
+                case "J12":
+                    model.addAttribute("title", "Startliste finaler " + Group.GIRLS_12.getValue());
+                    model.addAttribute("heats", getHeatsRankedFinalsForGroup(heatsRankedFinals, Group.GIRLS_12));
+                    return "web/startlist-finals.html";
+                case "G13":
+                    model.addAttribute("title", "Startliste finaler " + Group.BOYS_13.getValue());
+                    model.addAttribute("heats", getHeatsRankedFinalsForGroup(heatsRankedFinals, Group.BOYS_13));
+                    return "web/startlist-finals.html";
+                case "J13":
+                    model.addAttribute("title", "Startliste finaler " + Group.GIRLS_13.getValue());
+                    model.addAttribute("heats", getHeatsRankedFinalsForGroup(heatsRankedFinals, Group.GIRLS_13));
+                    return "web/startlist-finals.html";
+                case "G14":
+                    model.addAttribute("title", "Startliste finaler " + Group.BOYS_14.getValue());
+                    model.addAttribute("heats", getHeatsRankedFinalsForGroup(heatsRankedFinals, Group.BOYS_14));
+                    return "web/startlist-finals.html";
+                case "J14":
+                    model.addAttribute("title", "Startliste finaler " + Group.GIRLS_14.getValue());
+                    model.addAttribute("heats", getHeatsRankedFinalsForGroup(heatsRankedFinals, Group.GIRLS_14));
+                    return "web/startlist-finals.html";
+            }
+        }
+        return "web/startlist-finals-menu.html";
     }
 
     @GetMapping("/avansement-meny")
