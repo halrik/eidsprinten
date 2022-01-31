@@ -31,7 +31,7 @@ public class WebController {
 
     @GetMapping("/startliste-urangerte")
     public String startListUnranked(Model model) {
-        List<Heat> heatsUnRanked = heatsService.getHeatsUnRanked();
+        List<Heat> heatsUnRanked = heatsService.getHeatsUnRankedStored();
         model.addAttribute("title", "Startliste urangerte");
         model.addAttribute("heats", heatsUnRanked);
         return "web/startlist.html";
@@ -39,7 +39,7 @@ public class WebController {
 
     @GetMapping("/startliste-rangerte")
     public String startListRanked(Model model) {
-        List<Heat> heatsRanked = heatsService.getHeatsRanked();
+        List<Heat> heatsRanked = heatsService.getHeatsRankedStored();
         model.addAttribute("title", "Startliste rangerte");
         model.addAttribute("heats", heatsRanked);
         return "web/startlist.html";

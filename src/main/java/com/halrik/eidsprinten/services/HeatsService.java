@@ -72,6 +72,16 @@ public class HeatsService {
         heatRepository.deleteAll(heats);
     }
 
+    public List<Heat> getHeatsUnRankedStored() {
+        List<Heat> unrankedHeats = heatRepository.findByRankedHeat(false);
+        return sortTeamsWithinHeatByBibAndSortHeatsByHeatNumber(unrankedHeats);
+    }
+
+    public List<Heat> getHeatsRankedStored() {
+        List<Heat> rankedHeats = heatRepository.findByRankedHeat(true);
+        return sortTeamsWithinHeatByBibAndSortHeatsByHeatNumber(rankedHeats);
+    }
+
     public List<Heat> getHeatsUnRanked() {
         List<Heat> unRankedHeats = new ArrayList<>();
 
@@ -116,11 +126,15 @@ public class HeatsService {
             filterByGender(Gender.BOYS, age10Teams));
         addUnrankedHeats(start, leg, heatNo(unRankedHeats), unRankedHeats, filterByGender(Gender.GIRLS, age10Teams));
 
-        unRankedHeats.forEach(heat ->
+        return sortTeamsWithinHeatByBibAndSortHeatsByHeatNumber(unRankedHeats);
+    }
+
+    private List<Heat> sortTeamsWithinHeatByBibAndSortHeatsByHeatNumber(List<Heat> heats) {
+        heats.forEach(heat ->
             heat.setTeams(heat.getTeams().stream().sorted(Comparator.comparingInt(Team::getBib))
                 .collect(Collectors.toCollection(LinkedHashSet::new))));
 
-        return unRankedHeats;
+        return heats.stream().sorted(Comparator.comparingInt(Heat::getHeatNumber)).collect(Collectors.toList());
     }
 
     public List<Heat> getHeatsRankedAndSave() {
