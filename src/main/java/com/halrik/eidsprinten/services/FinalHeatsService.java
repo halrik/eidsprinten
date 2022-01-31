@@ -164,10 +164,11 @@ public class FinalHeatsService {
                 .findFirst().orElseThrow(() -> new IllegalStateException("To heat is not present!"));
 
             Team teamWithResultInProlog = fromHeat.getResult().get(heatAdvancement.getResult());
-
-            Set<Team> teams = toHeat.getTeams();
-            if (teams.stream().noneMatch(team -> team.getId().equals(teamWithResultInProlog.getId()))) {
-                teams.add(teamWithResultInProlog);
+            if (teamWithResultInProlog != null) {
+                Set<Team> teams = toHeat.getTeams();
+                if (teams.stream().noneMatch(team -> team.getId().equals(teamWithResultInProlog.getId()))) {
+                    teams.add(teamWithResultInProlog);
+                }
             }
         });
 
