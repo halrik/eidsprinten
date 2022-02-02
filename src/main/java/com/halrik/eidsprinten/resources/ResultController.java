@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/results")
 public class ResultController {
 
     private HeatsService heatsService;
@@ -58,7 +58,7 @@ public class ResultController {
         return ResponseEntity.ok(heat);
     }
 
-    @PostMapping(value = "/ranked/randomresults")
+    @PostMapping(value = "/ranked/prolog/randomresults")
     public ResponseEntity<List<Heat>> registerRandomRankedResults() {
         return new ResponseEntity<>(heatsService.registerRandomRankedResults(true), HttpStatus.OK);
     }
@@ -68,7 +68,7 @@ public class ResultController {
         return new ResponseEntity<>(heatsService.registerRandomRankedResults(false), HttpStatus.OK);
     }
 
-    @DeleteMapping(value = "/ranked")
+    @DeleteMapping(value = "/ranked/prolog")
     public ResponseEntity<List<Heat>> deleteRankedResults() {
         return new ResponseEntity<>(heatsService.deleteRankedResults(true), HttpStatus.OK);
     }
@@ -78,7 +78,7 @@ public class ResultController {
         return new ResponseEntity<>(heatsService.deleteRankedResults(false), HttpStatus.OK);
     }
 
-    @GetMapping(value = "/ranked/result")
+    @GetMapping(value = "/ranked/finals")
     public ResponseEntity<List<Result>> getHeatsRankedResult(@RequestParam Group group) {
         return new ResponseEntity<>(finalHeatsService.getHeatsRankedResults(group), HttpStatus.OK);
     }
