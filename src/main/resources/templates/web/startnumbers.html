@@ -1,0 +1,84 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Eidsprinten</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+  <style>
+    html * {
+      font-family: "Open Sans", Arial, ArialMT, sans-serif;
+    }
+
+    .header {
+      width: 100%;
+      height: 200px;
+      float: left;
+      margin: auto;
+    }
+
+    .header img {
+      float: left;
+      width: 150px;
+      height: 150px;
+    }
+
+    .header h1 {
+      color: green;
+      position: relative;
+      top: 18px;
+      left: 10px;
+      font-size: 45px;
+    }
+
+    .wrapperDiv table {
+      width: 95%;
+      font-size: 1.2vw;
+      margin-left: 20px;
+      margin-right: 20px;
+      margin-bottom: 50px;
+    }
+
+    h3 {
+      color: green;
+      font-size: 5vw;
+      text-align: left;
+      margin: 20px;
+    }
+
+    p {
+      font-size: 4vw;
+      margin: 20px;
+    }
+
+    h2 {
+      font-size: 2vw;
+      margin: 20px;
+    }
+
+    input {
+      font-size: 3vw;
+      margin: 20px;
+    }
+  </style>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      $("#searchInput").on("keyup", function () {
+        var value = $(this).val().toLowerCase();
+        $("#teamsTable tr").filter(function () {
+          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+      });
+    });
+  </script>
+</head>
+<body>
+<div th:insert="web/header.html"></div>
+<p><a href="/eidsprinten/">Tilbake til forsiden</a></p>
+<h3 th:text="${title}"/>
+<input id="searchInput" type="text" placeholder="Søk..">
+<br><br>
+<div class="wrapperDiv" th:with="hideTitle=true, teamsGroupedByClub=${teamsGroupedByClub}"
+     th:insert="startnumbers.html"></div>
+</body>
+</html>

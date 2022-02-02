@@ -8,8 +8,11 @@ import com.halrik.eidsprinten.repository.HeatRepository;
 import com.halrik.eidsprinten.repository.ParticipantRepository;
 import com.halrik.eidsprinten.repository.TeamRepository;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
@@ -177,6 +180,39 @@ public class EidsprintenService {
 
     public List<Team> getTeamsByAge(Integer age) {
         return teamRepository.findByAge(age);
+    }
+
+    public Map<String, List<Team>> getTeamsGroupedByClub() {
+        Map<String, List<Team>> teamsGroupedByClub = new TreeMap<>();
+        List<Team> allTeams = teamRepository.findAll();
+
+        sortTeamsByGenderAndAge(allTeams);
+
+        allTeams.forEach(team -> {
+            List<Team> teamsForClub =
+                teamsGroupedByClub.get(team.getClubName()) != null ? teamsGroupedByClub.get(team.getClubName())
+                    : new ArrayList<>();
+            teamsForClub.add(team);
+            teamsGroupedByClub.put(team.getClubName(), teamsForClub);
+        });
+
+        return teamsGroupedByClub;
+    }
+
+    private void sortTeamsByGenderAndAge(List<Team> teams) {
+        Collections.sort(teams, (Comparator) (o1, o2) -> {
+            String genderClass1 = ((Team) o1).getGenderClass();
+            String genderClass2 = ((Team) o2).getGenderClass();
+            int sComp = genderClass1.compareTo(genderClass2);
+
+            if (sComp != 0) {
+                return sComp;
+            }
+
+            Integer age1 = ((Team) o1).getAge();
+            Integer age2 = ((Team) o2).getAge();
+            return age1.compareTo(age2);
+        });
     }
 
     @Transactional

@@ -3,6 +3,7 @@ package com.halrik.eidsprinten.services;
 import com.halrik.eidsprinten.domain.Heat;
 import com.halrik.eidsprinten.domain.HeatAdvancement;
 import com.halrik.eidsprinten.domain.Result;
+import com.halrik.eidsprinten.domain.Team;
 import com.halrik.eidsprinten.model.enums.Group;
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
 import com.openhtmltopdf.svgsupport.BatikSVGDrawer;
@@ -11,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,13 +21,16 @@ import org.springframework.stereotype.Service;
 @Service
 public class ReportService {
 
+    private final EidsprintenService eidsprintenService;
     private final HeatsService heatsService;
     private final FinalHeatsService finalHeatsService;
     private final TemplateService templateService;
     private final PdfRendererBuilder pdfBuilder;
 
-    public ReportService(HeatsService heatsService, FinalHeatsService finalHeatsService,
+    public ReportService(EidsprintenService eidsprintenService,
+        HeatsService heatsService, FinalHeatsService finalHeatsService,
         TemplateService templateService) {
+        this.eidsprintenService = eidsprintenService;
         this.heatsService = heatsService;
         this.finalHeatsService = finalHeatsService;
         this.templateService = templateService;
@@ -80,6 +85,18 @@ public class ReportService {
             List<Result> resultList = finalHeatsService.getHeatsRankedResults(group);
             pdfBuilder.withHtmlContent(
                     templateService.getResultListHtml(resultList, group.getValue()), "")
+                .toStream(outputStream)
+                .run();
+
+            return outputStream.toByteArray();
+        }
+    }
+
+    public byte[] generateStartNumbersPdf() throws IOException {
+        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+            Map<String, List<Team>> teamsGroupedByClub = eidsprintenService.getTeamsGroupedByClub();
+            pdfBuilder.withHtmlContent(
+                    templateService.getStartNumbersHtml(teamsGroupedByClub), "")
                 .toStream(outputStream)
                 .run();
 

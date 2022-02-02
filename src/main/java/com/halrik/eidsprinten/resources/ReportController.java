@@ -90,6 +90,18 @@ public class ReportController {
             .body(new InputStreamResource(inputStream));
     }
 
+    @GetMapping(value = "/startnumbers", produces = "application/pdf")
+    public ResponseEntity<InputStreamResource> startNumbers() throws IOException {
+        byte[] pdfBytes = reportService.generateStartNumbersPdf();
+        String downloadFileName = "startnummer-liste-" + LocalDateTime.now().format(dateTimeFormatter) + ".pdf";
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(pdfBytes);
+        return ResponseEntity
+            .ok()
+            .headers(getHeaders(downloadFileName))
+            .contentType(MediaType.APPLICATION_PDF)
+            .body(new InputStreamResource(inputStream));
+    }
+
     private HttpHeaders getHeaders(String downloadFileName) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/pdf");

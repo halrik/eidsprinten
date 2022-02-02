@@ -2,6 +2,7 @@ package com.halrik.eidsprinten.services;
 
 import static com.halrik.eidsprinten.model.enums.Template.ADVANCEMENT_SETUP;
 import static com.halrik.eidsprinten.model.enums.Template.RESULT_LIST;
+import static com.halrik.eidsprinten.model.enums.Template.STARTNUMBERS;
 import static com.halrik.eidsprinten.model.enums.Template.START_LIST_FINALS;
 import static com.halrik.eidsprinten.model.enums.Template.START_LIST_HEATS;
 import static com.halrik.eidsprinten.utils.HeatsUtil.getAdvancementsForGroup;
@@ -9,8 +10,10 @@ import static com.halrik.eidsprinten.utils.HeatsUtil.getAdvancementsForGroup;
 import com.halrik.eidsprinten.domain.Heat;
 import com.halrik.eidsprinten.domain.HeatAdvancement;
 import com.halrik.eidsprinten.domain.Result;
+import com.halrik.eidsprinten.domain.Team;
 import com.halrik.eidsprinten.model.enums.Group;
 import java.util.List;
+import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -39,6 +42,12 @@ public class TemplateService {
         context.setVariable("groupName", groupName);
         context.setVariable("resultList", resultList);
         return parseThymeleafTemplate(RESULT_LIST.getTemplateName(), context);
+    }
+
+    public String getStartNumbersHtml(Map<String, List<Team>> teamsGroupedByClub) {
+        Context context = new Context();
+        context.setVariable("teamsGroupedByClub", teamsGroupedByClub);
+        return parseThymeleafTemplate(STARTNUMBERS.getTemplateName(), context);
     }
 
     public String getAdvancementsSetupHtml(List<HeatAdvancement> advancements) {

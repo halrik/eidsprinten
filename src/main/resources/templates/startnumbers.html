@@ -1,0 +1,56 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <style>
+    table {
+      width: 100%;
+      font-size: 12px;
+    }
+
+    table, th, td {
+      border: 2px solid black;
+      border-collapse: collapse;
+      padding: 2px;
+    }
+
+    tr {
+      page-break-inside: avoid;
+      page-break-after: auto;
+    }
+
+    h3 {
+      color: green;
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+
+<h3 th:if="${!hideTitle}">
+  Eidsprinten 2022 - Startnummer sortert per klubb
+</h3>
+
+<div th:each="teams: ${teamsGroupedByClub}">
+  <h2 th:text="${teams.getKey()}"></h2>
+  <table>
+    <thead>
+    <tr>
+      <th style="width:7%;">Klasse</th>
+      <th style="width:26%; text-align: left;">Lag</th>
+      <th style="width:7%;">Startnr.</th>
+      <th style="width:30%; text-align: left;">Navn 1</th>
+      <th style="width:30%; text-align: left;">Navn 2</th>
+    </tr>
+    </thead>
+    <tbody id="teamsTable">
+    <tr th:each="team: ${teams.getValue()}">
+      <td th:text="${team.getGroupName()}"></td>
+      <td th:text="${team.getTeamName()}"></td>
+      <td style="text-align: center;" th:text="${team.getBib()}"></td>
+      <td th:text="${team.getParticipantLeg1Name()}"></td>
+      <td th:text="${team.getParticipantLeg2Name()}"></td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+</body>
+</html>

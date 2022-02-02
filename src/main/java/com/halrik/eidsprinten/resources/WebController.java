@@ -6,10 +6,13 @@ import static com.halrik.eidsprinten.utils.HeatsUtil.getHeatsRankedFinalsForGrou
 import com.halrik.eidsprinten.domain.Heat;
 import com.halrik.eidsprinten.domain.HeatAdvancement;
 import com.halrik.eidsprinten.domain.Result;
+import com.halrik.eidsprinten.domain.Team;
 import com.halrik.eidsprinten.model.enums.Group;
+import com.halrik.eidsprinten.services.EidsprintenService;
 import com.halrik.eidsprinten.services.FinalHeatsService;
 import com.halrik.eidsprinten.services.HeatsService;
 import java.util.List;
+import java.util.Map;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,10 +21,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class WebController {
 
+    private EidsprintenService eidsprintenService;
     private HeatsService heatsService;
     private FinalHeatsService finalHeatsService;
 
-    public WebController(HeatsService heatsService, FinalHeatsService finalHeatsService) {
+    public WebController(EidsprintenService eidsprintenService,
+        HeatsService heatsService, FinalHeatsService finalHeatsService) {
+        this.eidsprintenService = eidsprintenService;
         this.heatsService = heatsService;
         this.finalHeatsService = finalHeatsService;
     }
@@ -30,6 +36,15 @@ public class WebController {
     public String index() {
         return "web/index.html";
     }
+
+    @GetMapping("/startnummerliste")
+    public String startNumbers(Model model) {
+        Map<String, List<Team>> teamsGroupedByClub = eidsprintenService.getTeamsGroupedByClub();
+        model.addAttribute("title", "Startnummer sortert per klubb");
+        model.addAttribute("teamsGroupedByClub", teamsGroupedByClub);
+        return "web/startnumbers.html";
+    }
+
 
     @GetMapping("/startliste-urangerte")
     public String startListUnranked(Model model) {
