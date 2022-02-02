@@ -5,6 +5,7 @@ import static com.halrik.eidsprinten.utils.HeatsUtil.getHeatsRankedFinalsForGrou
 
 import com.halrik.eidsprinten.domain.Heat;
 import com.halrik.eidsprinten.domain.HeatAdvancement;
+import com.halrik.eidsprinten.domain.Result;
 import com.halrik.eidsprinten.model.enums.Group;
 import com.halrik.eidsprinten.services.FinalHeatsService;
 import com.halrik.eidsprinten.services.HeatsService;
@@ -47,49 +48,19 @@ public class WebController {
     }
 
     @GetMapping("/startlister-finaler")
-    public String startlistFinalsMenu() {
+    public String startListFinalsMenu() {
         return "web/startlist-finals-menu.html";
     }
 
     @GetMapping("/startliste-finale")
-    public String startlistFinal(@RequestParam(name = "group", required = false) String group, Model model) {
-        List<Heat> heatsRankedFinals = finalHeatsService.getHeatsRankedFinalsStored();
-
-        if (group != null) {
-            switch (group) {
-                case "G11":
-                    model.addAttribute("title", "Startliste finaler " + Group.BOYS_11.getValue());
-                    model.addAttribute("heats", getHeatsRankedFinalsForGroup(heatsRankedFinals, Group.BOYS_11));
-                    return "web/startlist-finals.html";
-                case "J11":
-                    model.addAttribute("title", "Startliste finaler " + Group.GIRLS_11.getValue());
-                    model.addAttribute("heats", getHeatsRankedFinalsForGroup(heatsRankedFinals, Group.GIRLS_11));
-                    return "web/startlist-finals.html";
-                case "G12":
-                    model.addAttribute("title", "Startliste finaler " + Group.BOYS_12.getValue());
-                    model.addAttribute("heats", getHeatsRankedFinalsForGroup(heatsRankedFinals, Group.BOYS_12));
-                    return "web/startlist-finals.html";
-                case "J12":
-                    model.addAttribute("title", "Startliste finaler " + Group.GIRLS_12.getValue());
-                    model.addAttribute("heats", getHeatsRankedFinalsForGroup(heatsRankedFinals, Group.GIRLS_12));
-                    return "web/startlist-finals.html";
-                case "G13":
-                    model.addAttribute("title", "Startliste finaler " + Group.BOYS_13.getValue());
-                    model.addAttribute("heats", getHeatsRankedFinalsForGroup(heatsRankedFinals, Group.BOYS_13));
-                    return "web/startlist-finals.html";
-                case "J13":
-                    model.addAttribute("title", "Startliste finaler " + Group.GIRLS_13.getValue());
-                    model.addAttribute("heats", getHeatsRankedFinalsForGroup(heatsRankedFinals, Group.GIRLS_13));
-                    return "web/startlist-finals.html";
-                case "G14":
-                    model.addAttribute("title", "Startliste finaler " + Group.BOYS_14.getValue());
-                    model.addAttribute("heats", getHeatsRankedFinalsForGroup(heatsRankedFinals, Group.BOYS_14));
-                    return "web/startlist-finals.html";
-                case "J14":
-                    model.addAttribute("title", "Startliste finaler " + Group.GIRLS_14.getValue());
-                    model.addAttribute("heats", getHeatsRankedFinalsForGroup(heatsRankedFinals, Group.GIRLS_14));
-                    return "web/startlist-finals.html";
-            }
+    public String startListFinal(@RequestParam(name = "group", required = false) String genderAgeShortValue,
+        Model model) {
+        if (genderAgeShortValue != null) {
+            Group group = Group.valueOfGenderAgeShortValue(genderAgeShortValue);
+            List<Heat> heatsRankedFinals = finalHeatsService.getHeatsRankedFinalsStored();
+            model.addAttribute("title", "Startliste finaler " + group.getValue());
+            model.addAttribute("heats", getHeatsRankedFinalsForGroup(heatsRankedFinals, group));
+            return "web/startlist-finals.html";
         }
         return "web/startlist-finals-menu.html";
     }
@@ -105,36 +76,14 @@ public class WebController {
     }
 
     @GetMapping("/avansement")
-    public String advancementSetup(@RequestParam(name = "group", required = false) String group, Model model) {
+    public String advancementSetup(@RequestParam(name = "group", required = false) String genderAgeShortValue,
+        Model model) {
         List<HeatAdvancement> advancements = finalHeatsService.getAdvancementSetup();
 
-        if (group != null) {
-            switch (group) {
-                case "G11":
-                    model.addAttribute("advancementsBoys11", getAdvancementsForGroup(advancements, Group.BOYS_11));
-                    return "web/advancement-setup.html";
-                case "J11":
-                    model.addAttribute("advancementsBoys11", getAdvancementsForGroup(advancements, Group.GIRLS_11));
-                    return "web/advancement-setup.html";
-                case "G12":
-                    model.addAttribute("advancementsBoys11", getAdvancementsForGroup(advancements, Group.BOYS_12));
-                    return "web/advancement-setup.html";
-                case "J12":
-                    model.addAttribute("advancementsBoys11", getAdvancementsForGroup(advancements, Group.GIRLS_12));
-                    return "web/advancement-setup.html";
-                case "G13":
-                    model.addAttribute("advancementsBoys11", getAdvancementsForGroup(advancements, Group.BOYS_13));
-                    return "web/advancement-setup.html";
-                case "J13":
-                    model.addAttribute("advancementsBoys11", getAdvancementsForGroup(advancements, Group.GIRLS_13));
-                    return "web/advancement-setup.html";
-                case "G14":
-                    model.addAttribute("advancementsBoys11", getAdvancementsForGroup(advancements, Group.BOYS_14));
-                    return "web/advancement-setup.html";
-                case "J14":
-                    model.addAttribute("advancementsBoys11", getAdvancementsForGroup(advancements, Group.GIRLS_14));
-                    return "web/advancement-setup.html";
-            }
+        if (genderAgeShortValue != null) {
+            Group group = Group.valueOfGenderAgeShortValue(genderAgeShortValue);
+            model.addAttribute("advancementsBoys11", getAdvancementsForGroup(advancements, group));
+            return "web/advancement-setup.html";
         }
 
         model.addAttribute("advancementsBoys11", getAdvancementsForGroup(advancements, Group.BOYS_11));
@@ -149,5 +98,17 @@ public class WebController {
         return "web/advancement-setup.html";
     }
 
+    @GetMapping("/resultater")
+    public String resultList(@RequestParam(name = "group", required = false) String genderAgeShortValue, Model model) {
+        if (genderAgeShortValue != null) {
+            Group group = Group.valueOfGenderAgeShortValue(genderAgeShortValue);
+            List<Result> resultList = finalHeatsService.getHeatsRankedResults(group);
+            model.addAttribute("title", "Resultatliste for " + group.getValue());
+            model.addAttribute("resultList", resultList);
+            return "web/resultlist.html";
+        }
+
+        return "web/resultlists.html";
+    }
 }
 

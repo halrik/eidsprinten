@@ -1,5 +1,4 @@
 <html xmlns:th="http://www.thymeleaf.org">
-<html>
 <head>
   <title>Eidsprinten</title>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
@@ -30,6 +29,20 @@
       font-size: 45px;
     }
 
+    .wrapperDiv table {
+      width: 95%;
+      font-size: 1.2vw;
+      margin-left: 20px;
+      margin-right: 20px;
+      margin-bottom: 50px;
+    }
+
+    table.inline {
+      margin: 0px;
+      margin-right: 0px !important;
+      width: 100%;
+    }
+
     h3 {
       color: green;
       font-size: 5vw;
@@ -45,11 +58,9 @@
 </head>
 <body>
 <div th:insert="web/header.html"></div>
-<h3>Meny</h3>
-<p><a href="startliste-urangerte">Startliste urangerte</a></p>
-<p><a href="startliste-rangerte">Startliste rangerte</a></p>
-<p><a href="startlister-finaler">Startlister finaler</a></p>
-<p><a href="avansement-meny">Avansement</a></p>
-<p><a href="resultater">Resultater</a></p>
+<p><a href="/eidsprinten/">Tilbake til forsiden</a></p>
+<p><a href="startlister-finaler">Tilbake til resultater</a></p>
+<h3 th:text="${title}"/>
+<div class="wrapperDiv" th:with="hideTitle=true, heats=${heats}" th:insert="resultlist.html"></div>
 </body>
 </html>

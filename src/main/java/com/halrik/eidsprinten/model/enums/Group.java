@@ -39,6 +39,11 @@ public enum Group {
             .filter(group -> group.getAge() == age && group.getGender().equals(gender))
             .findFirst()
             .orElseThrow(
-                () -> new IllegalArgumentException("No GroupName enum for age " + age + " and gender " + gender));
+                () -> new IllegalArgumentException("No Group enum for age " + age + " and gender " + gender));
+    }
+
+    public static Group valueOfGenderAgeShortValue(String genderAgeShortValue) {
+        return valueOf(Gender.valueOfGenderValue(genderAgeShortValue.substring(0, 1)),
+            Integer.valueOf(genderAgeShortValue.substring(1)));
     }
 }
