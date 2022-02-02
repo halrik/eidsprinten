@@ -66,4 +66,17 @@ public class HeatsController {
         return new ResponseEntity<>("All heats deleted", HttpStatus.OK);
     }
 
+    @DeleteMapping(value = "/ranked")
+    public ResponseEntity<String> deleteRankedHeats() {
+        heatsService.deleteHeats(true, true);
+        heatsService.deleteHeats(true, false);
+        return new ResponseEntity<>("Ranked heats deleted", HttpStatus.OK);
+    }
+
+    @DeleteMapping(value = "/ranked/finals")
+    public ResponseEntity<String> deleteRankedFinalsHeats() {
+        heatsService.deleteHeats(true, false);
+        return new ResponseEntity<>("Ranked prolog heats deleted", HttpStatus.OK);
+    }
+
 }

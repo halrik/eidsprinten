@@ -64,7 +64,7 @@ public class EidsprintenService {
                         incrementBib(bib);
                         log.info("Set bib {} for team {}", bib.get(), team);
                         team.setBib(bib.get());
-                        teamRepository.save(team);
+                        saveTeam(team);
                     });
                     // make room for some late arrivals
                     for (int i = 0; i < 2; i++) {
@@ -128,7 +128,11 @@ public class EidsprintenService {
             team.setParticipantLeg2Name(participant.getFirstName() + " " + participant.getLastName());
         }
 
-        teamRepository.save(team);
+        saveTeam(team);
+    }
+
+    public Team saveTeam(Team team) {
+        return teamRepository.save(team);
     }
 
     private Team getTeam(Participant participant) {
@@ -160,7 +164,11 @@ public class EidsprintenService {
         }
 
         log.info("Save participant {}", participant);
-        savedParticipants.add(participantRepository.save(participant));
+        savedParticipants.add(saveParticipant(participant));
+    }
+
+    public Participant saveParticipant(Participant participant) {
+        return participantRepository.save(participant);
     }
 
     public List<Participant> getParticipantsByClub(String clubName) {
@@ -175,6 +183,8 @@ public class EidsprintenService {
     public long deleteTeam(Integer bib) {
         teamRepository.findByBib(bib).stream().findFirst().ifPresent(team -> {
             team.getHeats().forEach(heat -> heat.removeTeam(team));
+            participantRepository.deleteById(team.getParticipantLeg1Id());
+            participantRepository.deleteById(team.getParticipantLeg2Id());
         });
         return teamRepository.deleteByBib(bib);
     }
