@@ -8,6 +8,8 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
 
     List<Team> findByAge(Integer age);
 
+    List<Team> findByGroupName(String groupName);
+
     List<Team> findByBib(Integer bib);
 
     long deleteByBib(Integer bib);

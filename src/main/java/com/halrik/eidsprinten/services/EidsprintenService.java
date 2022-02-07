@@ -4,7 +4,6 @@ import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatc
 
 import com.halrik.eidsprinten.domain.Participant;
 import com.halrik.eidsprinten.domain.Team;
-import com.halrik.eidsprinten.repository.HeatRepository;
 import com.halrik.eidsprinten.repository.ParticipantRepository;
 import com.halrik.eidsprinten.repository.TeamRepository;
 import java.util.ArrayList;
@@ -31,13 +30,11 @@ public class EidsprintenService {
 
     private ParticipantRepository participantRepository;
     private TeamRepository teamRepository;
-    private HeatRepository heatRepository;
 
     public EidsprintenService(ParticipantRepository participantRepository,
-        TeamRepository teamRepository, HeatRepository heatRepository) {
+        TeamRepository teamRepository) {
         this.participantRepository = participantRepository;
         this.teamRepository = teamRepository;
-        this.heatRepository = heatRepository;
     }
 
     public void saveParticipantsAndTeams(List<Participant> participantList) {

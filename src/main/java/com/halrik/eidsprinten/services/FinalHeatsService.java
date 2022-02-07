@@ -9,6 +9,7 @@ import com.halrik.eidsprinten.domain.Team;
 import com.halrik.eidsprinten.model.enums.FinalHeat;
 import com.halrik.eidsprinten.model.enums.Group;
 import com.halrik.eidsprinten.repository.HeatRepository;
+import com.halrik.eidsprinten.repository.TeamRepository;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -17,16 +18,18 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 @Service
 public class FinalHeatsService {
 
     private HeatRepository heatRepository;
-    private HeatsService heatsService;
+    private TeamRepository teamRepository;
 
-    public FinalHeatsService(HeatRepository heatRepository, HeatsService heatsService) {
+    public FinalHeatsService(HeatRepository heatRepository,
+        TeamRepository teamRepository) {
         this.heatRepository = heatRepository;
-        this.heatsService = heatsService;
+        this.teamRepository = teamRepository;
     }
 
     public List<HeatAdvancement> getAdvancementSetup() {
@@ -148,9 +151,38 @@ public class FinalHeatsService {
         AtomicInteger result = new AtomicInteger(1);
         finalHeats.forEach(heat -> heat.getResult()
             .forEach((resultInHeat, team) -> {
-                resultList.add(new Result(result.get(), team));
+                resultList.add(new Result(result.toString(), team));
                 result.getAndIncrement();
             }));
+
+        List<Heat> prologHeats = heatRepository.findByGroupNameAndPrologHeat(group.getValue(), true);
+        if (!CollectionUtils.isEmpty(prologHeats)) {
+            List<Team> teams = teamRepository.findByGroupName(group.getValue());
+            teams.forEach(team -> {
+                boolean hasAnyPrologHeatsNoResult = prologHeats.stream()
+                    .anyMatch(heat -> heat.getResult().isEmpty());
+
+                if (!hasAnyPrologHeatsNoResult) {
+                    Optional<Heat> prologResult = prologHeats.stream()
+                        .filter(heat -> heat.getResult().values().contains(team))
+                        .findFirst();
+                    if (prologResult.isEmpty()) {
+                        resultList.add(new Result("DNS", team));
+                    } else {
+                        boolean hasAnyFinalHeatsNoResult = finalHeats.stream()
+                            .anyMatch(heat -> heat.getResult().isEmpty());
+                        if (!hasAnyFinalHeatsNoResult) {
+                            Optional<Heat> finalResult = finalHeats.stream()
+                                .filter(heat -> heat.getResult().values().contains(team))
+                                .findFirst();
+                            if (finalResult.isEmpty()) {
+                                resultList.add(new Result("DNF", team));
+                            }
+                        }
+                    }
+                }
+            });
+        }
 
         return resultList;
     }

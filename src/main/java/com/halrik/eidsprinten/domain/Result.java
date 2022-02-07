@@ -7,7 +7,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class Result {
 
-    private Integer result;
+    private String result;
     private Team team;
 
 }

@@ -6,3 +6,19 @@ J 9 år	IL Jardar 1
 
 7 teams are missing participants [8 G Haslum IL 2, 8 G Haslum IL 1, 9 G Asker Skiklubb 1, 9 J Haslum IL 4, 10 G Haslum IL 2, 10 G Holmen IF 4, 12 G Haslum IL 1]
 - Lagt til en utøver Navn Løs for hvert av disse lagene
+
+
+Steg for å sette opp heats og startlister:
+
+1. Last opp excel filen via /eidsprinten/api/upload i swagger for å importere participants og teams
+2. Generer urangerte heats via /eidsprinten/api/heats/unranked/save i swagger
+3. Generer rangerte heats via /eidsprinten/api/heats/ranked/save i swagger
+
+
+For å teste startlister finaler:
+1. Registrer random resultater via /eidsprinten/api/results/ranked/prolog/randomresults i swagger
+2. Generer startlister for finaler /eidsprinten/api/heats/ranked/finals/save i swagger
+
+For å teste resultatlister:
+1. Registrer random resultater via /eidsprinten/api/results/ranked/finals/randomresults i swagger
+2. Generer startlister for finaler /eidsprinten/api/heats/ranked/finals/save i swagger
