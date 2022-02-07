@@ -121,7 +121,6 @@ public class FinalHeatsService {
     }
 
     public List<Heat> getHeatsRankedFinalsAndSave() {
-        heatsService.deleteHeats(true, false);
         return heatRepository.saveAll(getHeatsRankedFinals());
     }
 
