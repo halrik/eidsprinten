@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -23,7 +24,8 @@ public class ExcelHelper {
     private static String TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
     private static String SHEET = "Deltakerliste Excel";
 
-    private static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd.MM.yyyy");
+    private static SimpleDateFormat DATE_FORMAT_DOT = new SimpleDateFormat("dd.MM.yyyy");
+    private static SimpleDateFormat DATE_FORMAT_SLASH = new SimpleDateFormat("dd/MM/yyyy");
 
     private ExcelHelper() {
         throw new IllegalStateException("Utility class");
@@ -57,7 +59,7 @@ public class ExcelHelper {
 
                 log.info("Parsing row {}", rowNumber);
 
-                participantList.add(rowToParticipant(currentRow));
+                rowToParticipant(currentRow).ifPresent(participant -> participantList.add(participant));
             }
 
             workbook.close();
@@ -68,28 +70,44 @@ public class ExcelHelper {
         }
     }
 
-    private static Participant rowToParticipant(Row row) throws ParseException {
+    private static Optional<Participant> rowToParticipant(Row row) throws ParseException {
         Participant participant = new Participant();
-        participant.setGroupName(row.getCell(0).getStringCellValue());
-        participant.setLastName(row.getCell(4).getStringCellValue());
-        participant.setFirstName(row.getCell(5).getStringCellValue());
+        if (row.getCell(0) == null) {
+            return Optional.empty();
+        }
+        participant.setGroupName(row.getCell(0).getStringCellValue().trim());
+        participant.setLastName(row.getCell(4).getStringCellValue().trim());
+        participant.setFirstName(row.getCell(5).getStringCellValue().trim());
 
         participant.setGender(row.getCell(6).getStringCellValue());
-        participant.setBirthDate(DATE_FORMAT.parse(row.getCell(7).getStringCellValue()));
+        try {
+            participant.setBirthDate(DATE_FORMAT_DOT.parse(row.getCell(7).getStringCellValue()));
+        } catch (Exception ex) {
+            participant.setBirthDate(DATE_FORMAT_SLASH.parse(row.getCell(7).getStringCellValue()));
+        }
         participant.setClubName(row.getCell(10).getStringCellValue());
         participant.setTeamName(row.getCell(15).getStringCellValue());
-        participant.setLeg(Integer.valueOf(row.getCell(16).getStringCellValue()));
 
-        if (row.getCell(23) != null) {
-            participant.setTeamLeaderName(row.getCell(23).getStringCellValue());
+        try {
+            participant.setLeg(Integer.valueOf(row.getCell(16).getStringCellValue()));
+        } catch (IllegalStateException ise) {
+            participant.setLeg((int) row.getCell(16).getNumericCellValue());
         }
 
         if (row.getCell(24) != null) {
-            participant.setTeamLeaderPhone(row.getCell(24).getStringCellValue());
+            participant.setTeamLeaderName(row.getCell(24).getStringCellValue());
         }
 
         if (row.getCell(25) != null) {
-            participant.setTeamLeaderEmail(row.getCell(25).getStringCellValue());
+            try {
+                participant.setTeamLeaderPhone(row.getCell(25).getStringCellValue());
+            } catch (IllegalStateException ise) {
+                participant.setTeamLeaderPhone("" + row.getCell(25).getNumericCellValue());
+            }
+        }
+
+        if (row.getCell(26) != null) {
+            participant.setTeamLeaderEmail(row.getCell(26).getStringCellValue());
         }
 
         participant.setAge(Integer.valueOf(
@@ -101,7 +119,7 @@ public class ExcelHelper {
 
         participant.setGenderClass(participant.getGroupName().substring(0, 1));
 
-        return participant;
+        return Optional.of(participant);
     }
 
 }

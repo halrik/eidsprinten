@@ -1,0 +1,8 @@
+Følgende lag var opprinnelig meldt på med klasse Felles 7 år:
+
+G 8 år	Haslum IL 1
+G 8 år	Haslum IL 2
+J 9 år	IL Jardar 1
+
+7 teams are missing participants [8 G Haslum IL 2, 8 G Haslum IL 1, 9 G Asker Skiklubb 1, 9 J Haslum IL 4, 10 G Haslum IL 2, 10 G Holmen IF 4, 12 G Haslum IL 1]
+- Lagt til en utøver Navn Løs for hvert av disse lagene

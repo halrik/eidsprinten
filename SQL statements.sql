@@ -1,0 +1,1 @@
+select * from participant where first_name = 'Navn';
