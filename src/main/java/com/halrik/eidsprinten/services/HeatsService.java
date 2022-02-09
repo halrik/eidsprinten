@@ -93,23 +93,32 @@ public class HeatsService {
 
         LocalDateTime start = getStartTime(START_HOUR);
 
-        // add L1 heats for age 8 and 9
+        // add L1 heats for age 8
         int leg = 1;
         start = addUnrankedHeats(start, leg, heatNo(unRankedHeats), unRankedHeats,
             filterByGender(Gender.BOYS, age8Teams));
         start = addUnrankedHeats(start, leg, heatNo(unRankedHeats), unRankedHeats,
             filterByGender(Gender.GIRLS, age8Teams));
-        start = addUnrankedHeats(start, leg, heatNo(unRankedHeats), unRankedHeats,
-            filterByGender(Gender.BOYS, age9Teams));
-        start = addUnrankedHeats(start, leg, heatNo(unRankedHeats), unRankedHeats,
-            filterByGender(Gender.GIRLS, age9Teams));
 
-        // add L2 heats for age 8 and 9
+        start = start.plusMinutes(5);
+
+        // add L2 heats for age 8
         leg = 2;
         start = addUnrankedHeats(start, leg, heatNo(unRankedHeats), unRankedHeats,
             filterByGender(Gender.BOYS, age8Teams));
         start = addUnrankedHeats(start, leg, heatNo(unRankedHeats), unRankedHeats,
             filterByGender(Gender.GIRLS, age8Teams));
+
+        // add L1 heats for age 9
+        leg = 1;
+        start = addUnrankedHeats(start, leg, heatNo(unRankedHeats), unRankedHeats,
+            filterByGender(Gender.BOYS, age9Teams));
+        start = start.plusMinutes(5);
+        start = addUnrankedHeats(start, leg, heatNo(unRankedHeats), unRankedHeats,
+            filterByGender(Gender.GIRLS, age9Teams));
+
+        // add L2 heats for age 9
+        leg = 2;
         start = addUnrankedHeats(start, leg, heatNo(unRankedHeats), unRankedHeats,
             filterByGender(Gender.BOYS, age9Teams));
         start = addUnrankedHeats(start, leg, heatNo(unRankedHeats), unRankedHeats,
