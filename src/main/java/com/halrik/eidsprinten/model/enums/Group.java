@@ -3,6 +3,12 @@ package com.halrik.eidsprinten.model.enums;
 import java.util.Arrays;
 
 public enum Group {
+    BOYS_8("G 8 år", Gender.BOYS, 8),
+    GIRLS_8("J 8 år", Gender.GIRLS, 8),
+    BOYS_9("G 9 år", Gender.BOYS, 9),
+    GIRLS_9("J 9 år", Gender.GIRLS, 9),
+    BOYS_10("G 10 år", Gender.BOYS, 10),
+    GIRLS_10("J 10 år", Gender.GIRLS, 10),
     BOYS_11("G 11 år", Gender.BOYS, 11),
     GIRLS_11("J 11 år", Gender.GIRLS, 11),
     BOYS_12("G 12 år", Gender.BOYS, 12),

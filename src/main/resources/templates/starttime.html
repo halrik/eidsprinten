@@ -1,0 +1,44 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <style>
+    table {
+      width: 100%;
+      font-size: 12px;
+    }
+
+    table, th, td {
+      border: 2px solid black;
+      border-collapse: collapse;
+      padding: 2px;
+    }
+
+    tr {
+      page-break-inside: avoid;
+      page-break-after: auto;
+    }
+
+    h3 {
+      color: green;
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+
+<h3 th:if="${!hideTitle}">
+  Eidsprinten 2022 - Starttider
+</h3>
+<table>
+  <thead>
+  <tr>
+    <th style="width:20%;">Starttid</th>
+    <th style="text-align: left;">Klasse</th>
+  </tr>
+  </thead>
+  <tr th:each="startTime: ${startTimeMap}">
+    <td style="text-align: center;" th:text="${startTime.key}"></td>
+    <td th:text="${startTime.value}"></td>
+  </tr>
+</table>
+</body>
+</html>

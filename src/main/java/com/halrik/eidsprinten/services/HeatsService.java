@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,6 +52,35 @@ public class HeatsService {
         this.teamRepository = teamRepository;
         this.heatRepository = heatRepository;
         this.hourMinuteFormatter = hourMinuteFormatter;
+    }
+
+    public Map<String, String> getStartTimeMap() {
+        List<Heat> allHeats = new ArrayList<>();
+        allHeats.addAll(getHeatsUnRankedStored());
+        allHeats.addAll(getHeatsRankedStored());
+
+        Map<String, String> startTimeMap = new TreeMap<>();
+        addStartTimeForGroup(startTimeMap, allHeats, Group.BOYS_8);
+        addStartTimeForGroup(startTimeMap, allHeats, Group.GIRLS_8);
+        addStartTimeForGroup(startTimeMap, allHeats, Group.BOYS_9);
+        addStartTimeForGroup(startTimeMap, allHeats, Group.GIRLS_9);
+        addStartTimeForGroup(startTimeMap, allHeats, Group.BOYS_10);
+        addStartTimeForGroup(startTimeMap, allHeats, Group.GIRLS_10);
+        addStartTimeForGroup(startTimeMap, allHeats, Group.BOYS_11);
+        addStartTimeForGroup(startTimeMap, allHeats, Group.GIRLS_11);
+        addStartTimeForGroup(startTimeMap, allHeats, Group.BOYS_12);
+        addStartTimeForGroup(startTimeMap, allHeats, Group.GIRLS_12);
+        addStartTimeForGroup(startTimeMap, allHeats, Group.BOYS_13);
+        addStartTimeForGroup(startTimeMap, allHeats, Group.GIRLS_13);
+        addStartTimeForGroup(startTimeMap, allHeats, Group.BOYS_14);
+        addStartTimeForGroup(startTimeMap, allHeats, Group.GIRLS_14);
+        return startTimeMap;
+    }
+
+    private void addStartTimeForGroup(Map<String, String> startTimeMap, List<Heat> allHeats, Group group) {
+        startTimeMap.put(
+            allHeats.stream().filter(Heat::isPrologHeat).filter(heat -> heat.getGroupName().equals(group.getValue()))
+                .findFirst().get().getStartTime(), group.getValue());
     }
 
     public List<Heat> getHeatsUnRankedAndSave() {

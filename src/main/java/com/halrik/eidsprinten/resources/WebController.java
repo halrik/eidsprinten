@@ -11,6 +11,7 @@ import com.halrik.eidsprinten.model.enums.Group;
 import com.halrik.eidsprinten.services.EidsprintenService;
 import com.halrik.eidsprinten.services.FinalHeatsService;
 import com.halrik.eidsprinten.services.HeatsService;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Controller;
@@ -37,6 +38,14 @@ public class WebController {
         return "web/index.html";
     }
 
+    @GetMapping("/starttider")
+    public String startTime(Model model) {
+        Map<String, String> startTimeMap = new HashMap<>();
+        model.addAttribute("title", "Startider per klasse");
+        model.addAttribute("startTimeMap", heatsService.getStartTimeMap());
+        return "web/starttime.html";
+    }
+
     @GetMapping("/startnummerliste")
     public String startNumbers(Model model) {
         Map<String, List<Team>> teamsGroupedByClub = eidsprintenService.getTeamsGroupedByClub();
@@ -44,7 +53,6 @@ public class WebController {
         model.addAttribute("teamsGroupedByClub", teamsGroupedByClub);
         return "web/startnumbers.html";
     }
-
 
     @GetMapping("/startliste-urangerte")
     public String startListUnranked(Model model) {
