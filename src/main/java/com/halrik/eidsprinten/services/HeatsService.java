@@ -41,6 +41,7 @@ public class HeatsService {
     private static final int START_HOUR_RANKED = 13;
     private static final int START_MINUTE_RANKED = 15;
     private static final int MINUTES_BETWEEN_HEATS = 5;
+    private static final int MINUTES_AFTER_LAST_HEAT_TO_AWARD_CEREMONY = 25;
 
     private TeamRepository teamRepository;
     private HeatRepository heatRepository;
@@ -78,9 +79,42 @@ public class HeatsService {
     }
 
     private void addStartTimeForGroup(Map<String, String> startTimeMap, List<Heat> allHeats, Group group) {
-        startTimeMap.put(
-            allHeats.stream().filter(Heat::isPrologHeat).filter(heat -> heat.getGroupName().equals(group.getValue()))
-                .findFirst().get().getStartTime(), group.getValue());
+        allHeats.stream().filter(Heat::isPrologHeat).filter(heat -> heat.getGroupName().equals(group.getValue()))
+            .findFirst().ifPresent(heat -> startTimeMap.put(heat.getStartTime(), group.getValue()));
+    }
+
+    public Map<String, String> getAwardCeremonyTimeMap() {
+        List<Heat> allHeats = new ArrayList<>();
+        allHeats.addAll(getHeatsUnRankedStored());
+        allHeats.addAll(getHeatsRankedStored());
+
+        Map<String, String> awardCeremonyTimeMap = new TreeMap<>();
+        addAwardCeremonyTimeForGroup(awardCeremonyTimeMap, allHeats, Group.BOYS_11);
+        addAwardCeremonyTimeForGroup(awardCeremonyTimeMap, allHeats, Group.GIRLS_11);
+        addAwardCeremonyTimeForGroup(awardCeremonyTimeMap, allHeats, Group.BOYS_12);
+        addAwardCeremonyTimeForGroup(awardCeremonyTimeMap, allHeats, Group.GIRLS_12);
+        addAwardCeremonyTimeForGroup(awardCeremonyTimeMap, allHeats, Group.BOYS_13);
+        addAwardCeremonyTimeForGroup(awardCeremonyTimeMap, allHeats, Group.GIRLS_13);
+        addAwardCeremonyTimeForGroup(awardCeremonyTimeMap, allHeats, Group.BOYS_14);
+        addAwardCeremonyTimeForGroup(awardCeremonyTimeMap, allHeats, Group.GIRLS_14);
+        return awardCeremonyTimeMap;
+    }
+
+    private void addAwardCeremonyTimeForGroup(Map<String, String> awardCeremonyTimeMap, List<Heat> allHeats,
+        Group group) {
+        allHeats.stream().filter(heat -> !heat.isPrologHeat())
+            .filter(heat -> heat.getGroupName().equals(group.getValue()))
+            .reduce((first, second) -> second).ifPresent(heat -> {
+                String heatStartTime = heat.getStartTime();
+
+                LocalDateTime heatStartDateTime = LocalDateTime.of(LocalDateTime.now().getYear(), Month.FEBRUARY, 13,
+                    Integer.valueOf(heatStartTime.substring(0, heatStartTime.indexOf(":"))),
+                    Integer.valueOf(heatStartTime.substring(heatStartTime.indexOf(":") + 1)), 00);
+
+                LocalDateTime groupAwardCeremonyTime = heatStartDateTime.plusMinutes(
+                    MINUTES_AFTER_LAST_HEAT_TO_AWARD_CEREMONY);
+                awardCeremonyTimeMap.put(groupAwardCeremonyTime.format(hourMinuteFormatter), group.getValue());
+            });
     }
 
     public List<Heat> getHeatsUnRankedAndSave() {
@@ -100,7 +134,7 @@ public class HeatsService {
         List<Heat> heats = heatRepository.findByRankedHeatAndPrologHeat(isRanked, isProlog);
         heats.forEach(heat -> {
             Set<Team> teams = new HashSet(heat.getTeams());
-            teams.forEach(team -> heat.removeTeam(team));
+            teams.forEach(heat::removeTeam);
             heatRepository.save(heat);
         });
         heatRepository.deleteAll(heats);

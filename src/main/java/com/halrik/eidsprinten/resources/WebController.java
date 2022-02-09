@@ -133,5 +133,14 @@ public class WebController {
 
         return "web/resultlists.html";
     }
+
+    @GetMapping("/premieutdeling")
+    public String awardCeremony(Model model) {
+        Map<String, String> startTimeMap = new HashMap<>();
+        model.addAttribute("title", "Premieutdeling");
+        model.addAttribute("awardCeremonyTimeMap", heatsService.getAwardCeremonyTimeMap());
+        return "web/awardceremony.html";
+    }
+
 }
 

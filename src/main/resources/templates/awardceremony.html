@@ -1,0 +1,53 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <style>
+    table {
+      width: 100%;
+      font-size: 12px;
+    }
+
+    table, th, td {
+      border: 2px solid black;
+      border-collapse: collapse;
+      padding: 2px;
+    }
+
+    tr {
+      page-break-inside: avoid;
+      page-break-after: auto;
+    }
+
+    h3 {
+      color: green;
+      text-align: left;
+    }
+
+    div.ingress {
+      font-size: 2vw;
+      margin: 20px;
+    }
+
+  </style>
+</head>
+<body>
+
+<h3 th:if="${!hideTitle}">
+  Eidsprinten 2022 - Premieutdeling
+</h3>
+
+<div class="ingress">Premieutdeling for urangerte klasser vil foregå fortløpende på vei ut fra målområdet.</div>
+
+<table>
+  <thead>
+  <tr>
+    <th style="width:20%;">Ca. tid for premieutdeling</th>
+    <th style="text-align: left;">Klasse</th>
+  </tr>
+  </thead>
+  <tr th:each="awardCeremonyTime: ${awardCeremonyTimeMap}">
+    <td style="text-align: center;" th:text="${awardCeremonyTime.key}"></td>
+    <td th:text="${awardCeremonyTime.value}"></td>
+  </tr>
+</table>
+</body>
+</html>
