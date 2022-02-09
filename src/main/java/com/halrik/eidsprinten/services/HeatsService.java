@@ -36,7 +36,9 @@ public class HeatsService {
 
     private static final int MAX_HEAT_SIZE = 9;
     private static final int START_HOUR = 10;
+    private static final int START_MINUTE = 00;
     private static final int START_HOUR_RANKED = 13;
+    private static final int START_MINUTE_RANKED = 15;
     private static final int MINUTES_BETWEEN_HEATS = 5;
 
     private TeamRepository teamRepository;
@@ -91,7 +93,7 @@ public class HeatsService {
         List<Team> age9Teams = teamRepository.findByAge(9);
         List<Team> age10Teams = teamRepository.findByAge(10);
 
-        LocalDateTime start = getStartTime(START_HOUR);
+        LocalDateTime start = getStartTime(START_HOUR, START_MINUTE);
 
         // add L1 heats for age 8
         int leg = 1;
@@ -153,7 +155,7 @@ public class HeatsService {
         List<Team> age13Teams = teamRepository.findByAge(13);
         List<Team> age14Teams = teamRepository.findByAge(14);
 
-        LocalDateTime start = getStartTime(START_HOUR_RANKED);
+        LocalDateTime start = getStartTime(START_HOUR_RANKED, START_MINUTE_RANKED);
 
         Integer lastHeatNo = getHeatsUnRanked().size();
 
@@ -248,8 +250,8 @@ public class HeatsService {
         return resultTeamMap;
     }
 
-    private LocalDateTime getStartTime(int startHourRanked) {
-        return LocalDateTime.of(2021, Month.FEBRUARY, 13, startHourRanked, 00, 00);
+    private LocalDateTime getStartTime(int startHourRanked, int startMinuteRanked) {
+        return LocalDateTime.of(2022, Month.FEBRUARY, 13, startHourRanked, startMinuteRanked, 00);
     }
 
     private int heatNo(List<Heat> heats) {
