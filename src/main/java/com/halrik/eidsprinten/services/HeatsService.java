@@ -163,6 +163,8 @@ public class HeatsService {
         start = addPrologHeats(start, nextHeatNo(lastHeatNo, rankedHeats), rankedHeats,
             filterByGender(Gender.GIRLS, age11Teams));
 
+        start = start.plusMinutes(5);
+
         // add empty final heats for age 11
         start = addFinalHeats(start, nextHeatNo(lastHeatNo, rankedHeats), rankedHeats,
             sizeOfPrologHeatsForGroup(Group.BOYS_11, rankedHeats), Group.BOYS_11);
@@ -174,6 +176,8 @@ public class HeatsService {
             filterByGender(Gender.BOYS, age12Teams));
         start = addPrologHeats(start, nextHeatNo(lastHeatNo, rankedHeats), rankedHeats,
             filterByGender(Gender.GIRLS, age12Teams));
+
+        start = start.plusMinutes(5);
 
         // add empty final heats for age 12
         start = addFinalHeats(start, nextHeatNo(lastHeatNo, rankedHeats), rankedHeats,
@@ -187,6 +191,8 @@ public class HeatsService {
         start = addPrologHeats(start, nextHeatNo(lastHeatNo, rankedHeats), rankedHeats,
             filterByGender(Gender.GIRLS, age13Teams));
 
+        start = start.plusMinutes(10);
+
         // add empty final heats for age 13
         start = addFinalHeats(start, nextHeatNo(lastHeatNo, rankedHeats), rankedHeats,
             sizeOfPrologHeatsForGroup(Group.BOYS_13, rankedHeats), Group.BOYS_13);
@@ -198,6 +204,8 @@ public class HeatsService {
             filterByGender(Gender.BOYS, age14Teams));
         start = addPrologHeats(start, nextHeatNo(lastHeatNo, rankedHeats), rankedHeats,
             filterByGender(Gender.GIRLS, age14Teams));
+
+        start = start.plusMinutes(10);
 
         // add empty final heats for age 14
         start = addFinalHeats(start, nextHeatNo(lastHeatNo, rankedHeats), rankedHeats,
