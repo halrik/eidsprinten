@@ -1,10 +1,12 @@
 package com.halrik.eidsprinten.services;
 
 import static com.halrik.eidsprinten.model.enums.Template.ADVANCEMENT_SETUP;
+import static com.halrik.eidsprinten.model.enums.Template.AWARD_CEREMONY;
 import static com.halrik.eidsprinten.model.enums.Template.RESULT_LIST;
 import static com.halrik.eidsprinten.model.enums.Template.STARTNUMBERS;
 import static com.halrik.eidsprinten.model.enums.Template.START_LIST_FINALS;
 import static com.halrik.eidsprinten.model.enums.Template.START_LIST_HEATS;
+import static com.halrik.eidsprinten.model.enums.Template.START_TIME;
 import static com.halrik.eidsprinten.utils.HeatsUtil.getAdvancementsForGroup;
 
 import com.halrik.eidsprinten.domain.Heat;
@@ -48,6 +50,18 @@ public class TemplateService {
         Context context = new Context();
         context.setVariable("teamsGroupedByClub", teamsGroupedByClub);
         return parseThymeleafTemplate(STARTNUMBERS.getTemplateName(), context);
+    }
+
+    public String getStartTimeHtml(Map<String, String> startTimeMap) {
+        Context context = new Context();
+        context.setVariable("startTimeMap", startTimeMap);
+        return parseThymeleafTemplate(START_TIME.getTemplateName(), context);
+    }
+
+    public String getAwardCeremonyHtml(Map<String, String> awardCeremonyTimeMap) {
+        Context context = new Context();
+        context.setVariable("awardCeremonyTimeMap", awardCeremonyTimeMap);
+        return parseThymeleafTemplate(AWARD_CEREMONY.getTemplateName(), context);
     }
 
     public String getAdvancementsSetupHtml(List<HeatAdvancement> advancements) {

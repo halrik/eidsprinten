@@ -116,6 +116,31 @@ public class ReportService {
         }
     }
 
+    public byte[] generateStartTimePdf() throws IOException {
+        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+            Map<String, String> startTimeMap = heatsService.getStartTimeMap();
+            pdfBuilder.withHtmlContent(
+                    templateService.getStartTimeHtml(startTimeMap), "")
+                .toStream(outputStream)
+                .run();
+
+            return outputStream.toByteArray();
+        }
+    }
+
+    public byte[] generateAwardCeremonyPdf() throws IOException {
+        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+            Map<String, String> awardCeremonyTimeMap = heatsService.getAwardCeremonyTimeMap();
+            pdfBuilder.withHtmlContent(
+                    templateService.getAwardCeremonyHtml(awardCeremonyTimeMap), "")
+                .toStream(outputStream)
+                .run();
+
+            return outputStream.toByteArray();
+        }
+    }
+
+
     protected InputStream getFontInputStream(String fileName) {
         return ReportService.class.getResourceAsStream("/fonts/" + fileName);
     }

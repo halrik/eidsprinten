@@ -102,6 +102,30 @@ public class ReportController {
             .body(new InputStreamResource(inputStream));
     }
 
+    @GetMapping(value = "/starttime", produces = "application/pdf")
+    public ResponseEntity<InputStreamResource> startTime() throws IOException {
+        byte[] pdfBytes = reportService.generateStartTimePdf();
+        String downloadFileName = "start-tider-" + LocalDateTime.now().format(dateTimeFormatter) + ".pdf";
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(pdfBytes);
+        return ResponseEntity
+            .ok()
+            .headers(getHeaders(downloadFileName))
+            .contentType(MediaType.APPLICATION_PDF)
+            .body(new InputStreamResource(inputStream));
+    }
+
+    @GetMapping(value = "/awardceremony", produces = "application/pdf")
+    public ResponseEntity<InputStreamResource> awardCeremony() throws IOException {
+        byte[] pdfBytes = reportService.generateAwardCeremonyPdf();
+        String downloadFileName = "premieutdeling-" + LocalDateTime.now().format(dateTimeFormatter) + ".pdf";
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(pdfBytes);
+        return ResponseEntity
+            .ok()
+            .headers(getHeaders(downloadFileName))
+            .contentType(MediaType.APPLICATION_PDF)
+            .body(new InputStreamResource(inputStream));
+    }
+
     private HttpHeaders getHeaders(String downloadFileName) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/pdf");

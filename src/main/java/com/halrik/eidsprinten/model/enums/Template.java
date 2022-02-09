@@ -10,7 +10,9 @@ public enum Template {
     START_LIST_FINALS("startlist-finals.html"),
     ADVANCEMENT_SETUP("advancement-setup.html"),
     RESULT_LIST("resultlist.html"),
-    STARTNUMBERS("startnumbers.html");
+    STARTNUMBERS("startnumbers.html"),
+    START_TIME("starttime.html"),
+    AWARD_CEREMONY("awardceremony.html");
 
     private final String templateName;
 
