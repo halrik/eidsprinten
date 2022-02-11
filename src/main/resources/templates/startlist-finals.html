@@ -93,7 +93,7 @@
       <table class="inline">
         <tr th:each="team, iterStat: ${heat.teams}">
           <td th:class="${iterStat.last}? 'inline last' : 'inline'"
-              th:text="${heat.isPrologHeat} ? ${team.participantLeg1Name} : ${team.participantLeg2Name}"/>
+              th:text="${team.participantLeg1Name}"/>
         </tr>
       </table>
     </td>
@@ -101,7 +101,7 @@
       <table class="inline">
         <tr th:each="team, iterStat: ${heat.teams}">
           <td th:class="${iterStat.last}? 'inline last' : 'inline'"
-              th:text="${heat.isPrologHeat} ? ${team.participantLeg2Name} : ${team.participantLeg1Name}"/>
+              th:text="${team.participantLeg2Name}"/>
         </tr>
       </table>
     </td>
