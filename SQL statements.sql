@@ -101,3 +101,10 @@ select * from team where bib = 63;
 select * from participant where id in (243, 244);
 update team set age = 8, group_name = 'J 8 år' where bib = 63;
 update participant set age = 8, group_name = 'J 8 år' where id in (243, 244);
+
+-- slå sammen lag 167 og 168
+select * from team where bib in (167, 168);
+select * from participant where id in (295, 293);
+update team set participant_leg2id = 295, participant_leg2name = 'Mathias Nøst-Hegge' where bib = 167;
+update team set participant_leg1id = 294, participant_leg1name = 'Navnløs' where bib = 168;
+-- lag 168 kan nå slettes
