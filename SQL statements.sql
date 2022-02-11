@@ -108,3 +108,10 @@ select * from participant where id in (295, 293);
 update team set participant_leg2id = 295, participant_leg2name = 'Mathias Nøst-Hegge' where bib = 167;
 update team set participant_leg1id = 294, participant_leg1name = 'Navnløs' where bib = 168;
 -- lag 168 kan nå slettes
+
+-- slå sammen lag, William og Magnus har trukket seg
+-- G 11 år	Gui SK 2	129	Sindre Løvstad Rist	William Paul Wesche
+-- G 11 år	Gui SK 1	128	Ludvik Berge-Lunden	Magnus Lundsett Fredriksen
+select * from team where bib in (128, 129);
+update team set participant_leg2id = 355, participant_leg2name = 'Sindre Løvstad Rist' where bib = 128;
+-- lag 129 kan nå slettes
