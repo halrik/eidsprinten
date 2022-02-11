@@ -35,7 +35,7 @@ public class HeatsService {
 
     private static final Logger log = LoggerFactory.getLogger(HeatsService.class);
 
-    private static final int MAX_HEAT_SIZE = 9;
+    private static final int MAX_HEAT_SIZE = 8;
     private static final int START_HOUR = 10;
     private static final int START_MINUTE = 00;
     private static final int START_HOUR_RANKED = 13;
