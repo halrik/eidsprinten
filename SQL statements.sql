@@ -26,3 +26,11 @@ update participant set first_name = 'Navn', last_name = 'Løs' where id = 296;
 update team set participant_leg1name = 'Navn Løs' where bib = 168;
 
 -- lag 140 (Alma og Celine Myhr) slettet
+
+-- Klasse: G10
+-- Lag: Holmen IF 4
+-- Navn på utøver som mangler: Hao Zheng
+select * from team where bib = 83;
+select * from participant where id = 16;
+update participant set first_name = 'Hao', last_name = 'Zheng' where id = 16;
+update team set participant_leg2name = 'Hao Zheng' where bib = 83;
