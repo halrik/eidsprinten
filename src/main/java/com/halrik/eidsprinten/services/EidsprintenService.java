@@ -186,11 +186,11 @@ public class EidsprintenService {
         sortTeamsByGenderAndAge(allTeams);
 
         allTeams.forEach(team -> {
+            String key = team.getClubName() + (team.getAge() > 10 ? " - Rangerte" : " - Urangerte");
             List<Team> teamsForClub =
-                teamsGroupedByClub.get(team.getClubName()) != null ? teamsGroupedByClub.get(team.getClubName())
-                    : new ArrayList<>();
+                teamsGroupedByClub.get(key) != null ? teamsGroupedByClub.get(key) : new ArrayList<>();
             teamsForClub.add(team);
-            teamsGroupedByClub.put(team.getClubName(), teamsForClub);
+            teamsGroupedByClub.put(key, teamsForClub);
         });
 
         return teamsGroupedByClub;

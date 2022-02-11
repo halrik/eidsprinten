@@ -21,15 +21,28 @@
       color: green;
       text-align: left;
     }
+
+    div {
+      page-break-after: always;
+    }
+  </style>
+  <style type="text/css" media="print">
+    @page {
+      size: landscape;
+    }
+
+    body {
+      writing-mode: tb-rl;
+    }
   </style>
 </head>
 <body>
 
-<h3 th:if="${!hideTitle}">
-  Eidsprinten 2022 - Startnummer sortert per klubb
-</h3>
-
 <div th:each="teams: ${teamsGroupedByClub}">
+  <h3 th:if="${!hideTitle}">
+    Eidsprinten 2022 - Startnummer sortert per klubb og urangert/rangert
+  </h3>
+
   <h2 th:text="${teams.getKey()}"></h2>
   <table>
     <thead>
