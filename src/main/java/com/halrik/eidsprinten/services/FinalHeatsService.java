@@ -104,7 +104,8 @@ public class FinalHeatsService {
                 }
                 heatAdvancements.add(
                     new HeatAdvancement(result, prologHeat.getHeatNumber(), finalHeat.getHeatNumber(),
-                        prologHeat.getHeatName(), finalHeat.getHeatName(), prologHeat.getGroupName()));
+                        prologHeat.getHeatName(), finalHeat.getHeatName(), prologHeat.getGroupName(),
+                        prologHeat.getTeams().size()));
             }
         }));
     }

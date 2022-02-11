@@ -10,26 +10,24 @@
 <table>
   <tbody>
   <tr>
-    <th colspan="3">Fra løp 1</th>
+    <th style="text-align: center;" colspan="3">Fra løp 1</th>
     <th></th>
-    <th colspan="3">Til løp 2</th>
+    <th style="text-align: center;" colspan="3">Til løp 2</th>
   </tr>
   <tr>
-    <th>Heat nr.</th>
-    <th>Klasse</th>
-    <th>Løp</th>
-    <th>Resultat</th>
-    <th>Heat nr.</th>
-    <th>Klasse</th>
-    <th>Løp</th>
+    <th style="text-align: center;">Heat nr.</th>
+    <th style="text-align: center;">Klasse</th>
+    <th style="text-align: center;">Løp</th>
+    <th style="text-align: center;">Resultat</th>
+    <th style="text-align: center;">Heat nr.</th>
+    <th style="text-align: center;">Løp</th>
   </tr>
-  <tr th:each="advancement: ${groupAdvancements}">
-    <td th:text="${advancement.fromHeatNumber}"/>
-    <td th:text="${advancement.groupName}"/>
-    <td th:text="${advancement.fromHeatName}"/>
+  <tr th:class="${advancement.result == 1}? 'first' : ''" th:each="advancement, iterStat: ${groupAdvancements}">
+    <td th:if="${advancement.result == 1}" th:rowspan="${advancement.teamsInHeat}" th:text="${advancement.fromHeatNumber}"/>
+    <td th:if="${advancement.result == 1}" th:rowspan="${advancement.teamsInHeat}" th:text="${advancement.groupName}"/>
+    <td th:if="${advancement.result == 1}" th:rowspan="${advancement.teamsInHeat}" th:text="${advancement.fromHeatName}"/>
     <td th:text="${advancement.result}"/>
     <td th:text="${advancement.toHeatNumber}"/>
-    <td th:text="${advancement.groupName}"/>
     <td th:text="${advancement.toHeatName}"/>
   </tr>
   </tbody>

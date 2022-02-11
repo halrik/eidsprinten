@@ -13,5 +13,5 @@ public class HeatAdvancement {
     private String fromHeatName;
     private String toHeatName;
     private String groupName;
-
+    private Integer teamsInHeat;
 }
