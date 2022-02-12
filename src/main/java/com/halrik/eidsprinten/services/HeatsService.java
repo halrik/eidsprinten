@@ -419,8 +419,12 @@ public class HeatsService {
         int teamsSize = teams.size();
         double numberOfHeatsEachRoundForCurrentGroup =
             teamsSize / MAX_HEAT_SIZE + (teamsSize % MAX_HEAT_SIZE > 0 ? 1 : 0);
-        int heatNumberCounter = heatNumber;
 
+        if (numberOfHeatsEachRoundForCurrentGroup < 2) {
+            numberOfHeatsEachRoundForCurrentGroup = 2;
+        }
+
+        int heatNumberCounter = heatNumber;
         List<Heat> addHeats = new ArrayList<>();
         while (addHeats.size() < numberOfHeatsEachRoundForCurrentGroup) {
             Heat heat = new Heat();
