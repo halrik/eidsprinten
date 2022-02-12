@@ -105,7 +105,7 @@ public class WebController {
 
         if (genderAgeShortValue != null) {
             Group group = Group.valueOfGenderAgeShortValue(genderAgeShortValue);
-            model.addAttribute("advancementsBoys11", getAdvancementsForGroup(advancements, group));
+            model.addAttribute("advancements", getAdvancementsForGroup(advancements, group));
             return "web/advancement-setup.html";
         }
 
@@ -113,10 +113,8 @@ public class WebController {
         model.addAttribute("advancementsGirls11", getAdvancementsForGroup(advancements, Group.GIRLS_11));
         model.addAttribute("advancementsBoys12", getAdvancementsForGroup(advancements, Group.BOYS_12));
         model.addAttribute("advancementsGirls12", getAdvancementsForGroup(advancements, Group.GIRLS_12));
-        model.addAttribute("advancementsBoys13", getAdvancementsForGroup(advancements, Group.BOYS_13));
-        model.addAttribute("advancementsGirls13", getAdvancementsForGroup(advancements, Group.GIRLS_13));
-        model.addAttribute("advancementsBoys14", getAdvancementsForGroup(advancements, Group.BOYS_14));
-        model.addAttribute("advancementsGirls14", getAdvancementsForGroup(advancements, Group.GIRLS_14));
+        model.addAttribute("advancementsMixed13", getAdvancementsForGroup(advancements, Group.MIXED_13));
+        model.addAttribute("advancementsMixed14", getAdvancementsForGroup(advancements, Group.MIXED_14));
 
         return "web/advancement-setup.html";
     }

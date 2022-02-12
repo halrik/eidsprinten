@@ -67,6 +67,9 @@
 <p><a href="/eidsprinten/">Tilbake til forsiden</a></p>
 <p><a href="/eidsprinten/avansement-meny">Tilbake til avansement</a></p>
 
+<div th:if="${advancements}" th:with="groupAdvancements=${advancements}"
+     th:insert="group-advancements.html"></div>
+
 <div th:if="${advancementsBoys11}" th:with="groupAdvancements=${advancementsBoys11}"
      th:insert="group-advancements.html"></div>
 
@@ -79,16 +82,11 @@
 <div th:if="${advancementsGirls12}" th:with="groupAdvancements=${advancementsGirls12}"
      th:insert="group-advancements.html"></div>
 
-<div th:if="${advancementsBoys13}" th:with="groupAdvancements=${advancementsBoys13}"
+<div th:if="${advancements13}" th:with="groupAdvancements=${advancements13}"
      th:insert="group-advancements.html"></div>
 
-<div th:if="${advancementsGirls13}" th:with="groupAdvancements=${advancementsGirls13}"
+<div th:if="${advancements14}" th:with="groupAdvancements=${advancements14}"
      th:insert="group-advancements.html"></div>
 
-<div th:if="${advancementsBoys14}" th:with="groupAdvancements=${advancementsBoys14}"
-     th:insert="group-advancements.html"></div>
-
-<div th:if="${advancementsGirls14}" th:with="groupAdvancements=${advancementsGirls14}"
-     th:insert="group-advancements.html"></div>
 </body>
 </html>

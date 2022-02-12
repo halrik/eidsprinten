@@ -4,7 +4,8 @@ import java.util.Arrays;
 
 public enum Gender {
     BOYS("G"),
-    GIRLS("J");
+    GIRLS("J"),
+    MIXED("M");
 
     String value;
 

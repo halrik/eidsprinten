@@ -1,5 +1,7 @@
 package com.halrik.eidsprinten.services;
 
+import static com.halrik.eidsprinten.domain.Result.DNF;
+import static com.halrik.eidsprinten.domain.Result.DNS;
 import static com.halrik.eidsprinten.utils.HeatsUtil.sortTeamsWithinHeatByBibAndSortHeatsByHeatNumber;
 
 import com.halrik.eidsprinten.domain.Heat;
@@ -39,10 +41,8 @@ public class FinalHeatsService {
         fillAdvancementForGroup(heatAdvancements, Group.GIRLS_11);
         fillAdvancementForGroup(heatAdvancements, Group.BOYS_12);
         fillAdvancementForGroup(heatAdvancements, Group.GIRLS_12);
-        fillAdvancementForGroup(heatAdvancements, Group.BOYS_13);
-        fillAdvancementForGroup(heatAdvancements, Group.GIRLS_13);
-        fillAdvancementForGroup(heatAdvancements, Group.BOYS_14);
-        fillAdvancementForGroup(heatAdvancements, Group.GIRLS_14);
+        fillAdvancementForGroup(heatAdvancements, Group.MIXED_13);
+        fillAdvancementForGroup(heatAdvancements, Group.MIXED_14);
 
         heatAdvancements.sort(Comparator.comparingInt(HeatAdvancement::getFromHeatNumber));
 
@@ -137,17 +137,23 @@ public class FinalHeatsService {
         finalHeats.addAll(updateFinalHeats(Group.GIRLS_11, filterAdvancementSetup(advancementSetup, Group.GIRLS_11)));
         finalHeats.addAll(updateFinalHeats(Group.BOYS_12, filterAdvancementSetup(advancementSetup, Group.BOYS_12)));
         finalHeats.addAll(updateFinalHeats(Group.GIRLS_12, filterAdvancementSetup(advancementSetup, Group.GIRLS_12)));
-        finalHeats.addAll(updateFinalHeats(Group.BOYS_13, filterAdvancementSetup(advancementSetup, Group.BOYS_13)));
-        finalHeats.addAll(updateFinalHeats(Group.GIRLS_13, filterAdvancementSetup(advancementSetup, Group.GIRLS_13)));
-        finalHeats.addAll(updateFinalHeats(Group.BOYS_14, filterAdvancementSetup(advancementSetup, Group.BOYS_14)));
-        finalHeats.addAll(updateFinalHeats(Group.GIRLS_14, filterAdvancementSetup(advancementSetup, Group.GIRLS_14)));
+        finalHeats.addAll(updateFinalHeats(Group.MIXED_13, filterAdvancementSetup(advancementSetup, Group.MIXED_13)));
+        finalHeats.addAll(updateFinalHeats(Group.MIXED_14, filterAdvancementSetup(advancementSetup, Group.MIXED_14)));
 
         return finalHeats;
     }
 
     public List<Result> getHeatsRankedResults(Group group) {
         List<Result> resultList = new ArrayList<>();
-        List<Heat> finalHeats = heatRepository.findByGroupNameAndPrologHeat(group.getValue(), false);
+
+        List<Heat> finalHeats;
+        if (Group.BOYS_13.equals(group) || Group.GIRLS_13.equals(group)) {
+            finalHeats = heatRepository.findByGroupNameAndPrologHeat(Group.MIXED_13.getValue(), false);
+        } else if (Group.BOYS_14.equals(group) || Group.GIRLS_14.equals(group)) {
+            finalHeats = heatRepository.findByGroupNameAndPrologHeat(Group.MIXED_14.getValue(), false);
+        } else {
+            finalHeats = heatRepository.findByGroupNameAndPrologHeat(group.getValue(), false);
+        }
 
         AtomicInteger result = new AtomicInteger(1);
         finalHeats.forEach(heat -> heat.getResult()
@@ -156,7 +162,15 @@ public class FinalHeatsService {
                 result.getAndIncrement();
             }));
 
-        List<Heat> prologHeats = heatRepository.findByGroupNameAndPrologHeat(group.getValue(), true);
+        List<Heat> prologHeats;
+        if (Group.BOYS_13.equals(group) || Group.GIRLS_13.equals(group)) {
+            prologHeats = heatRepository.findByGroupNameAndPrologHeat(Group.MIXED_13.getValue(), true);
+        } else if (Group.BOYS_14.equals(group) || Group.GIRLS_14.equals(group)) {
+            prologHeats = heatRepository.findByGroupNameAndPrologHeat(Group.MIXED_14.getValue(), true);
+        } else {
+            prologHeats = heatRepository.findByGroupNameAndPrologHeat(group.getValue(), true);
+        }
+
         if (!CollectionUtils.isEmpty(prologHeats)) {
             List<Team> teams = teamRepository.findByGroupName(group.getValue());
             teams.forEach(team -> {
@@ -168,7 +182,7 @@ public class FinalHeatsService {
                         .filter(heat -> heat.getResult().values().contains(team))
                         .findFirst();
                     if (prologResult.isEmpty()) {
-                        resultList.add(new Result("DNS", team));
+                        resultList.add(new Result(DNS, team));
                     } else {
                         boolean hasAnyFinalHeatsNoResult = finalHeats.stream()
                             .anyMatch(heat -> heat.getResult().isEmpty());
@@ -177,7 +191,7 @@ public class FinalHeatsService {
                                 .filter(heat -> heat.getResult().values().contains(team))
                                 .findFirst();
                             if (finalResult.isEmpty()) {
-                                resultList.add(new Result("DNF", team));
+                                resultList.add(new Result(Result.DNF, team));
                             }
                         }
                     }
@@ -185,9 +199,30 @@ public class FinalHeatsService {
             });
         }
 
+        if (Group.BOYS_13.equals(group) || Group.GIRLS_13.equals(group) ||
+            Group.BOYS_14.equals(group) || Group.GIRLS_13.equals(group)) {
+            filterMixedResultList(resultList, group);
+        }
+
         return resultList;
     }
 
+    private void filterMixedResultList(List<Result> resultList, Group group) {
+        List<Result> resultsToRemove = resultList.stream().filter(result ->
+            !result.getTeam().getGroupName().equals(group.getValue())
+        ).collect(Collectors.toList());
+
+        resultsToRemove.forEach(resultToRemove -> resultList.remove(resultToRemove));
+
+        AtomicInteger result = new AtomicInteger(1);
+        resultList.forEach(groupResult -> {
+            String resultValue = groupResult.getResult();
+            if (!DNS.equals(resultValue) && !DNF.equals(resultValue)) {
+                groupResult.setResult(result.toString());
+                result.getAndIncrement();
+            }
+        });
+    }
 
     private List<Heat> updateFinalHeats(Group ageGroup, List<HeatAdvancement> advancementSetup) {
         List<Heat> prologHeats = heatRepository.findByGroupNameAndPrologHeat(ageGroup.getValue(), true);

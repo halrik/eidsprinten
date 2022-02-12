@@ -70,10 +70,8 @@ public class TemplateService {
         context.setVariable("advancementsGirls11", getAdvancementsForGroup(advancements, Group.GIRLS_11));
         context.setVariable("advancementsBoys12", getAdvancementsForGroup(advancements, Group.BOYS_12));
         context.setVariable("advancementsGirls12", getAdvancementsForGroup(advancements, Group.GIRLS_12));
-        context.setVariable("advancementsBoys13", getAdvancementsForGroup(advancements, Group.BOYS_13));
-        context.setVariable("advancementsGirls13", getAdvancementsForGroup(advancements, Group.GIRLS_13));
-        context.setVariable("advancementsBoys14", getAdvancementsForGroup(advancements, Group.BOYS_14));
-        context.setVariable("advancementsGirls14", getAdvancementsForGroup(advancements, Group.GIRLS_14));
+        context.setVariable("advancementsMixed13", getAdvancementsForGroup(advancements, Group.MIXED_13));
+        context.setVariable("advancementsMixed14", getAdvancementsForGroup(advancements, Group.MIXED_14));
         return parseThymeleafTemplate(ADVANCEMENT_SETUP.getTemplateName(), context);
     }
 
