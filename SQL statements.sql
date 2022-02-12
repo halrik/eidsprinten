@@ -258,3 +258,79 @@ select * from participant where id = 266;
 -- slette lag 167
 select * from team where bib = 160;
 select * from participant where id = 279;
+
+-- G 13 år	Gui SK 3	195	Tindre Bjørholt	Karl Markus Lien
+-- Karl Markus Lien utgår
+-- Erstatter: Storm Windju Christiansen
+select * from team where bib = 195;
+select * from participant where id = 308;
+
+-- J 12 år	Asker Skiklubb 1	180	Helene Hellerud Øpstad	Selma Welle-Smidt
+-- endre til Helene Hellerud Øpstad og Alma Strand Bolstad
+select * from team where bib = 180;
+select * from participant where id = 189;
+
+-- J 12 år	Asker Skiklubb 2	181	Nora Dahl Hoffmann	Alma Strand Bolstad
+-- endre til Emilie Wøien og Kira Takle
+select * from team where bib = 181;
+select * from participant where id = 191;
+select * from participant where id = 190;
+
+select * from team where bib in (59,60,61);
+
+/*
+J10
+Haslum lag 6 blir borte grunnet sykdom. Lag 4 vil da bestå av Etappe 1; Klara Katrine Utne og Etappe 2: Andrea Johanne Håvie
+-- J 10 år	Haslum IL 6	99	Andrea Johanne Håvie	Iga Pudelek
+-- J 10 år	Haslum IL 4	97	Klara Katrine Utne	Ada Liavaag Næss
+*/
+select * from team where bib = 97;
+select * from participant where id = 135;
+select * from heat_teams where teams_id = (select id from team where bib = 99);
+delete from heat_teams where teams_id = (select id from team where bib = 99);
+
+/*
+G12
+Haslum 1 Etappe 1 Nikolay Thøgersen (ikke registrert tidligere) og Etappe 2 Kristian Bache Stranden (allerede registrert).
+-- G 12 år	Haslum IL 1	156	Navn Løs	Kristian Bache Stranden
+
+Det mangler et par navn som vi jobber med å få på plass… Alternativt går en utøver for to lag.
+ */
+select * from team where bib = 156;
+
+select group_name, participant_leg1name, participant_leg2name, team_name from team where (participant_leg1name = 'Navn Løs' or participant_leg2name = 'Navn Løs') order by club_name;
+
+/*
+To endringer fra GUI skileik:
+
+Nr. 6 Kristian Molberg kommer ikke, erstattes av Bastian Solheim Bjerke.
+Nr. 22 Tiril Kolderup-Steen kommer ikke.
+ */
+-- G 8 år	Gui SK 2	6	Adrian Hesselius	Kristian Molberg
+select * from team where bib = 6;
+
+-- Følgende endring gjøres i laget Jutul 1 i G12: Hermann Birkeland erstattes av Mats Svege
+-- G 12 år	Jutul IL 1	155	Martin Midtbø Helgesen	Herman Solheim Birkeland
+select * from team where bib = 155;
+
+
+-- endringer fra Lasse
+select * from team where bib in (116,112,82,65);
+select * from heat_teams where teams_id in ((select id from team where bib in (65,116)));
+delete from heat_teams where teams_id in ((select id from team where bib in (65,116)));
+
+
+-- fjerne lag som er slått ut av covid
+-- G 11 år	Haslum IL 1	120	Mads Stavang Braaten	Frikk Vigleik Sexe
+-- G 11 år	Haslum IL 2	121	Henrik Heli-Haugestøl	Eskil Svanes Elgesem
+select * from team where bib in (120,121);
+select * from heat_teams where teams_id in ((select id from team where bib in (120,121)));
+delete from heat_teams where teams_id in ((select id from team where bib in (120,121)));
+-- slettet
+
+-- lag 150 fra Nes Ski er registrert i G12, skulle vært G11
+select * from team where bib = 150;
+select * from participant where id in (49,50);
+
+
+select count(*), heats_heat_number from heat_teams group by heats_heat_number;
