@@ -17,7 +17,6 @@ update team set participant_leg2name = 'Navn Løs' where bib = 167;
 
 select * from team where bib = 185;
 select * from participant where id = 302;
-update participant set first_name = 'Josefine', last_name = 'Opheim' where id = 302;
 update team set participant_leg2name = 'Josefine Opheim' where bib = 185;
 
 select * from team where bib = 168;
@@ -115,3 +114,131 @@ update team set participant_leg1id = 294, participant_leg1name = 'Navnløs' wher
 select * from team where bib in (128, 129);
 update team set participant_leg2id = 355, participant_leg2name = 'Sindre Løvstad Rist' where bib = 128;
 -- lag 129 kan nå slettes
+
+
+/*
+Oppdateringer fra Ole Asbjørn
+1. Linnea (erstatter Semine) - Frida
+2. Maria Elise (erstatter Stiene) - Tiril
+3. Thomas (G13) går inn på lag med Wilhelm (mix lag G14)
+4. Maria Elise - Ylva (uendret)
+5. Edvard (erstatter Erlend) - Erik
+6. Tindre - Karl Markus (ny kombo)
+7. Fredrik - Nicolas (uendret)
+8. Laget med Linnea og Martine utgår (bib 220)
+9. Laget med Edvard og Tindre utgår (bib 194)?
+*/
+
+
+-- 1. 	Linnea Løvstad Rist (erstatter Semine) - Frida
+-- var J 14 år	Gui SK 1	221	Semina Haavaag Hakonsen	Frida Stryken Fundingsrud
+select * from team where participant_leg1id = 319 or participant_leg2id = 319;
+select * from participant where id = 319;
+update participant set first_name = 'Linnea Løvstad', last_name = 'Rist' where id = 319;
+update team set participant_leg1name = 'Linnea Løvstad Rist' where bib = 221;
+
+-- 2. Maria Elise (erstatter Stiene) - Tiril - setter participant 1 Navn Løs enn så lenge
+-- var J 14 år	Gui SK 3	219	Stiene Mie van der Velde	Tiril Windju Christianssen
+select * from team where bib = 219;
+select * from participant where id = 315;
+update participant set first_name = 'Navn', last_name = 'Løs' where id = 315;
+update team set participant_leg1name = 'Navn Løs' where bib = 219;
+
+-- 3. Thomas (G13) går inn på lag med Wilhelm (mix lag G14)
+-- var G 14 år	Gui SK 1	212	Wilhelm Kollerud	Navn Løs
+select * from team where bib = 212;
+select * from participant where id = 390;
+update participant set first_name = 'Thomas Peter', last_name = 'Ennals', age = 13  where id = 390;
+update team set participant_leg2name = 'Thomas Peter Ennals' where bib = 212;
+
+-- 5. Edvard (erstatter Erlend) - Erik
+-- G 13 år	Gui SK 1	193	Erlend Lundslett Fredriksen	Erik Stenersen Øksby
+-- G 13 år	Gui SK 2	194	Edvard Lunde	Tindre Bjørholt
+select * from team where bib in (193, 194);
+update team set participant_leg2id = 305, participant_leg2name = 'Edvard Lunde' where bib = 193;
+
+-- 6. Tindre - Karl Markus (ny kombo)
+-- G 13 år	Gui SK 3	195	Thomas Peter Ennals	Karl Markus Lien
+-- G 13 år	Gui SK 2	194	Edvard Lunde	Tindre Bjørholt
+select * from team where bib in (194, 195);
+update team set participant_leg1id = 306, participant_leg1name = 'Tindre Bjørholt' where bib = 195;
+
+/*
+J 13 år	Gui SK 1	206	Maria Elise Solberg	Ylva Hodneland Hansen
+
+G 13 år	Gui SK 1	193	Erlend Lundslett Fredriksen	Erik Stenersen Øksby
+G 13 år	Gui SK 2	194	Edvard Lunde	Tindre Bjørholt
+G 13 år	Gui SK 3	195	Thomas Peter Ennals	Karl Markus Lien
+G 13 år	Gui SK 4	196	Fredrik Myklebust ebbesen	Nikolas Ryen
+
+J 14 år	Gui SK 3	219	Stiene Mie van der Velde	Tiril Windju Christianssen
+J 14 år	Gui SK 2	220	Linnea Løvstad Rist	Martine Vannebo
+J 14 år	Gui SK 1	221	Semina Haavaag Hakonsen	Frida Stryken Fundingsrud
+ */
+
+/*
+J14: Linnea - Frida - Gui SK 1 - ok
+J14: Tiril - Maria Elise (med forbehold om godkjenning fra rennledelsen) - Gui SK 2 - ok
+G14: Thomas - Wilhelm (mixlag Drøbak/Gui SK 1) - ok
+J13: Maria Elise - Ylva - ok
+G13: Edvard - Erik
+G13: Fredrik - Nicolas - ok
+G13: Tindre - Karl Markus - ok
+ */
+
+select group_name, bib, participant_leg1name, participant_leg2name, team_name from team where club_name = 'Gui SK - Langrenn' and age in (13,14);
+select group_name, bib, participant_leg1name, participant_leg2name, team_name from team where club_name = 'Gui SK - Langrenn' and group_name = 'G 14 år';
+
+/*
+Pga covid har vi fått noen endringer i lapoppstilling for Lommedalen IL 2010 og 2011.
+
+Vi stiller følgende 4 lag / ett mindre enn påmeldt.
+
+2010 gutter: Elias Molund og Simon Beck-Vehre
+2010 jenter: Mia Seereeram Østfold og Sky Raistrick
+2011 jenter: Ida Børsheim Lefdal og Matthea Myrstad
+2011 gutter: Max Alexander Nybråten og Sebastian Fuglesang -- registrere nytt lag med bib 186
+
+377 Eirik Hunsbedt Auran
+
+var følgende lag:
+
+G 12 år	Lommedalen IL 1	169	Elias Molund	Mia Seereeram Østland -- bytte med Simon Bech-Vehre
+G 12 år	Lommedalen IL 2	170	Eirik Hunsbedt Auran	Simon Bech-Vehre -- slette og legge til nytt lag med G 11 år Max Alexander Nybråten og Sebastian Fuglesang
+J 11 år	Lommedalen IL 1	144	Ida Børsheim Lefdahl	Mathea Myrstad -- ingen endring
+J 12 år	Lommedalen IL 1	186	Maja Weber Eriksen	Sky Raistrick -- endres til J 12 år med Mia Seereeram Østfold og Sky Raistrick
+ */
+
+select * from team where club_name = 'Lommedalen IL - Langrenn' and age in (11,12);
+select * from participant where id = 386;
+
+select * from team where bib = 186
+
+
+/*
+ Hei,
+
+Grunnet Covid-smitte så er vi nødt til å bytte ut en utøver i J10
+Heat 23
+Startnr 110
+Start kl 12:00
+Deltakere: Thelma Valderhaug og Sina Faye-Lund Solberg
+
+Hilsen Benita Lundgren
+Trener BVH langrenn
+Sendt fra min iPhone
+ */
+
+select * from team where bib = 110;
+update participant set first_name = 'Thelma', last_name = 'Valderhaug' where id = 150;
+update team set participant_leg1name = 'Thelma Valderhaug' where bib = 110;
+
+select * from heat_teams where heats_heat_number in (51,52);
+select * from team where bib in (206,196); -- 155 flyttes til heat 52, 157 flyttes til heat 51
+update heat_teams set teams_id = 157 where heats_heat_number = 51 and teams_id = 155;
+update heat_teams set teams_id = 155 where heats_heat_number = 52 and teams_id = 157;
+
+select * from team where bib = 50;
+select * from participant where id = 121;
+
+select * from team where bib = 186;
