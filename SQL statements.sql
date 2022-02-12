@@ -242,3 +242,19 @@ select * from team where bib = 50;
 select * from participant where id = 121;
 
 select * from team where bib = 186;
+
+
+-- J 8 år	Gui SK 2	22	Emilie Aas	Tiril Kolderup-Steen
+-- Tiril utgår
+-- erstattes med Eline Walle Leknes
+-- endre til J 8 år
+select * from team where bib = 22;
+select * from participant where id = 266;
+
+-- G 12 år	Gui SK 8	167	Jonas Walle	Mathias Nøst-Hegge
+-- G 12 år	Gui SK 1	160	Oliver Rognmo-Hodge	Sigurd Bertheussen Brinch
+-- Jonas Walle og Oliver Rognmo-Hodge utgår
+-- erstatt Oliver med Mathias på lag 160
+-- slette lag 167
+select * from team where bib = 160;
+select * from participant where id = 279;
