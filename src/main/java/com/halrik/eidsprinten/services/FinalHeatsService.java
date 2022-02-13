@@ -88,6 +88,15 @@ public class FinalHeatsService {
                     throw new IllegalStateException("Case for " + i + " is not supported!");
             }
         }
+
+        List<HeatAdvancement> boys12ToC = heatAdvancements.stream().filter(
+            heatAdvancement -> heatAdvancement.getGroupName().equals(Group.BOYS_12.getValue())
+                && heatAdvancement.getResult() == 6).collect(Collectors.toList());
+
+        boys12ToC.forEach(heatAdvancement -> {
+            heatAdvancement.setToHeatName("C - finale");
+            heatAdvancement.setToHeatNumber(44);
+        });
     }
 
     private Optional<Heat> getFinalHeat(Group group, FinalHeat finalHeat) {

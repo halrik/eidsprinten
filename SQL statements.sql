@@ -334,3 +334,28 @@ select * from participant where id in (49,50);
 
 
 select count(*), heats_heat_number from heat_teams group by heats_heat_number;
+
+-- J 8 år	Gui SK 8	28	Maria Evelyn Bidvaite Tønnevold Berg	Mathilde Saunes Hilton
+select * from team where bib = 28;
+
+select * from team where bib = 63;
+
+-- fjerne lag BVH G11
+select * from team where bib in (186);
+select * from heat_teams where teams_id in ((select id from team where bib in (186)));
+delete from heat_teams where teams_id in ((select id from team where bib in (186)));
+
+-- J 9 år	Haslum IL 4	58	Ane Gulsvik Kinck	Navn Løs -- Kristian Udnæseth
+select * from team where bib = 58;
+
+-- J 9 år	Haslum IL 1	64	Siren Svanes Elgesem	Linde Gussiås
+-- erstatte Siren med Elisabeth Thoresen
+select * from team where bib = 64;
+
+select * from team where bib = 59;
+
+
+-- fjerne lag 117
+select * from team where bib in (117);
+select * from heat_teams where teams_id in ((select id from team where bib in (117)));
+delete from heat_teams where teams_id in ((select id from team where bib in (117)));

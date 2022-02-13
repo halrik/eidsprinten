@@ -44,7 +44,7 @@ public class ReportService {
 
     public byte[] generateStartListUnrankedPdf() throws IOException {
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-            List<Heat> heatsUnRanked = heatsService.getHeatsUnRanked();
+            List<Heat> heatsUnRanked = heatsService.getHeatsUnRankedStored();
 
             pdfBuilder.withHtmlContent(templateService.getStartListHeatsHtml(heatsUnRanked, "Urangerte"), "")
                 .toStream(outputStream)
@@ -56,7 +56,7 @@ public class ReportService {
 
     public byte[] generateStartListRankedPdf() throws IOException {
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-            List<Heat> heatsRanked = heatsService.getHeatsRanked();
+            List<Heat> heatsRanked = heatsService.getHeatsRankedStored();
 
             pdfBuilder.withHtmlContent(templateService.getStartListHeatsHtml(heatsRanked, "Rangerte"), "")
                 .toStream(outputStream)
