@@ -164,10 +164,14 @@ public class FinalHeatsService {
             finalHeats = heatRepository.findByGroupNameAndPrologHeat(group.getValue(), false);
         }
 
+        List<Heat> finalHeatsReverseOrder = finalHeats.stream()
+            .sorted((h1, h2) -> Long.compare(h2.getHeatNumber(), h1.getHeatNumber())).collect(Collectors.toList());
+
         AtomicInteger result = new AtomicInteger(1);
-        finalHeats.forEach(heat -> heat.getResult()
+        finalHeatsReverseOrder.forEach(heat -> heat.getResult()
             .forEach((resultInHeat, team) -> {
                 resultList.add(new Result(result.toString(), team));
+
                 result.getAndIncrement();
             }));
 
@@ -193,10 +197,10 @@ public class FinalHeatsService {
                     if (prologResult.isEmpty()) {
                         resultList.add(new Result(DNS, team));
                     } else {
-                        boolean hasAnyFinalHeatsNoResult = finalHeats.stream()
+                        boolean hasAnyFinalHeatsNoResult = finalHeatsReverseOrder.stream()
                             .anyMatch(heat -> heat.getResult().isEmpty());
                         if (!hasAnyFinalHeatsNoResult) {
-                            Optional<Heat> finalResult = finalHeats.stream()
+                            Optional<Heat> finalResult = finalHeatsReverseOrder.stream()
                                 .filter(heat -> heat.getResult().values().contains(team))
                                 .findFirst();
                             if (finalResult.isEmpty()) {
