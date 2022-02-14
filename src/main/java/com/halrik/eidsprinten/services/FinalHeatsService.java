@@ -213,7 +213,7 @@ public class FinalHeatsService {
         }
 
         if (Group.BOYS_13.equals(group) || Group.GIRLS_13.equals(group) ||
-            Group.BOYS_14.equals(group) || Group.GIRLS_13.equals(group)) {
+            Group.BOYS_14.equals(group) || Group.GIRLS_14.equals(group)) {
             filterMixedResultList(resultList, group);
         }
 
