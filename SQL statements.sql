@@ -359,3 +359,22 @@ select * from team where bib = 59;
 select * from team where bib in (117);
 select * from heat_teams where teams_id in ((select id from team where bib in (117)));
 delete from heat_teams where teams_id in ((select id from team where bib in (117)));
+
+select * from team where bib = 79;
+
+-- J 13 år	Gui SK 1	206	Maria Elise Solberg	Ylva Hodneland Hansen
+-- J 14 år	Gui SK 2	219	Tiril Windju Christianssen	Maria Elise Solberg
+-- fjerne lag 117
+select * from team where bib in (206);
+select * from heat_teams where teams_id in ((select id from team where bib in (206)));
+delete from heat_teams where teams_id in ((select id from team where bib in (206)));
+
+select * from team where bib in (219);
+
+-- flytte lag 205 til heat 50
+select * from team where bib = 205;
+select * from heat_teams where heats_heat_number in (49,50);
+
+select * from team where bib in (212,210);
+
+
