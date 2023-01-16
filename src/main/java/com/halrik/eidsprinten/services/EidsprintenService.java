@@ -6,6 +6,7 @@ import com.halrik.eidsprinten.domain.Participant;
 import com.halrik.eidsprinten.domain.Team;
 import com.halrik.eidsprinten.repository.ParticipantRepository;
 import com.halrik.eidsprinten.repository.TeamRepository;
+import jakarta.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -14,7 +15,6 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
-import javax.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Example;
@@ -34,6 +34,7 @@ public class EidsprintenService {
         this.participantRepository = participantRepository;
         this.teamRepository = teamRepository;
     }
+
     public void saveParticipantsAndTeams(List<Participant> participantList) {
         log.info("Saving participants and teams");
 
@@ -47,6 +48,7 @@ public class EidsprintenService {
 
         allocateBibs();
     }
+
     public void allocateBibs() {
         List<Team> teams = teamRepository.findAll();
 
@@ -69,14 +71,17 @@ public class EidsprintenService {
                 }
             ));
     }
+
     private void incrementBib(AtomicInteger bib) {
         while (INVALID_BIBS.contains(bib.incrementAndGet())) {
             log.info("Skipped bib {}", bib.get());
         }
     }
+
     public int validateTeams() {
         return validateTeams(participantRepository.findAll());
     }
+
     private int validateTeams(List<Participant> participantList) {
         log.info("Validating teams");
 
@@ -107,6 +112,7 @@ public class EidsprintenService {
 
         return numberOfTeams.get();
     }
+
     private void addToTeam(Participant participant) {
         Team team = getTeam(participant);
 
@@ -122,9 +128,11 @@ public class EidsprintenService {
 
         saveTeam(team);
     }
+
     public Team saveTeam(Team team) {
         return teamRepository.save(team);
     }
+
     private Team getTeam(Participant participant) {
         Team matchingTeam = new Team();
         matchingTeam.setTeamName(participant.getTeamName());
@@ -144,6 +152,7 @@ public class EidsprintenService {
 
         return team;
     }
+
     private void saveParticipant(List<Participant> savedParticipants, Participant participant) {
         if (participantRepository.exists(Example.of(participant, ExampleMatcher.matching()
             .withIgnorePaths("id")
@@ -155,15 +164,19 @@ public class EidsprintenService {
         log.info("Save participant {}", participant);
         savedParticipants.add(saveParticipant(participant));
     }
+
     public Participant saveParticipant(Participant participant) {
         return participantRepository.save(participant);
     }
+
     public List<Participant> getParticipantsByClub(String clubName) {
         return participantRepository.findByClubName(clubName);
     }
+
     public List<Team> getTeamsByAge(Integer age) {
         return teamRepository.findByAge(age);
     }
+
     public Map<String, List<Team>> getTeamsGroupedByClub() {
         Map<String, List<Team>> teamsGroupedByClub = new TreeMap<>();
         List<Team> allTeams = teamRepository.findAll();
@@ -180,6 +193,7 @@ public class EidsprintenService {
 
         return teamsGroupedByClub;
     }
+
     private void sortTeamsByGenderAndAge(List<Team> teams) {
         Collections.sort(teams, (Comparator) (o1, o2) -> {
             String genderClass1 = ((Team) o1).getGenderClass();
@@ -195,6 +209,7 @@ public class EidsprintenService {
             return age1.compareTo(age2);
         });
     }
+
     @Transactional
     public long deleteTeam(Integer bib) {
         teamRepository.findByBib(bib).stream().findFirst().ifPresent(team -> {

@@ -1,10 +1,10 @@
 package com.halrik.eidsprinten.domain;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import java.util.Map;
 import java.util.Set;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
