@@ -21,7 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
 public class EidsprintenController {
 
     private static final Logger log = LoggerFactory.getLogger(EidsprintenController.class);
-
     private EidsprintenService eidsprintenService;
 
     public EidsprintenController(EidsprintenService eidsprintenService) {
