@@ -36,6 +36,9 @@ public class ExcelHelper {
     }
 
     public static List<Participant> excelToParticipants(InputStream is) {
+        int skipFirstRows = 3;
+        int rowNumber = 0;
+
         try {
             Workbook workbook = new XSSFWorkbook(is);
 
@@ -43,10 +46,6 @@ public class ExcelHelper {
             Iterator<Row> rows = sheet.iterator();
 
             List<Participant> participantList = new ArrayList<>();
-
-            int skipFirstRows = 3;
-
-            int rowNumber = 0;
             while (rows.hasNext()) {
                 Row currentRow = rows.next();
 
@@ -65,8 +64,9 @@ public class ExcelHelper {
             workbook.close();
 
             return participantList;
-        } catch (IOException | ParseException e) {
-            throw new RuntimeException("fail to parse Excel file: " + e.getMessage());
+        } catch (IOException | ParseException | IllegalStateException e) {
+            log.error("Failed to parse Excel file (row " + rowNumber + ")", e);
+            throw new RuntimeException("Failed to parse Excel file (row " + rowNumber + "): " + e.getMessage());
         }
     }
 
