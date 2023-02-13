@@ -54,7 +54,7 @@
 <body>
 
 <h3 th:if="${!hideTitle}">
-  <span th:text="'Eidsprinten 2022 - Startliste - ' + ${startListType}"></span>
+  <span th:text="'Eidsprinten ' + ${#dates.year(#dates.createNow())} + ' - Startliste - ' + ${startListType}"></span>
 </h3>
 
 <table>

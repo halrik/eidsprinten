@@ -25,9 +25,7 @@
 </head>
 <body>
 
-<h3 th:if="${!hideTitle}">
-  Eidsprinten 2022 - Premieutdeling
-</h3>
+<h3 th:if="${!hideTitle}" th:text="'Eidsprinten ' + ${#dates.year(#dates.createNow())} + ' - Premieutdeling'" />
 
 <div class="ingress">Premieutdeling for urangerte klasser vil foregå fortløpende på vei ut fra målområdet.</div>
 

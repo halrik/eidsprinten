@@ -1,6 +1,6 @@
 <h3>
   <div th:if="${showPrefix}">
-    <span th:text="'Eidsprinten 2022 - Avansement - Rangerte - ' + ${groupAdvancements[0].groupName}"></span>
+    <span th:text="'Eidsprinten ' + ${#dates.year(#dates.createNow())} + ' - Avansement - Rangerte - ' + ${groupAdvancements[0].groupName}"></span>
   </div>
   <div th:unless="${showPrefix}">
     <span th:text="'Avansement - Rangerte - ' + ${groupAdvancements[0].groupName}"></span>

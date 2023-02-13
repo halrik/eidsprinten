@@ -1,4 +1,4 @@
 <div class="header">
   <img src="resources/gui-logo.png" alt="logo" />
-  <h1>Eidsprinten 2023</h1>
+  <h1 th:text="'Eidsprinten ' + ${#dates.year(#dates.createNow())}" />
 </div>

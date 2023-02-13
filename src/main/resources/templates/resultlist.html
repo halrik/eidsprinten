@@ -29,7 +29,7 @@
 </head>
 <body>
 <h3 th:if="${!hideTitle}">
-  <span th:text="'Eidsprinten 2022 - Resultatliste - ' + ${groupName}"></span>
+  <span th:text="'Eidsprinten ' + ${#dates.year(#dates.createNow())} + ' - Resultatliste - ' + ${groupName}"></span>
 </h3>
 
 <table>

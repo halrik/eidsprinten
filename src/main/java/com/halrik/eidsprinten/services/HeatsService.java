@@ -301,7 +301,9 @@ public class HeatsService {
     }
 
     private LocalDateTime getStartTime(int startHourRanked, int startMinuteRanked) {
-        return LocalDateTime.of(2022, Month.FEBRUARY, 13, startHourRanked, startMinuteRanked, 00);
+        LocalDateTime now = LocalDateTime.now();
+        return LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), startHourRanked, startMinuteRanked,
+            00);
     }
 
     private int heatNo(List<Heat> heats) {

@@ -25,9 +25,7 @@
 </head>
 <body>
 
-<h3 th:if="${!hideTitle}">
-  Eidsprinten 2022 - Starttider
-</h3>
+<h3 th:if="${!hideTitle}" th:text="'Eidsprinten ' + ${#dates.year(#dates.createNow())} + ' - Starttider'" />
 <table>
   <thead>
   <tr>
