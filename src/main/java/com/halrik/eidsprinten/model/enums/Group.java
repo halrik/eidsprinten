@@ -3,6 +3,7 @@ package com.halrik.eidsprinten.model.enums;
 import java.util.Arrays;
 
 public enum Group {
+    MIXED_7_AND_GIRLS_8("Felles 7 år/J 8 år", Gender.MIXED, 7),
     BOYS_8("G 8 år", Gender.BOYS, 8),
     GIRLS_8("J 8 år", Gender.GIRLS, 8),
     BOYS_9("G 9 år", Gender.BOYS, 9),

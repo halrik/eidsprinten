@@ -115,6 +115,7 @@ public class ExcelHelper {
                 .replace("år", "")
                 .replace("G", "")
                 .replace("J", "")
+                .replace("Felles", "")
                 .replace(" ", "")));
 
         participant.setGenderClass(participant.getGroupName().substring(0, 1));

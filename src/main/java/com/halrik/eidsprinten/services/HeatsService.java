@@ -39,7 +39,7 @@ public class HeatsService {
     private static final int START_HOUR = 10;
     private static final int START_MINUTE = 00;
     private static final int START_HOUR_RANKED = 13;
-    private static final int START_MINUTE_RANKED = 30;
+    private static final int START_MINUTE_RANKED = 00;
     private static final int MINUTES_BETWEEN_HEATS = 5;
     private static final int MINUTES_AFTER_LAST_HEAT_TO_AWARD_CEREMONY = 25;
 
@@ -149,27 +149,31 @@ public class HeatsService {
     public List<Heat> getHeatsUnRanked() {
         List<Heat> unRankedHeats = new ArrayList<>();
 
+        List<Team> age7Teams = teamRepository.findByAge(7);
         List<Team> age8Teams = teamRepository.findByAge(8);
         List<Team> age9Teams = teamRepository.findByAge(9);
         List<Team> age10Teams = teamRepository.findByAge(10);
+        List<Team> age7andGirls8Teams = new ArrayList<>();
+        age7andGirls8Teams.addAll(age7Teams);
+        age7andGirls8Teams.addAll(filterByGender(Gender.GIRLS, age8Teams));
 
         LocalDateTime start = getStartTime(START_HOUR, START_MINUTE);
 
-        // add L1 heats for age 8
+        // add L1 heats for age 7 and 8
         int leg = 1;
         start = addUnrankedHeats(start, leg, heatNo(unRankedHeats), unRankedHeats,
-            filterByGender(Gender.BOYS, age8Teams), Group.BOYS_8);
+            age7andGirls8Teams, Group.MIXED_7_AND_GIRLS_8);
         start = addUnrankedHeats(start, leg, heatNo(unRankedHeats), unRankedHeats,
-            filterByGender(Gender.GIRLS, age8Teams), Group.GIRLS_8);
+            filterByGender(Gender.BOYS, age8Teams), Group.BOYS_8);
 
         start = start.plusMinutes(5);
 
-        // add L2 heats for age 8
+        // add L2 heats for age 7 and 8
         leg = 2;
         start = addUnrankedHeats(start, leg, heatNo(unRankedHeats), unRankedHeats,
-            filterByGender(Gender.BOYS, age8Teams), Group.BOYS_8);
+            age7andGirls8Teams, Group.MIXED_7_AND_GIRLS_8);
         start = addUnrankedHeats(start, leg, heatNo(unRankedHeats), unRankedHeats,
-            filterByGender(Gender.GIRLS, age8Teams), Group.GIRLS_8);
+            filterByGender(Gender.BOYS, age8Teams), Group.BOYS_8);
 
         // add L1 heats for age 9
         leg = 1;
