@@ -61,6 +61,7 @@ public class HeatsService {
         allHeats.addAll(getHeatsRankedStored());
 
         Map<String, String> startTimeMap = new TreeMap<>();
+        addStartTimeForGroup(startTimeMap, allHeats, Group.MIXED_7_AND_GIRLS_8);
         addStartTimeForGroup(startTimeMap, allHeats, Group.BOYS_8);
         addStartTimeForGroup(startTimeMap, allHeats, Group.GIRLS_8);
         addStartTimeForGroup(startTimeMap, allHeats, Group.BOYS_9);
