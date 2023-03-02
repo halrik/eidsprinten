@@ -67,7 +67,7 @@
 <p><a href="/eidsprinten/">Tilbake til forsiden</a></p>
 <p><a href="/eidsprinten/avansement-meny">Tilbake til avansement</a></p>
 
-<div th:if="${advancements}" th:with="groupAdvancements=${advancements}"
+<div th:unless="${#lists.isEmpty(advancements)}" th:with="groupAdvancements=${advancements}"
      th:insert="group-advancements.html"></div>
 
 <div th:if="${advancementsBoys11}" th:with="groupAdvancements=${advancementsBoys11}"
