@@ -101,7 +101,7 @@ public class FinalHeatsService {
 
         boys11ToC.forEach(heatAdvancement -> {
             heatAdvancement.setToHeatName("C - finale");
-            heatAdvancement.setToHeatNumber(32);
+            heatAdvancement.setToHeatNumber(33);
         });
     }
 
