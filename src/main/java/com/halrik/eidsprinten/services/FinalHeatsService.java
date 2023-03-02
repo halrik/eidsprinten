@@ -56,6 +56,10 @@ public class FinalHeatsService {
         int numberOfPrologHeats = prologHeats.size();
         int numberOfTeams = getNumberOfTeamsByAgeGroupInPrologHeats(prologHeats);
 
+        if (numberOfTeams == 0) {
+            return;
+        }
+
         int maxNumberOfTeamsInOneHeat =
             numberOfTeams / numberOfPrologHeats + (numberOfTeams % numberOfPrologHeats > 0 ? 1 : 0);
 
@@ -89,13 +93,15 @@ public class FinalHeatsService {
             }
         }
 
-        List<HeatAdvancement> boys12ToC = heatAdvancements.stream().filter(
-            heatAdvancement -> heatAdvancement.getGroupName().equals(Group.BOYS_12.getValue())
+        // fix to avoid A final with 9 teams, B final with 9 teams and C final with 3 teams
+        // with this we will get A final with 9 teams, B final with 6 teams and C final with 6 teams
+        List<HeatAdvancement> boys11ToC = heatAdvancements.stream().filter(
+            heatAdvancement -> heatAdvancement.getGroupName().equals(Group.BOYS_11.getValue())
                 && heatAdvancement.getResult() == 6).collect(Collectors.toList());
 
-        boys12ToC.forEach(heatAdvancement -> {
+        boys11ToC.forEach(heatAdvancement -> {
             heatAdvancement.setToHeatName("C - finale");
-            heatAdvancement.setToHeatNumber(44);
+            heatAdvancement.setToHeatNumber(32);
         });
     }
 
