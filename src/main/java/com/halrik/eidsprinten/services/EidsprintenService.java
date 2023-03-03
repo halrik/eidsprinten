@@ -64,10 +64,6 @@ public class EidsprintenService {
                         team.setBib(bib.get());
                         saveTeam(team);
                     });
-                    // make room for some late arrivals
-                    for (int i = 0; i < 2; i++) {
-                        incrementBib(bib);
-                    }
                 }
             ));
     }
