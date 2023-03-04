@@ -46,7 +46,7 @@ public class EidsprintenService {
 
         savedParticipants.forEach(savedParticipant -> addToTeam(savedParticipant));
 
-        allocateBibs();
+        //allocateBibs();
     }
 
     public void allocateBibs() {
