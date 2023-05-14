@@ -1,0 +1,5 @@
+114,Bærums Skiklub - Ski,G,G 11 år,42,Simen Salimi,43,Navn Løs,hakonaune@hotmail.com,Håkon Christiansen Stub Aune,99459491,Bærums Skiklub 2
+
+3,Haslum IL - Ski,F,Felles 7 år,253,Mathias Strand-Udnæseth,254,Navn Løs,kjetilsanders@gmail.com,Kjetil Sanders,98251421,Haslum IL 2
+
+79,IL Jardar - Ski,G,G 10 år,21,Philip Langeland,22,Navn Løs,jacob.matheson@gmail.com,Jacob Agner Matheson,"",IL Jardar 4
