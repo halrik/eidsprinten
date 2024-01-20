@@ -11,4 +11,5 @@ Start EidsprintenApplication and go to:
 
 ## Deployed on heroku
 
-https://eidsprinten.herokuapp.com/
+* https://eidsprinten.herokuapp.com/eidsprinten/
+* https://eidsprinten.herokuapp.com/eidsprinten/swagger-ui/4.15.5/index.html
