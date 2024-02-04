@@ -14,9 +14,13 @@ import com.halrik.eidsprinten.services.HeatsService;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
@@ -138,6 +142,21 @@ public class WebController {
         model.addAttribute("title", "Premieutdeling");
         model.addAttribute("awardCeremonyTimeMap", heatsService.getAwardCeremonyTimeMap());
         return "web/awardceremony.html";
+    }
+
+    @GetMapping("/admin/resultater")
+    public String showForm(ResultForm resultForm) {
+        return "web/admin/resultform.html";
+    }
+
+    @PostMapping("/admin/resultater")
+    public String checkPersonInfo(@Valid ResultForm resultForm, BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            return "web/admin/resultform.html";
+        }
+
+        return "redirect:/admin/resultater";
     }
 
 }
