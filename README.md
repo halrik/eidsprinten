@@ -6,12 +6,12 @@ Replace <heroku_postgres_password> placeholder in application-local.properties f
 
 Start EidsprintenApplication and go to:
 
-* http://localhost:8080/eidsprinten/swagger-ui/4.15.5/index.html
 * http://localhost:8080/eidsprinten/
+* http://localhost:8080/eidsprinten/swagger-ui/index.html
 
 Remember to enable `spring.jpa.hibernate.ddl-auto=create` in application-local.properties the first time application is started.
 
 ## Deployed on heroku
 
 * https://eidsprinten.herokuapp.com/eidsprinten/
-* https://eidsprinten.herokuapp.com/eidsprinten/swagger-ui/4.15.5/index.html
+* https://eidsprinten.herokuapp.com/eidsprinten/swagger-ui/index.html
