@@ -1,0 +1,61 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+    <body>
+        <form action="#" th:action="@{/admin/resultater}" th:object="${resultForm}" method="post">
+            <table>
+                <tr>
+                    <td>Heat:</td>
+                    <td><input type="number" th:field="*{heatNumber}" /></td>
+                    <td th:if="${#fields.hasErrors('heatNumber')}" th:errors="*{heatNumber}">Heat Error</td>
+                </tr>
+                <tr>
+                    <td>1. plass:</td>
+                    <td><input type="text" th:field="*{no1}" /></td>
+                    <td th:if="${#fields.hasErrors('no1')}" th:errors="*{no1}">No1 Error</td>
+                </tr>
+                <tr>
+                    <td>2. plass:</td>
+                    <td><input type="text" th:field="*{no2}" /></td>
+                    <td th:if="${#fields.hasErrors('no2')}" th:errors="*{no2}">No2 Error</td>
+                </tr>
+                <tr>
+                    <td>3. plass:</td>
+                    <td><input type="text" th:field="*{no3}" /></td>
+                    <td th:if="${#fields.hasErrors('no3')}" th:errors="*{no3}">No3 Error</td>
+                </tr>
+                <tr>
+                    <td>4. plass:</td>
+                    <td><input type="text" th:field="*{no4}" /></td>
+                    <td th:if="${#fields.hasErrors('no4')}" th:errors="*{no4}">No4 Error</td>
+                </tr>
+                <tr>
+                    <td>5. plass:</td>
+                    <td><input type="text" th:field="*{no5}" /></td>
+                    <td th:if="${#fields.hasErrors('no5')}" th:errors="*{no5}">No5 Error</td>
+                </tr>
+                <tr>
+                    <td>6. plass:</td>
+                    <td><input type="text" th:field="*{no6}" /></td>
+                    <td th:if="${#fields.hasErrors('no6')}" th:errors="*{no6}">No6 Error</td>
+                </tr>
+                <tr>
+                    <td>7. plass:</td>
+                    <td><input type="text" th:field="*{no7}" /></td>
+                    <td th:if="${#fields.hasErrors('no7')}" th:errors="*{no7}">No7 Error</td>
+                </tr>
+                <tr>
+                    <td>8. plass:</td>
+                    <td><input type="text" th:field="*{no8}" /></td>
+                    <td th:if="${#fields.hasErrors('no8')}" th:errors="*{no8}">No8 Error</td>
+                </tr>
+                <tr>
+                    <td>9. plass:</td>
+                    <td><input type="text" th:field="*{no9}" /></td>
+                    <td th:if="${#fields.hasErrors('no9')}" th:errors="*{no9}">No9 Error</td>
+                <tr>
+                    <td><button type="submit">Submit</button></td>
+                </tr>
+            </table>
+        </form>
+    </body>
+</html>
