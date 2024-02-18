@@ -20,6 +20,14 @@ import org.springframework.web.multipart.MultipartFile;
 public class ExcelHelper {
 
     private static final Logger log = LoggerFactory.getLogger(ExcelHelper.class);
+    public static final int INDEX_GROUP_NAME = 14;
+    public static final int INDEX_LAST_NAME = 1;
+    public static final int INDEX_FIRST_NAME = 0;
+    public static final int INDEX_GENDER = 8;
+    public static final int INDEX_TEAM_NAME = 11;
+    public static final int INDEX_LEG = 12;
+    public static final int INDEX_TEAM_LEADER_NAME = 20;
+    public static final int INDEX_TEAM_LEADER_EMAIL = 21;
 
     private static String TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
     private static String SHEET = "Deltakerliste Excel";
@@ -36,13 +44,13 @@ public class ExcelHelper {
     }
 
     public static List<Participant> excelToParticipants(InputStream is) {
-        int skipFirstRows = 3;
+        int skipFirstRows = 1;
         int rowNumber = 0;
 
         try {
             Workbook workbook = new XSSFWorkbook(is);
 
-            Sheet sheet = workbook.getSheet(SHEET);
+            Sheet sheet = workbook.getSheetAt(0);
             Iterator<Row> rows = sheet.iterator();
 
             List<Participant> participantList = new ArrayList<>();
@@ -75,29 +83,30 @@ public class ExcelHelper {
         if (row.getCell(0) == null) {
             return Optional.empty();
         }
-        participant.setGroupName(row.getCell(0).getStringCellValue().trim());
-        participant.setLastName(row.getCell(4).getStringCellValue().trim());
-        participant.setFirstName(row.getCell(5).getStringCellValue().trim());
+        participant.setGroupName(row.getCell(INDEX_GROUP_NAME).getStringCellValue().trim());
+        participant.setLastName(row.getCell(INDEX_LAST_NAME).getStringCellValue().trim());
+        participant.setFirstName(row.getCell(INDEX_FIRST_NAME).getStringCellValue().trim());
 
-        participant.setGender(row.getCell(6).getStringCellValue());
+        participant.setGender(row.getCell(INDEX_GENDER).getStringCellValue());
         try {
-            participant.setBirthDate(DATE_FORMAT_DOT.parse(row.getCell(7).getStringCellValue()));
+            participant.setBirthDate(DATE_FORMAT_DOT.parse(row.getCell(6).getStringCellValue()));
         } catch (Exception ex) {
-            participant.setBirthDate(DATE_FORMAT_SLASH.parse(row.getCell(7).getStringCellValue()));
+            participant.setBirthDate(DATE_FORMAT_SLASH.parse(row.getCell(6).getStringCellValue()));
         }
-        participant.setClubName(row.getCell(10).getStringCellValue());
-        participant.setTeamName(row.getCell(15).getStringCellValue());
+        participant.setClubName(extractClubName(row.getCell(INDEX_TEAM_NAME).getStringCellValue()));
+        participant.setTeamName(row.getCell(INDEX_TEAM_NAME).getStringCellValue());
 
         try {
-            participant.setLeg(Integer.valueOf(row.getCell(16).getStringCellValue()));
+            participant.setLeg(Integer.valueOf(row.getCell(INDEX_LEG).getStringCellValue()));
         } catch (IllegalStateException ise) {
-            participant.setLeg((int) row.getCell(16).getNumericCellValue());
+            participant.setLeg((int) row.getCell(INDEX_LEG).getNumericCellValue());
         }
 
-        if (row.getCell(24) != null) {
-            participant.setTeamLeaderName(row.getCell(24).getStringCellValue());
+        if (row.getCell(INDEX_TEAM_LEADER_NAME) != null) {
+            participant.setTeamLeaderName(row.getCell(INDEX_TEAM_LEADER_NAME).getStringCellValue());
         }
 
+        /*
         if (row.getCell(25) != null) {
             try {
                 participant.setTeamLeaderPhone(row.getCell(25).getStringCellValue());
@@ -105,9 +114,10 @@ public class ExcelHelper {
                 participant.setTeamLeaderPhone("" + row.getCell(25).getNumericCellValue());
             }
         }
+         */
 
-        if (row.getCell(26) != null) {
-            participant.setTeamLeaderEmail(row.getCell(26).getStringCellValue());
+        if (row.getCell(INDEX_TEAM_LEADER_EMAIL) != null) {
+            participant.setTeamLeaderEmail(row.getCell(INDEX_TEAM_LEADER_EMAIL).getStringCellValue());
         }
 
         participant.setAge(Integer.valueOf(
@@ -121,6 +131,10 @@ public class ExcelHelper {
         participant.setGenderClass(participant.getGroupName().substring(0, 1));
 
         return Optional.of(participant);
+    }
+
+    private static String extractClubName(String teamName) {
+        return teamName.split(" -")[0];
     }
 
 }
