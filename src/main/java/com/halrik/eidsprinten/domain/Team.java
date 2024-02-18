@@ -29,11 +29,7 @@ public class Team {
     private String teamLeaderName;
     private String teamLeaderPhone;
     private String teamLeaderEmail;
-
-    private Long participantLeg1Id;
     private String participantLeg1Name;
-
-    private Long participantLeg2Id;
     private String participantLeg2Name;
 
     @ManyToMany(mappedBy = "teams")

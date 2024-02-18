@@ -4,7 +4,6 @@ import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatc
 
 import com.halrik.eidsprinten.domain.Participant;
 import com.halrik.eidsprinten.domain.Team;
-import com.halrik.eidsprinten.repository.ParticipantRepository;
 import com.halrik.eidsprinten.repository.TeamRepository;
 import jakarta.transaction.Transactional;
 import java.util.ArrayList;
@@ -26,12 +25,9 @@ public class EidsprintenService {
 
     private static final Logger log = LoggerFactory.getLogger(EidsprintenService.class);
     private static final List<Integer> INVALID_BIBS = List.of();
-    private ParticipantRepository participantRepository;
     private TeamRepository teamRepository;
 
-    public EidsprintenService(ParticipantRepository participantRepository,
-        TeamRepository teamRepository) {
-        this.participantRepository = participantRepository;
+    public EidsprintenService(TeamRepository teamRepository) {
         this.teamRepository = teamRepository;
     }
 
@@ -40,13 +36,9 @@ public class EidsprintenService {
 
         validateTeams(participantList);
 
-        List<Participant> savedParticipants = new ArrayList<>();
+        participantList.forEach(participant -> addToTeam(participant));
 
-        participantList.forEach(participant -> saveParticipant(savedParticipants, participant));
-
-        savedParticipants.forEach(savedParticipant -> addToTeam(savedParticipant));
-
-        //allocateBibs();
+        allocateBibs();
     }
 
     public void allocateBibs() {
@@ -72,10 +64,6 @@ public class EidsprintenService {
         while (INVALID_BIBS.contains(bib.incrementAndGet())) {
             log.info("Skipped bib {}", bib.get());
         }
-    }
-
-    public int validateTeams() {
-        return validateTeams(participantRepository.findAll());
     }
 
     private int validateTeams(List<Participant> participantList) {
@@ -115,10 +103,8 @@ public class EidsprintenService {
         log.info("Add participant {} to team {}", participant, team);
 
         if (participant.getLeg() == 1) {
-            team.setParticipantLeg1Id(participant.getId());
             team.setParticipantLeg1Name(participant.getFirstName() + " " + participant.getLastName());
         } else if (participant.getLeg() == 2) {
-            team.setParticipantLeg2Id(participant.getId());
             team.setParticipantLeg2Name(participant.getFirstName() + " " + participant.getLastName());
         }
 
@@ -147,26 +133,6 @@ public class EidsprintenService {
         team.setGenderClass(participant.getGenderClass());
 
         return team;
-    }
-
-    private void saveParticipant(List<Participant> savedParticipants, Participant participant) {
-        if (participantRepository.exists(Example.of(participant, ExampleMatcher.matching()
-            .withIgnorePaths("id")
-            .withMatcher("firstName", ignoreCase())
-            .withMatcher("lastName", ignoreCase())))) {
-            return;
-        }
-
-        log.info("Save participant {}", participant);
-        savedParticipants.add(saveParticipant(participant));
-    }
-
-    public Participant saveParticipant(Participant participant) {
-        return participantRepository.save(participant);
-    }
-
-    public List<Participant> getParticipantsByClub(String clubName) {
-        return participantRepository.findByClubName(clubName);
     }
 
     public List<Team> getTeamsByAge(Integer age) {
@@ -210,8 +176,6 @@ public class EidsprintenService {
     public long deleteTeam(Integer bib) {
         teamRepository.findByBib(bib).stream().findFirst().ifPresent(team -> {
             team.getHeats().forEach(heat -> heat.removeTeam(team));
-            participantRepository.deleteById(team.getParticipantLeg1Id());
-            participantRepository.deleteById(team.getParticipantLeg2Id());
         });
         return teamRepository.deleteByBib(bib);
     }

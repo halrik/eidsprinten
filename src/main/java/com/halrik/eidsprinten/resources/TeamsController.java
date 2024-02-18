@@ -35,19 +35,6 @@ public class TeamsController {
         this.eidsprintenService = eidsprintenService;
     }
 
-    @GetMapping(value = "/teams/validate")
-    public ResponseEntity<ResponseMessage> validateTeams() {
-        try {
-            int numberOfTeams = eidsprintenService.validateTeams();
-
-            return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(numberOfTeams + " teams are valid!"));
-        } catch (Exception e) {
-            log.error("Teams are not valid!", e);
-            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED)
-                .body(new ResponseMessage("Teams are not valid: " + e.getMessage() + "!"));
-        }
-    }
-
     @GetMapping(value = "/{age}")
     public ResponseEntity<List<Team>> getTeamsByAge(@PathVariable Integer age) {
         return new ResponseEntity<>(eidsprintenService.getTeamsByAge(age), HttpStatus.OK);
@@ -104,7 +91,6 @@ public class TeamsController {
         participantLeg1.setTeamLeaderName(teamLeaderName);
         participantLeg1.setTeamLeaderPhone(teamLeaderPhone);
         participantLeg1.setTeamLeaderEmail(teamLeaderEmail);
-        participantLeg1 = eidsprintenService.saveParticipant(participantLeg1);
 
         Participant participantLeg2 = new Participant();
         participantLeg2.setLeg(2);
@@ -120,7 +106,6 @@ public class TeamsController {
         participantLeg2.setTeamLeaderName(teamLeaderName);
         participantLeg2.setTeamLeaderPhone(teamLeaderPhone);
         participantLeg2.setTeamLeaderEmail(teamLeaderEmail);
-        participantLeg2 = eidsprintenService.saveParticipant(participantLeg2);
 
         Team team = new Team();
         team.setBib(bib);
@@ -133,9 +118,7 @@ public class TeamsController {
         team.setTeamLeaderPhone(teamLeaderPhone);
         team.setTeamLeaderEmail(teamLeaderEmail);
         team.setParticipantLeg1Name(participantLeg1FirstName + " " + participantLeg1LastName);
-        team.setParticipantLeg1Id(participantLeg1.getId());
         team.setParticipantLeg2Name(participantLeg2FirstName + " " + participantLeg2LastName);
-        team.setParticipantLeg2Id(participantLeg2.getId());
 
         team = eidsprintenService.saveTeam(team);
 
