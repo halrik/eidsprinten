@@ -39,8 +39,7 @@ public class FinalHeatsService {
 
         fillAdvancementForGroup(heatAdvancements, Group.BOYS_11);
         fillAdvancementForGroup(heatAdvancements, Group.GIRLS_11);
-        fillAdvancementForGroup(heatAdvancements, Group.BOYS_12);
-        fillAdvancementForGroup(heatAdvancements, Group.GIRLS_12);
+        fillAdvancementForGroup(heatAdvancements, Group.MIXED_12);
         fillAdvancementForGroup(heatAdvancements, Group.MIXED_13);
         fillAdvancementForGroup(heatAdvancements, Group.MIXED_14);
 
@@ -150,8 +149,7 @@ public class FinalHeatsService {
 
         finalHeats.addAll(updateFinalHeats(Group.BOYS_11, filterAdvancementSetup(advancementSetup, Group.BOYS_11)));
         finalHeats.addAll(updateFinalHeats(Group.GIRLS_11, filterAdvancementSetup(advancementSetup, Group.GIRLS_11)));
-        finalHeats.addAll(updateFinalHeats(Group.BOYS_12, filterAdvancementSetup(advancementSetup, Group.BOYS_12)));
-        finalHeats.addAll(updateFinalHeats(Group.GIRLS_12, filterAdvancementSetup(advancementSetup, Group.GIRLS_12)));
+        finalHeats.addAll(updateFinalHeats(Group.MIXED_12, filterAdvancementSetup(advancementSetup, Group.MIXED_12)));
         finalHeats.addAll(updateFinalHeats(Group.MIXED_13, filterAdvancementSetup(advancementSetup, Group.MIXED_13)));
         finalHeats.addAll(updateFinalHeats(Group.MIXED_14, filterAdvancementSetup(advancementSetup, Group.MIXED_14)));
 
@@ -162,7 +160,9 @@ public class FinalHeatsService {
         List<Result> resultList = new ArrayList<>();
 
         List<Heat> finalHeats;
-        if (Group.BOYS_13.equals(group) || Group.GIRLS_13.equals(group)) {
+        if (Group.BOYS_12.equals(group) || Group.GIRLS_12.equals(group)) {
+            finalHeats = heatRepository.findByGroupNameAndPrologHeat(Group.MIXED_12.getValue(), false);
+        } else if (Group.BOYS_13.equals(group) || Group.GIRLS_13.equals(group)) {
             finalHeats = heatRepository.findByGroupNameAndPrologHeat(Group.MIXED_13.getValue(), false);
         } else if (Group.BOYS_14.equals(group) || Group.GIRLS_14.equals(group)) {
             finalHeats = heatRepository.findByGroupNameAndPrologHeat(Group.MIXED_14.getValue(), false);
@@ -182,7 +182,9 @@ public class FinalHeatsService {
             }));
 
         List<Heat> prologHeats;
-        if (Group.BOYS_13.equals(group) || Group.GIRLS_13.equals(group)) {
+        if (Group.BOYS_12.equals(group) || Group.GIRLS_12.equals(group)) {
+            prologHeats = heatRepository.findByGroupNameAndPrologHeat(Group.MIXED_12.getValue(), true);
+        } else if (Group.BOYS_13.equals(group) || Group.GIRLS_13.equals(group)) {
             prologHeats = heatRepository.findByGroupNameAndPrologHeat(Group.MIXED_13.getValue(), true);
         } else if (Group.BOYS_14.equals(group) || Group.GIRLS_14.equals(group)) {
             prologHeats = heatRepository.findByGroupNameAndPrologHeat(Group.MIXED_14.getValue(), true);
@@ -218,7 +220,8 @@ public class FinalHeatsService {
             });
         }
 
-        if (Group.BOYS_13.equals(group) || Group.GIRLS_13.equals(group) ||
+        if (Group.BOYS_12.equals(group) || Group.GIRLS_12.equals(group) ||
+            Group.BOYS_13.equals(group) || Group.GIRLS_13.equals(group) ||
             Group.BOYS_14.equals(group) || Group.GIRLS_14.equals(group)) {
             filterMixedResultList(resultList, group);
         }

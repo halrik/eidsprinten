@@ -70,8 +70,7 @@ public class HeatsService {
         addStartTimeForGroup(startTimeMap, allHeats, Group.GIRLS_10);
         addStartTimeForGroup(startTimeMap, allHeats, Group.BOYS_11);
         addStartTimeForGroup(startTimeMap, allHeats, Group.GIRLS_11);
-        addStartTimeForGroup(startTimeMap, allHeats, Group.BOYS_12);
-        addStartTimeForGroup(startTimeMap, allHeats, Group.GIRLS_12);
+        addStartTimeForGroup(startTimeMap, allHeats, Group.MIXED_12);
         addStartTimeForGroup(startTimeMap, allHeats, Group.MIXED_13);
         addStartTimeForGroup(startTimeMap, allHeats, Group.MIXED_14);
         return startTimeMap;
@@ -90,8 +89,7 @@ public class HeatsService {
         Map<String, String> awardCeremonyTimeMap = new TreeMap<>();
         addAwardCeremonyTimeForGroup(awardCeremonyTimeMap, allHeats, Group.BOYS_11);
         addAwardCeremonyTimeForGroup(awardCeremonyTimeMap, allHeats, Group.GIRLS_11);
-        addAwardCeremonyTimeForGroup(awardCeremonyTimeMap, allHeats, Group.BOYS_12);
-        addAwardCeremonyTimeForGroup(awardCeremonyTimeMap, allHeats, Group.GIRLS_12);
+        addAwardCeremonyTimeForGroup(awardCeremonyTimeMap, allHeats, Group.MIXED_12);
         addAwardCeremonyTimeForGroup(awardCeremonyTimeMap, allHeats, Group.MIXED_13);
         addAwardCeremonyTimeForGroup(awardCeremonyTimeMap, allHeats, Group.MIXED_14);
         return awardCeremonyTimeMap;
@@ -248,18 +246,13 @@ public class HeatsService {
             sizeOfPrologHeatsForGroup(Group.GIRLS_11, rankedHeats), Group.GIRLS_11);
 
         // add prolog heats for age 12
-        start = addPrologHeats(start, nextHeatNo(lastHeatNo, rankedHeats), rankedHeats,
-            filterByGender(Gender.BOYS, age12Teams), Group.BOYS_12);
-        start = addPrologHeats(start, nextHeatNo(lastHeatNo, rankedHeats), rankedHeats,
-            filterByGender(Gender.GIRLS, age12Teams), Group.GIRLS_12);
+        start = addPrologHeats(start, nextHeatNo(lastHeatNo, rankedHeats), rankedHeats, age12Teams, Group.MIXED_12);
 
         start = start.plusMinutes(5);
 
         // add empty final heats for age 12
         start = addFinalHeats(start, nextHeatNo(lastHeatNo, rankedHeats), rankedHeats,
-            sizeOfPrologHeatsForGroup(Group.BOYS_12, rankedHeats), Group.BOYS_12);
-        start = addFinalHeats(start, nextHeatNo(lastHeatNo, rankedHeats), rankedHeats,
-            sizeOfPrologHeatsForGroup(Group.GIRLS_12, rankedHeats), Group.GIRLS_12);
+            sizeOfPrologHeatsForGroup(Group.MIXED_12, rankedHeats), Group.MIXED_12);
 
         // add prolog heats for age 13
         start = addPrologHeats(start, nextHeatNo(lastHeatNo, rankedHeats), rankedHeats, age13Teams, Group.MIXED_13);

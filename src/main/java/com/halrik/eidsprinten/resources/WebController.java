@@ -115,8 +115,7 @@ public class WebController {
 
         model.addAttribute("advancementsBoys11", getAdvancementsForGroup(advancements, Group.BOYS_11));
         model.addAttribute("advancementsGirls11", getAdvancementsForGroup(advancements, Group.GIRLS_11));
-        model.addAttribute("advancementsBoys12", getAdvancementsForGroup(advancements, Group.BOYS_12));
-        model.addAttribute("advancementsGirls12", getAdvancementsForGroup(advancements, Group.GIRLS_12));
+        model.addAttribute("advancementsMixed12", getAdvancementsForGroup(advancements, Group.MIXED_12));
         model.addAttribute("advancementsMixed13", getAdvancementsForGroup(advancements, Group.MIXED_13));
         model.addAttribute("advancementsMixed14", getAdvancementsForGroup(advancements, Group.MIXED_14));
 

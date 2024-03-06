@@ -18,6 +18,8 @@ public enum Group {
     GIRLS_13("J 13 år", Gender.GIRLS, 13),
     BOYS_14("G 14 år", Gender.BOYS, 14),
     GIRLS_14("J 14 år", Gender.GIRLS, 14),
+    MIXED_11("G 11 år/J 11 år", Gender.MIXED, 11),
+    MIXED_12("G 12 år/J 12 år", Gender.MIXED, 12),
     MIXED_13("G 13 år/J 13 år", Gender.MIXED, 13),
     MIXED_14("G 14 år/J 14 år", Gender.MIXED, 14);
 
