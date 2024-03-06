@@ -160,21 +160,23 @@ public class HeatsService {
 
         LocalDateTime start = getStartTime(START_HOUR, START_MINUTE);
 
-        // add L1 heats for age 7 and 8
-        int leg = 1;
-        start = addUnrankedHeats(start, leg, heatNo(unRankedHeats), unRankedHeats,
-            age7andGirls8Teams, Group.MIXED_7_AND_GIRLS_8);
-        start = addUnrankedHeats(start, leg, heatNo(unRankedHeats), unRankedHeats,
-            filterByGender(Gender.BOYS, age8Teams), Group.BOYS_8);
+        int leg;
 
-        start = start.plusMinutes(5);
+        // add L1 heats for age 10
+        leg = 1;
+        start = addUnrankedHeats(start, leg, heatNo(unRankedHeats), unRankedHeats,
+            filterByGender(Gender.BOYS, age10Teams), Group.BOYS_10);
+        start = addUnrankedHeats(start, leg, heatNo(unRankedHeats), unRankedHeats,
+            filterByGender(Gender.GIRLS, age10Teams), Group.GIRLS_10);
 
-        // add L2 heats for age 7 and 8
+        // add L2 heats for age 10
         leg = 2;
         start = addUnrankedHeats(start, leg, heatNo(unRankedHeats), unRankedHeats,
-            age7andGirls8Teams, Group.MIXED_7_AND_GIRLS_8);
+            filterByGender(Gender.BOYS, age10Teams), Group.BOYS_10);
         start = addUnrankedHeats(start, leg, heatNo(unRankedHeats), unRankedHeats,
-            filterByGender(Gender.BOYS, age8Teams), Group.BOYS_8);
+            filterByGender(Gender.GIRLS, age10Teams), Group.GIRLS_10);
+
+        start = start.plusMinutes(5);
 
         // add L1 heats for age 9
         leg = 1;
@@ -191,19 +193,24 @@ public class HeatsService {
         start = addUnrankedHeats(start, leg, heatNo(unRankedHeats), unRankedHeats,
             filterByGender(Gender.GIRLS, age9Teams), Group.GIRLS_9);
 
-        // add L1 heats for age 10
+        start = start.plusMinutes(5);
+
+        // add L1 heats for age 7 and 8
         leg = 1;
         start = addUnrankedHeats(start, leg, heatNo(unRankedHeats), unRankedHeats,
-            filterByGender(Gender.BOYS, age10Teams), Group.BOYS_10);
+            age7andGirls8Teams, Group.MIXED_7_AND_GIRLS_8);
         start = addUnrankedHeats(start, leg, heatNo(unRankedHeats), unRankedHeats,
-            filterByGender(Gender.GIRLS, age10Teams), Group.GIRLS_10);
+            filterByGender(Gender.BOYS, age8Teams), Group.BOYS_8);
 
-        // add L2 heats for age 10
+        start = start.plusMinutes(5);
+
+        // add L2 heats for age 7 and 8
         leg = 2;
         start = addUnrankedHeats(start, leg, heatNo(unRankedHeats), unRankedHeats,
-            filterByGender(Gender.BOYS, age10Teams), Group.BOYS_10);
+            age7andGirls8Teams, Group.MIXED_7_AND_GIRLS_8);
         addUnrankedHeats(start, leg, heatNo(unRankedHeats), unRankedHeats,
-            filterByGender(Gender.GIRLS, age10Teams), Group.GIRLS_10);
+            filterByGender(Gender.BOYS, age8Teams), Group.BOYS_8);
+
 
         return sortTeamsWithinHeatByBibAndSortHeatsByHeatNumber(unRankedHeats);
     }
