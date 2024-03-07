@@ -38,8 +38,8 @@ public class HeatsService {
     private static final int MAX_HEAT_SIZE = 8;
     private static final int START_HOUR = 10;
     private static final int START_MINUTE = 00;
-    private static final int START_HOUR_RANKED = 13;
-    private static final int START_MINUTE_RANKED = 00;
+    private static final int START_HOUR_RANKED = 12;
+    private static final int START_MINUTE_RANKED = 45;
     private static final int MINUTES_BETWEEN_HEATS = 5;
     private static final int MINUTES_AFTER_LAST_HEAT_TO_AWARD_CEREMONY = 25;
 
@@ -68,12 +68,10 @@ public class HeatsService {
         addStartTimeForGroup(startTimeMap, allHeats, Group.GIRLS_9);
         addStartTimeForGroup(startTimeMap, allHeats, Group.BOYS_10);
         addStartTimeForGroup(startTimeMap, allHeats, Group.GIRLS_10);
-        addStartTimeForGroup(startTimeMap, allHeats, Group.BOYS_11);
-        addStartTimeForGroup(startTimeMap, allHeats, Group.GIRLS_11);
-        addStartTimeForGroup(startTimeMap, allHeats, Group.BOYS_12);
-        addStartTimeForGroup(startTimeMap, allHeats, Group.GIRLS_12);
-        addStartTimeForGroup(startTimeMap, allHeats, Group.MIXED_13);
-        addStartTimeForGroup(startTimeMap, allHeats, Group.MIXED_14);
+        addStartTimeForGroup(startTimeMap, allHeats, Group.MIXED_BOYS_11_12);
+        addStartTimeForGroup(startTimeMap, allHeats, Group.MIXED_GIRLS_11_12);
+        addStartTimeForGroup(startTimeMap, allHeats, Group.MIXED_BOYS_13_14);
+        addStartTimeForGroup(startTimeMap, allHeats, Group.MIXED_GIRLS_13_14);
         return startTimeMap;
     }
 
@@ -88,12 +86,10 @@ public class HeatsService {
         allHeats.addAll(getHeatsRankedStored());
 
         Map<String, String> awardCeremonyTimeMap = new TreeMap<>();
-        addAwardCeremonyTimeForGroup(awardCeremonyTimeMap, allHeats, Group.BOYS_11);
-        addAwardCeremonyTimeForGroup(awardCeremonyTimeMap, allHeats, Group.GIRLS_11);
-        addAwardCeremonyTimeForGroup(awardCeremonyTimeMap, allHeats, Group.BOYS_12);
-        addAwardCeremonyTimeForGroup(awardCeremonyTimeMap, allHeats, Group.GIRLS_12);
-        addAwardCeremonyTimeForGroup(awardCeremonyTimeMap, allHeats, Group.MIXED_13);
-        addAwardCeremonyTimeForGroup(awardCeremonyTimeMap, allHeats, Group.MIXED_14);
+        addAwardCeremonyTimeForGroup(awardCeremonyTimeMap, allHeats, Group.MIXED_BOYS_11_12);
+        addAwardCeremonyTimeForGroup(awardCeremonyTimeMap, allHeats, Group.MIXED_GIRLS_11_12);
+        addAwardCeremonyTimeForGroup(awardCeremonyTimeMap, allHeats, Group.MIXED_BOYS_13_14);
+        addAwardCeremonyTimeForGroup(awardCeremonyTimeMap, allHeats, Group.MIXED_GIRLS_13_14);
         return awardCeremonyTimeMap;
     }
 
@@ -211,7 +207,6 @@ public class HeatsService {
         addUnrankedHeats(start, leg, heatNo(unRankedHeats), unRankedHeats,
             filterByGender(Gender.BOYS, age8Teams), Group.BOYS_8);
 
-
         return sortTeamsWithinHeatByBibAndSortHeatsByHeatNumber(unRankedHeats);
     }
 
@@ -233,49 +228,55 @@ public class HeatsService {
 
         Integer lastHeatNo = getHeatsUnRankedStored().size();
 
-        // add prolog heats for age 11
-        start = addPrologHeats(start, nextHeatNo(lastHeatNo, rankedHeats), rankedHeats,
-            filterByGender(Gender.BOYS, age11Teams), Group.BOYS_11);
-        start = addPrologHeats(start, nextHeatNo(lastHeatNo, rankedHeats), rankedHeats,
-            filterByGender(Gender.GIRLS, age11Teams), Group.GIRLS_11);
+        // add prolog heats for boys 11 and 12
+        List<Team> boys11And12Teams = new ArrayList<>();
+        boys11And12Teams.addAll(filterByGender(Gender.BOYS, age11Teams));
+        boys11And12Teams.addAll(filterByGender(Gender.BOYS, age12Teams));
+        start = addPrologHeats(start, nextHeatNo(lastHeatNo, rankedHeats), rankedHeats, boys11And12Teams,
+            Group.MIXED_BOYS_11_12);
+
+        // add prolog heats for girls 11 and 12
+        List<Team> girls11And12Teams = new ArrayList<>();
+        girls11And12Teams.addAll(filterByGender(Gender.GIRLS, age11Teams));
+        girls11And12Teams.addAll(filterByGender(Gender.GIRLS, age12Teams));
+        start = addPrologHeats(start, nextHeatNo(lastHeatNo, rankedHeats), rankedHeats, girls11And12Teams,
+            Group.MIXED_GIRLS_11_12);
 
         start = start.plusMinutes(5);
 
-        // add empty final heats for age 11
+        // add empty final heats for boys 11 and 12
         start = addFinalHeats(start, nextHeatNo(lastHeatNo, rankedHeats), rankedHeats,
-            sizeOfPrologHeatsForGroup(Group.BOYS_11, rankedHeats), Group.BOYS_11);
-        start = addFinalHeats(start, nextHeatNo(lastHeatNo, rankedHeats), rankedHeats,
-            sizeOfPrologHeatsForGroup(Group.GIRLS_11, rankedHeats), Group.GIRLS_11);
+            sizeOfPrologHeatsForGroup(Group.MIXED_BOYS_11_12, rankedHeats), Group.MIXED_BOYS_11_12);
 
-        // add prolog heats for age 12
-        start = addPrologHeats(start, nextHeatNo(lastHeatNo, rankedHeats), rankedHeats,
-            filterByGender(Gender.BOYS, age12Teams), Group.BOYS_12);
-        start = addPrologHeats(start, nextHeatNo(lastHeatNo, rankedHeats), rankedHeats,
-            filterByGender(Gender.GIRLS, age12Teams), Group.GIRLS_12);
+        // add empty final heats for girls 11 and 12
+        start = addFinalHeats(start, nextHeatNo(lastHeatNo, rankedHeats), rankedHeats,
+            sizeOfPrologHeatsForGroup(Group.MIXED_GIRLS_11_12, rankedHeats), Group.MIXED_GIRLS_11_12);
 
         start = start.plusMinutes(5);
 
-        // add empty final heats for age 12
-        start = addFinalHeats(start, nextHeatNo(lastHeatNo, rankedHeats), rankedHeats,
-            sizeOfPrologHeatsForGroup(Group.BOYS_12, rankedHeats), Group.BOYS_12);
-        start = addFinalHeats(start, nextHeatNo(lastHeatNo, rankedHeats), rankedHeats,
-            sizeOfPrologHeatsForGroup(Group.GIRLS_12, rankedHeats), Group.GIRLS_12);
+        // add prolog heats for boys 13 and 14
+        List<Team> boys13And14Teams = new ArrayList<>();
+        boys13And14Teams.addAll(filterByGender(Gender.BOYS, age13Teams));
+        boys13And14Teams.addAll(filterByGender(Gender.BOYS, age14Teams));
+        start = addPrologHeats(start, nextHeatNo(lastHeatNo, rankedHeats), rankedHeats, boys13And14Teams,
+            Group.MIXED_BOYS_13_14);
 
-        // add prolog heats for age 13
-        start = addPrologHeats(start, nextHeatNo(lastHeatNo, rankedHeats), rankedHeats, age13Teams, Group.MIXED_13);
-
-        // add prolog heats for age 14
-        start = addPrologHeats(start, nextHeatNo(lastHeatNo, rankedHeats), rankedHeats, age14Teams, Group.MIXED_14);
+        // add prolog heats for girls 13 and 14
+        List<Team> girls13And14Teams = new ArrayList<>();
+        girls13And14Teams.addAll(filterByGender(Gender.GIRLS, age13Teams));
+        girls13And14Teams.addAll(filterByGender(Gender.GIRLS, age14Teams));
+        start = addPrologHeats(start, nextHeatNo(lastHeatNo, rankedHeats), rankedHeats, girls13And14Teams,
+            Group.MIXED_GIRLS_13_14);
 
         start = start.plusMinutes(5);
 
-        // add empty final heats for age 13
+        // add empty final heats for boys 13 and 14
         start = addFinalHeats(start, nextHeatNo(lastHeatNo, rankedHeats), rankedHeats,
-            sizeOfPrologHeatsForGroup(Group.MIXED_13, rankedHeats), Group.MIXED_13);
+            sizeOfPrologHeatsForGroup(Group.MIXED_BOYS_13_14, rankedHeats), Group.MIXED_BOYS_13_14);
 
-        // add empty final heats for age 14
+        // add empty final heats for girls 13 and 14
         addFinalHeats(start, nextHeatNo(lastHeatNo, rankedHeats), rankedHeats,
-            sizeOfPrologHeatsForGroup(Group.MIXED_14, rankedHeats), Group.MIXED_14);
+            sizeOfPrologHeatsForGroup(Group.MIXED_GIRLS_13_14, rankedHeats), Group.MIXED_GIRLS_13_14);
 
         rankedHeats.forEach(heat ->
             heat.setTeams(heat.getTeams().stream().sorted(Comparator.comparingInt(Team::getBib))

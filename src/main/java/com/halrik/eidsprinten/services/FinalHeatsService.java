@@ -37,12 +37,10 @@ public class FinalHeatsService {
     public List<HeatAdvancement> getAdvancementSetup() {
         List<HeatAdvancement> heatAdvancements = new ArrayList<>();
 
-        fillAdvancementForGroup(heatAdvancements, Group.BOYS_11);
-        fillAdvancementForGroup(heatAdvancements, Group.GIRLS_11);
-        fillAdvancementForGroup(heatAdvancements, Group.BOYS_12);
-        fillAdvancementForGroup(heatAdvancements, Group.GIRLS_12);
-        fillAdvancementForGroup(heatAdvancements, Group.MIXED_13);
-        fillAdvancementForGroup(heatAdvancements, Group.MIXED_14);
+        fillAdvancementForGroup(heatAdvancements, Group.MIXED_BOYS_11_12);
+        fillAdvancementForGroup(heatAdvancements, Group.MIXED_GIRLS_11_12);
+        fillAdvancementForGroup(heatAdvancements, Group.MIXED_BOYS_13_14);
+        fillAdvancementForGroup(heatAdvancements, Group.MIXED_GIRLS_13_14);
 
         heatAdvancements.sort(Comparator.comparingInt(HeatAdvancement::getFromHeatNumber));
 
@@ -92,17 +90,6 @@ public class FinalHeatsService {
                     throw new IllegalStateException("Case for " + i + " is not supported!");
             }
         }
-
-        // fix to avoid A final with 9 teams, B final with 9 teams and C final with 3 teams
-        // with this we will get A final with 9 teams, B final with 6 teams and C final with 6 teams
-        List<HeatAdvancement> boys11ToC = heatAdvancements.stream().filter(
-            heatAdvancement -> heatAdvancement.getGroupName().equals(Group.BOYS_11.getValue())
-                && heatAdvancement.getResult() == 6).collect(Collectors.toList());
-
-        boys11ToC.forEach(heatAdvancement -> {
-            heatAdvancement.setToHeatName("C - finale");
-            heatAdvancement.setToHeatNumber(33);
-        });
     }
 
     private Optional<Heat> getFinalHeat(Group group, FinalHeat finalHeat) {
@@ -148,12 +135,15 @@ public class FinalHeatsService {
 
         List<HeatAdvancement> advancementSetup = getAdvancementSetup();
 
-        finalHeats.addAll(updateFinalHeats(Group.BOYS_11, filterAdvancementSetup(advancementSetup, Group.BOYS_11)));
-        finalHeats.addAll(updateFinalHeats(Group.GIRLS_11, filterAdvancementSetup(advancementSetup, Group.GIRLS_11)));
-        finalHeats.addAll(updateFinalHeats(Group.BOYS_12, filterAdvancementSetup(advancementSetup, Group.BOYS_12)));
-        finalHeats.addAll(updateFinalHeats(Group.GIRLS_12, filterAdvancementSetup(advancementSetup, Group.GIRLS_12)));
-        finalHeats.addAll(updateFinalHeats(Group.MIXED_13, filterAdvancementSetup(advancementSetup, Group.MIXED_13)));
-        finalHeats.addAll(updateFinalHeats(Group.MIXED_14, filterAdvancementSetup(advancementSetup, Group.MIXED_14)));
+        finalHeats.addAll(
+            updateFinalHeats(Group.MIXED_BOYS_11_12, filterAdvancementSetup(advancementSetup, Group.MIXED_BOYS_11_12)));
+        finalHeats.addAll(updateFinalHeats(Group.MIXED_GIRLS_11_12,
+            filterAdvancementSetup(advancementSetup, Group.MIXED_GIRLS_11_12)));
+
+        finalHeats.addAll(
+            updateFinalHeats(Group.MIXED_BOYS_13_14, filterAdvancementSetup(advancementSetup, Group.MIXED_BOYS_13_14)));
+        finalHeats.addAll(updateFinalHeats(Group.MIXED_GIRLS_13_14,
+            filterAdvancementSetup(advancementSetup, Group.MIXED_GIRLS_13_14)));
 
         return finalHeats;
     }
@@ -162,16 +152,20 @@ public class FinalHeatsService {
         List<Result> resultList = new ArrayList<>();
 
         List<Heat> finalHeats;
-        if (Group.BOYS_13.equals(group) || Group.GIRLS_13.equals(group)) {
-            finalHeats = heatRepository.findByGroupNameAndPrologHeat(Group.MIXED_13.getValue(), false);
-        } else if (Group.BOYS_14.equals(group) || Group.GIRLS_14.equals(group)) {
-            finalHeats = heatRepository.findByGroupNameAndPrologHeat(Group.MIXED_14.getValue(), false);
+        if (Group.BOYS_11.equals(group) || Group.BOYS_12.equals(group)) {
+            finalHeats = heatRepository.findByGroupNameAndPrologHeat(Group.MIXED_BOYS_11_12.getValue(), false);
+        } else if (Group.GIRLS_11.equals(group) || Group.GIRLS_12.equals(group)) {
+            finalHeats = heatRepository.findByGroupNameAndPrologHeat(Group.MIXED_GIRLS_11_12.getValue(), false);
+        } else if (Group.BOYS_13.equals(group) || Group.BOYS_14.equals(group)) {
+            finalHeats = heatRepository.findByGroupNameAndPrologHeat(Group.MIXED_BOYS_13_14.getValue(), false);
+        } else if (Group.GIRLS_13.equals(group) || Group.GIRLS_14.equals(group)) {
+            finalHeats = heatRepository.findByGroupNameAndPrologHeat(Group.MIXED_GIRLS_13_14.getValue(), false);
         } else {
             finalHeats = heatRepository.findByGroupNameAndPrologHeat(group.getValue(), false);
         }
 
         List<Heat> finalHeatsReverseOrder = finalHeats.stream()
-            .sorted((h1, h2) -> Long.compare(h2.getHeatNumber(), h1.getHeatNumber())).collect(Collectors.toList());
+            .sorted((h1, h2) -> Long.compare(h2.getHeatNumber(), h1.getHeatNumber())).toList();
 
         AtomicInteger result = new AtomicInteger(1);
         finalHeatsReverseOrder.forEach(heat -> heat.getResult()
@@ -182,10 +176,14 @@ public class FinalHeatsService {
             }));
 
         List<Heat> prologHeats;
-        if (Group.BOYS_13.equals(group) || Group.GIRLS_13.equals(group)) {
-            prologHeats = heatRepository.findByGroupNameAndPrologHeat(Group.MIXED_13.getValue(), true);
-        } else if (Group.BOYS_14.equals(group) || Group.GIRLS_14.equals(group)) {
-            prologHeats = heatRepository.findByGroupNameAndPrologHeat(Group.MIXED_14.getValue(), true);
+        if (Group.BOYS_11.equals(group) || Group.BOYS_12.equals(group)) {
+            prologHeats = heatRepository.findByGroupNameAndPrologHeat(Group.MIXED_BOYS_11_12.getValue(), true);
+        } else if (Group.GIRLS_11.equals(group) || Group.GIRLS_12.equals(group)) {
+            prologHeats = heatRepository.findByGroupNameAndPrologHeat(Group.MIXED_GIRLS_11_12.getValue(), true);
+        } else if (Group.BOYS_13.equals(group) || Group.BOYS_14.equals(group)) {
+            prologHeats = heatRepository.findByGroupNameAndPrologHeat(Group.MIXED_BOYS_13_14.getValue(), true);
+        } else if (Group.GIRLS_13.equals(group) || Group.GIRLS_14.equals(group)) {
+            prologHeats = heatRepository.findByGroupNameAndPrologHeat(Group.MIXED_GIRLS_13_14.getValue(), true);
         } else {
             prologHeats = heatRepository.findByGroupNameAndPrologHeat(group.getValue(), true);
         }
@@ -218,7 +216,9 @@ public class FinalHeatsService {
             });
         }
 
-        if (Group.BOYS_13.equals(group) || Group.GIRLS_13.equals(group) ||
+        if (Group.BOYS_11.equals(group) || Group.GIRLS_11.equals(group) ||
+            Group.BOYS_12.equals(group) || Group.GIRLS_12.equals(group) ||
+            Group.BOYS_13.equals(group) || Group.GIRLS_13.equals(group) ||
             Group.BOYS_14.equals(group) || Group.GIRLS_14.equals(group)) {
             filterMixedResultList(resultList, group);
         }

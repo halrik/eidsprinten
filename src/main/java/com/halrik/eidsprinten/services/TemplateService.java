@@ -66,12 +66,14 @@ public class TemplateService {
 
     public String getAdvancementsSetupHtml(List<HeatAdvancement> advancements) {
         Context context = new Context();
-        context.setVariable("advancementsBoys11", getAdvancementsForGroup(advancements, Group.BOYS_11));
-        context.setVariable("advancementsGirls11", getAdvancementsForGroup(advancements, Group.GIRLS_11));
-        context.setVariable("advancementsBoys12", getAdvancementsForGroup(advancements, Group.BOYS_12));
-        context.setVariable("advancementsGirls12", getAdvancementsForGroup(advancements, Group.GIRLS_12));
-        context.setVariable("advancementsMixed13", getAdvancementsForGroup(advancements, Group.MIXED_13));
-        context.setVariable("advancementsMixed14", getAdvancementsForGroup(advancements, Group.MIXED_14));
+        context.setVariable("advancementsMixedBoys11And12",
+            getAdvancementsForGroup(advancements, Group.MIXED_BOYS_11_12));
+        context.setVariable("advancementsMixedGirls11And12",
+            getAdvancementsForGroup(advancements, Group.MIXED_GIRLS_11_12));
+        context.setVariable("advancementsMixedBoys13And14",
+            getAdvancementsForGroup(advancements, Group.MIXED_BOYS_13_14));
+        context.setVariable("advancementsMixedGirls13And14",
+            getAdvancementsForGroup(advancements, Group.MIXED_GIRLS_13_14));
         return parseThymeleafTemplate(ADVANCEMENT_SETUP.getTemplateName(), context);
     }
 

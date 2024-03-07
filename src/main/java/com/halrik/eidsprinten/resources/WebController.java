@@ -11,11 +11,10 @@ import com.halrik.eidsprinten.model.enums.Group;
 import com.halrik.eidsprinten.services.EidsprintenService;
 import com.halrik.eidsprinten.services.FinalHeatsService;
 import com.halrik.eidsprinten.services.HeatsService;
+import jakarta.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -80,10 +79,10 @@ public class WebController {
     }
 
     @GetMapping("/startliste-finale")
-    public String startListFinal(@RequestParam(name = "group", required = false) String genderAgeShortValue,
+    public String startListFinal(@RequestParam(name = "group", required = false) String groupCode,
         Model model) {
-        if (genderAgeShortValue != null) {
-            Group group = Group.valueOfGenderAgeShortValue(genderAgeShortValue);
+        if (groupCode != null) {
+            Group group = Group.valueOfGroupCode(groupCode);
             List<Heat> heatsRankedFinals = finalHeatsService.getHeatsRankedFinalsStored();
             model.addAttribute("title", "Startliste finaler " + group.getValue());
             model.addAttribute("heats", getHeatsRankedFinalsForGroup(heatsRankedFinals, group));
@@ -103,22 +102,24 @@ public class WebController {
     }
 
     @GetMapping("/avansement")
-    public String advancementSetup(@RequestParam(name = "group", required = false) String genderAgeShortValue,
+    public String advancementSetup(@RequestParam(name = "group", required = false) String groupCode,
         Model model) {
         List<HeatAdvancement> advancements = finalHeatsService.getAdvancementSetup();
 
-        if (genderAgeShortValue != null) {
-            Group group = Group.valueOfGenderAgeShortValue(genderAgeShortValue);
+        if (groupCode != null) {
+            Group group = Group.valueOfGroupCode(groupCode);
             model.addAttribute("advancements", getAdvancementsForGroup(advancements, group));
             return "web/advancement-setup.html";
         }
 
-        model.addAttribute("advancementsBoys11", getAdvancementsForGroup(advancements, Group.BOYS_11));
-        model.addAttribute("advancementsGirls11", getAdvancementsForGroup(advancements, Group.GIRLS_11));
-        model.addAttribute("advancementsBoys12", getAdvancementsForGroup(advancements, Group.BOYS_12));
-        model.addAttribute("advancementsGirls12", getAdvancementsForGroup(advancements, Group.GIRLS_12));
-        model.addAttribute("advancementsMixed13", getAdvancementsForGroup(advancements, Group.MIXED_13));
-        model.addAttribute("advancementsMixed14", getAdvancementsForGroup(advancements, Group.MIXED_14));
+        model.addAttribute("advancementsMixedBoys11And12",
+            getAdvancementsForGroup(advancements, Group.MIXED_BOYS_11_12));
+        model.addAttribute("advancementsMixedGirls11And12",
+            getAdvancementsForGroup(advancements, Group.MIXED_GIRLS_11_12));
+        model.addAttribute("advancementsMixedBoys13And14",
+            getAdvancementsForGroup(advancements, Group.MIXED_BOYS_13_14));
+        model.addAttribute("advancementsMixedGirls13And14",
+            getAdvancementsForGroup(advancements, Group.MIXED_GIRLS_13_14));
 
         return "web/advancement-setup.html";
     }
